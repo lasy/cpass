@@ -1,12 +1,26 @@
 
+#' Visualize the subject diagnosis
+#'
+#' This function calls the \code{CPASS} function and provides a visualization of the diagnosis.
+#' @param data a data.frame that contains the symptoms reported by ONE subject. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{score}
+#'
+#' @keywords CPASS C-PASS PMDD MRMD
+#' @return a ggplot object
+#' @export
+#' @examples
+#' data(PMDD_data)
+#' input = PMDD_data %>% filter(SUBJECT == 2)
+#' plot_subject_diagnosis(data = input)
+#'
+
 
 plot_subject_diagnosis = function(data = data.frame()){
-  
+
   #subject_diagnosis = compute_diagnosis(data)
   #subject_diagnosis = data.frame(NCycles = 2, dxcat = 2, dx = "PMDD", PMDD = 2, MRMD = 0)
   subject_diagnosis = CPASS(data)
   subject = unique(data$SUBJECT)
-  
+
   gtitle = ggplot()
   gtitle = gtitle +
     ggtitle(str_c("SUBJECT : ",subject,"   ||   ",subject_diagnosis$SUBJECT_level_diagnosis$dx,""),
@@ -16,13 +30,13 @@ plot_subject_diagnosis = function(data = data.frame()){
               "# PMDD cycles: ", subject_diagnosis$SUBJECT_level_diagnosis$N_PMDD,"   ||   ",
               "# MRMD cycles: ", subject_diagnosis$SUBJECT_level_diagnosis$N_MRMD))
   gtitle
-  
+
   daily_summary = subject_diagnosis$daily_summary_DRSP
-  daily_summary = full_join(daily_summary, dsm5_dict %>%  select(DRSP,DRSP_desc, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY), by = "DRSP") %>% 
-    ungroup() %>% 
+  daily_summary = full_join(daily_summary, dsm5_dict %>%  select(DRSP,DRSP_desc, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY), by = "DRSP") %>%
+    ungroup() %>%
     mutate(DRSP = factor(DRSP, levels = dsm5_dict$DRSP),
            DRSP_desc = factor(DRSP_desc, levels = dsm5_dict$DRSP_desc),
-           DSM5_SYMPTOM_DOMAIN = factor(DSM5_SYMPTOM_DOMAIN, levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN))) 
+           DSM5_SYMPTOM_DOMAIN = factor(DSM5_SYMPTOM_DOMAIN, levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN)))
   g_daily_summary = ggplot(daily_summary, aes(x = DAY))
   g_daily_summary = g_daily_summary +
     geom_hline(yintercept = 1, col = "gray60")+
@@ -35,7 +49,7 @@ plot_subject_diagnosis = function(data = data.frame()){
     scale_y_continuous(breaks = c(1,4), minor_breaks = 1:6)+
     coord_cartesian(ylim=c(1, 6))+
     ylab("")+xlab("")+
-    facet_grid(DSM5_SYMPTOM_DOMAIN ~ PHASE, scale = "free_x", switch = "y")+ 
+    facet_grid(DSM5_SYMPTOM_DOMAIN ~ PHASE, scale = "free_x", switch = "y")+
     theme(strip.text.y.left = element_text(angle = 0, hjust = 1),
           strip.background.y = element_rect(fill = viz$strip.background.col, color = NA),
           strip.placement = "outside",
@@ -47,14 +61,14 @@ plot_subject_diagnosis = function(data = data.frame()){
     )+
     ggtitle("DRSP daily averages and ranges")
   #g_daily_summary
-  
+
   summary = subject_diagnosis$summary_DRSP
-  summary = full_join(summary, dsm5_dict %>%  select(DRSP,DRSP_desc, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY), by = "DRSP") %>% 
-    ungroup() %>% 
+  summary = full_join(summary, dsm5_dict %>%  select(DRSP,DRSP_desc, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY), by = "DRSP") %>%
+    ungroup() %>%
     mutate(DRSP_fac = factor(DRSP, levels = dsm5_dict$DRSP),
            DRSP_desc = factor(DRSP_desc, levels = dsm5_dict$DRSP_desc),
-           DSM5_SYMPTOM_DOMAIN = factor(DSM5_SYMPTOM_DOMAIN, levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN))) 
-  
+           DSM5_SYMPTOM_DOMAIN = factor(DSM5_SYMPTOM_DOMAIN, levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN)))
+
   drsp_desc = factor(dsm5_dict$DRSP_desc, levels = dsm5_dict$DRSP_desc)
   g_summary = ggplot(summary, aes(y = DRSP, x = ave_perc_change, col = DRSP_desc))
   g_summary = g_summary+
@@ -73,11 +87,11 @@ plot_subject_diagnosis = function(data = data.frame()){
           panel.spacing.y = unit(5,"pt"))+
     ggtitle("Av. % change")
   #g_summary
-  
+
   plots = plot_grid(plotlist = list(g_daily_summary, g_summary), ncol = 2, nrow =1,  rel_widths = c(2,1.2))
   plots_with_title = plot_grid(plotlist = list(gtitle, plots), ncol = 1, nrow =2,  rel_heights = c(1,10))
-  
-  return(plots_with_title) 
+
+  return(plots_with_title)
 }
 
 
@@ -87,14 +101,14 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE){
   if(any(!(columns %in% colnames(data)))){stop(str_c("The data must include the following columns:",columns))}
   if(("SUBJECT" %in% colnames(data)) & (length(unique(data$SUBJECT))>1)){stop("The data must include the observations of only ONE subject")}
   if(length(unique(data$CYCLE))>1){stop("The data must include the observations of only ONE cycle")}
-  
-  
+
+
   if(add_diagnosis){
-    
+
     cycle_diagnosis = CPASS(data)
-    
+
     title_add = str_c("     ",ifelse(cycle_diagnosis$CYCLE_level_diagnosis$included,cycle_diagnosis$CYCLE_level_diagnosis$diagnosis,"not included"))
-    
+
     # preparing data to plot the diagnosis
     df = full_join(cycle_diagnosis$DRSP_level_diagnosis %>%  select(SUBJECT, CYCLE, DRSP, DRSP_meets_criteria, DSM5_SYMPTOM_DOMAIN),
                    cycle_diagnosis$DSM5_DOMAINS_level_diagnosis %>%  select(SUBJECT, CYCLE, DSM5_SYMPTOM_DOMAIN, DSM5_criteria),
@@ -102,8 +116,8 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE){
     df = full_join(df, cycle_diagnosis$CYCLE_level_diagnosis %>%  select(-n_DSM5_DOMAINS_meeting_criteria),
                    by = c("SUBJECT", "CYCLE"))
     df = df %>%  ungroup()
-    
-    df_long = pivot_longer(df %>%  select(DRSP, DSM5_SYMPTOM_DOMAIN, DRSP_meets_criteria, DSM5_criteria, DSM5_A, DSM5_B), 
+
+    df_long = pivot_longer(df %>%  select(DRSP, DSM5_SYMPTOM_DOMAIN, DRSP_meets_criteria, DSM5_criteria, DSM5_A, DSM5_B),
                            cols = c("DRSP_meets_criteria","DSM5_criteria","DSM5_A","DSM5_B"),
                            names_to = "level",
                            values_to = "meets_criteria")
@@ -116,9 +130,9 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE){
       DSM5_SYMPTOM_DOMAIN = DSM5_SYMPTOM_DOMAIN %>% factor(., levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN))
     )
     df_long$meets_criteria[(df_long$level != "DRSP") & (df_long$DRSP %in% c(20, 22:24))] = NA
-    
+
     g_diagnosis = ggplot(df_long, aes(y = DRSP, x = 1, fill = meets_criteria))
-    g_diagnosis = g_diagnosis+ 
+    g_diagnosis = g_diagnosis+
       geom_tile(col = "white")+
       facet_grid(DSM5_SYMPTOM_DOMAIN ~ level, scale = "free_y", space = "free")+
       scale_fill_manual(values = c("gray90",viz$high_score),na.value = "gray45")+
@@ -127,21 +141,21 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE){
       scale_x_continuous(breaks = NULL)+
       theme(strip.text.y = element_blank())
     #g_diagnosis
-    
+
   }else{
     title_add = ""
   }
-  
-  
+
+
   obs = data
   if(!("DSM5_SYMPTOM_DOMAIN" %in% colnames(obs))){obs = full_join(obs, dsm5_dict, by = c("DRSP"))}
-  
-  obs = obs %>%  
+
+  obs = obs %>%
     mutate(DRSP = DRSP %>% factor(.,levels = rev(dsm5_dict$DRSP)),
            DSM5_SYMPTOM_DOMAIN = DSM5_SYMPTOM_DOMAIN %>% factor(.,levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN)),
            PHASE = PHASE %>%  factor(.,levels = c("pre","post")))
-  
-  
+
+
   gcanvas = ggplot(obs, aes(x = DAY, y = DRSP,  fill = score))
   g = gcanvas +
     geom_tile(col = "white", size = 0.5)+
@@ -162,11 +176,11 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE){
     xlab("")+
     ggtitle(str_c("CYCLE: ", unique(data$CYCLE),title_add))
   #g
-  
+
   if(add_diagnosis){
     g = plot_grid(g, g_diagnosis, align = "h", axis = "bt", ncol = 2, nrow = 1, rel_widths = c(2,1.2))
   }
-  
+
   return(g)
 }
 
@@ -174,14 +188,14 @@ plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE){
   columns = c("CYCLE","DAY","PHASE","DRSP","score")
   if(any(!(columns %in% colnames(data)))){stop(str_c("The data must include the following columns:",columns))}
   if(("SUBJECT" %in% colnames(data)) & (length(unique(data$SUBJECT))>1)){stop("The data must include the observations of only ONE subject")}
-  
-  
+
+
   cycles = sort(unique(data$CYCLE))
   plotlist = foreach(cycle = cycles) %do% {
     this_cycle_data = data %>% filter(CYCLE == cycle)
     g = plot_subject_cycle_obs(data = this_cycle_data, add_diagnosis = add_diagnosis)
   }
-  
+
   g_all_cycles = plot_grid(plotlist = plotlist, ncol=1, align="v")
   return(g_all_cycles)
 }
@@ -192,7 +206,7 @@ plot_subject_data_and_diagnosis = function(data = data.frame(), save_as_pdf = TR
   g_data = suppressWarnings(plot_subject_obs(data = data, add_diagnosis = TRUE))
   g = suppressWarnings(plot_grid(g_diagnosis_summary, g_data, ncol = 1, nrow = 2, rel_heights = c(1.2,3)))
   #g
-  
+
   if(save_as_pdf){
     if(pdf_name == ""){pdf_name = str_c("CPASS_SUBJECT_",unique(data$SUBJECT),".pdf")}
     if(pdf_path == ""){pdf_path = getwd()}

@@ -4,18 +4,32 @@
 \alias{CPASS}
 \title{Applies the C-PASS procedure for PMDD and MRMD diagnoses}
 \usage{
-CPASS(data)
+CPASS(data, sep_event = c("menses", "ovulation"))
 }
 \arguments{
-\item{data}{a data.frame that contains the symptoms reported by the subjects. The data must be in a long format and have the following columns: SUBJECT, CYCLE, DAY, DRSP, score}
+\item{data}{a data.frame that contains the symptoms reported by the subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{score}}
+
+\item{sep_event}{an optional character \code{"menses"} (default) or \code{"ovulation"} which declares if the pre- and post-menstrual phases are separated by the menses or by ovulation within a cycle (values of the column \code{CYCLE} in the provided data).}
 }
 \value{
-6 tables: (1) the subject-level diagnoses; (2) the cycle-level diagnoses; (3) the diagnoses at the DSM5 DOMAINS level; (4) the diagnoses at the individual DRSP items level; (5) the daily summary of each DRSP for each subject and (6) the percentage change in DRSP items between the pre- and post-menstrual phase
+The CPASS function returns a list with 6 elements; each of them is a table (\code{data.frame}):
+
+\describe{
+  \item{\code{SUBJECT_level_diagnosis}}{The subject-level diagnoses}
+  \item{\code{CYCLE_level_diagnosis}}{The cycle-level diagnoses}
+  \item{\code{DSM5_DOMAINS_level_diagnosis}}{The diagnoses at the DSM5 DOMAINS level}
+  \item{\code{DRSP_level_diagnosis}}{The diagnoses at the individual DRSP items level}
+  \item{\code{daily_summary_DRSP}}{The daily summary of each DRSP for each subject}
+  \item{\code{summary_DRSP}}{The percentage change in DRSP items between the pre- and post-menstrual phase}
+}
 }
 \description{
 This function implements the C-PASS procedure and returns.
 }
 \examples{
+data(PMDD_data)
+input = PMDD_data
+output = CPASS(input)
 
 }
 \keyword{C-PASS}
