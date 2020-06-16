@@ -10,4 +10,14 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
-
+Imports: 
+    magrittr,
+    ggplot2,
+    dplyr,
+    ggthemes,
+    cowplot,
+    purrr,
+    tidyr,
+    stringr
+Depends: 
+    R (>= 2.10)
