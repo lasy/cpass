@@ -300,9 +300,9 @@ as_cpass_data = function(data, sep_event = c("menses", "ovulation"), verbose = T
   # CYCLES
   if(verbose) cat("Total number of CYCLES: ", length(table(paste0(d2$SUBJECT,"-",d2$CYCLE))),"\n")
 
+  d2 = d2 %>% dplyr::select(SUBJECT, CYCLE, PHASE, DAY, DRSP, score)
 
   class(d2) <- append(class(d2),"cpass.data")
-  d2 = d2 %>% dplyr::select(SUBJECT, CYCLE, PHASE, DAY, DRSP, score)
   d2
 }
 
