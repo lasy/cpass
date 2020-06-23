@@ -12,7 +12,6 @@
 #' data(PMDD_data)
 #' input = PMDD_data %>% filter(SUBJECT == 2)
 #' plot_subject_diagnosis(data = input)
-#'
 
 
 plot_subject_diagnosis = function(data = data.frame()){

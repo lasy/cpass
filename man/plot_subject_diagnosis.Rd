@@ -19,7 +19,6 @@ This function calls the \code{CPASS} function and provides a visualization of th
 data(PMDD_data)
 input = PMDD_data \%>\% filter(SUBJECT == 2)
 plot_subject_diagnosis(data = input)
-
 }
 \keyword{C-PASS}
 \keyword{CPASS}
