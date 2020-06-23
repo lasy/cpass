@@ -306,7 +306,22 @@ as_cpass_data = function(data, sep_event = c("menses", "ovulation"), verbose = T
   d2
 }
 
-
+#' Checks if data is a "cpass.data" object.
+#'
+#' @param data a data.frame that contains symptoms reported subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{score}
+#' @keywords CPASS C-PASS PMDD MRMD
+#' @return a logical.
+#' @export
+#' @importFrom magrittr %>%
+#' @examples
+#' random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), DRSP = 1:24)
+#' random_data$score = sample(1:6, nrow(random_data), replace = TRUE)
+#' class(random_data)
+#' cpass_data = as_cpass_data(random_data)
+#' class(cpass_data)
+#' colnames(cpass_data)
+#' is_cpass_data(random_data)
+#' is_cpass_data(cpass_data)
 
 is_cpass_data = function(data){
   if(!("cpass.data" %in% class(data))) return(FALSE)

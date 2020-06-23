@@ -2,6 +2,7 @@
 
 export(CPASS)
 export(as_cpass_data)
+export(is_cpass_data)
 export(plot_subject_cycle_obs)
 export(plot_subject_data_and_diagnosis)
 export(plot_subject_diagnosis)
