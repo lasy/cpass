@@ -2,9 +2,8 @@
 
 #' Applies the C-PASS procedure for PMDD and MRMD diagnoses
 #'
-#' This function implements the C-PASS procedure and returns.
-#' @param data a data.frame that contains the symptoms reported by the subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{score}
-#' @param sep_event an optional character \code{"menses"} (default) or \code{"ovulation"} which declares if the pre- and post-menstrual phases are separated by the menses or by ovulation within a cycle (values of the column \code{CYCLE} in the provided data).
+#' This function implements the C-PASS procedure and returns a list of 6 tables of summaries and diagnoses at different levels (subjects, cycles, domains, etc).
+#' @param data a \code{cpass.data} object that contains the symptom scores reported by the subjects. To transform your data into a \code{cpass.data} object, use the function \code{as_cpass_data()}.
 #'
 #' @keywords CPASS C-PASS PMDD MRMD
 #' @return The CPASS function returns a list with 6 elements; each of them is a table (\code{data.frame}):
@@ -21,22 +20,17 @@
 #' @importFrom magrittr %>%
 #' @examples
 #' data(PMDD_data)
-#' input = PMDD_data
-#' output = CPASS(input)
-#'
+#' cpass_input = as_cpass_data(PMDD_data)
+#' output = CPASS(cpass_input)
+#' head(output$SUBJECT_level_diagnosis)
 
-CPASS = function(data, sep_event = c("menses","ovulation")){ #
+CPASS = function(data){
 
   # Check the data
-  .check_input_data(data)
-  # check PHASE is defined
-  if(!("PHASE" %in% colnames(data))){
-    # define PHASE
-  }
-  # ordering the PHASES
-  sep_event = sep_event[1]
-  if(sep_event == "menses"){data$PHASE = factor(data$PHASE, levels = c("pre","post"))}
+  if(!is_cpass_data(data)) stop("data must be of class 'cpass.data'. Use 'as_cpass_data(...)' to check the format of your data and transform them into 'cpass.data'.")
 
+  # Only keep the pre and post-menstrual phase:
+  data = data %>% dplyr::filter(PHASE %in% c("pre","post"))
 
   #### DRSP level diagnosis
   # enough observations in both phase
@@ -206,14 +200,117 @@ CPASS = function(data, sep_event = c("menses","ovulation")){ #
 }
 
 
+#' Transforms into a "cpass.data" object.
+#'
+#' This function transforms a data.frame into an object of class \code{"cpass.data"}.
+#' @param data a data.frame that contains symptoms reported subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{score}
+#' @param sep_event an optional character \code{"menses"} (default) or \code{"ovulation"} which defines if the pre- and post-menstrual phases are separated by the menses or by ovulation within a cycle (values of the column \code{CYCLE} in the provided data).
+#' @keywords CPASS C-PASS PMDD MRMD
+#' @return an object of class \code{"cpass.data"}.
+#' @export
+#' @importFrom magrittr %>%
+#' @examples
+#' random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), DRSP = 1:24)
+#' random_data$score = sample(1:6, nrow(random_data), replace = TRUE)
+#' class(random_data)
+#' cpass_data = as_cpass_data(random_data)
+#' class(cpass_data)
+#' colnames(cpass_data)
 
 
-.check_input_data = function(data){
-  required_columns = c("SUBJECT","CYCLE","DAY", "DRSP","score")
-  if(!all(c(required_columns %in% colnames(data)))){
+as_cpass_data = function(data, sep_event = c("menses", "ovulation"), verbose = TRUE){
+
+  d2 = data
+
+  possible_sep_event = c("ovulation","menses")
+  if(!any(sep_event %in% possible_sep_event)) stop(paste0("sep_event must be ",paste0("'",possible_sep_event,"'",collapse = " or ")))
+  sep_event = sep_event[1]
+
+  # CHECKING that all the necessary columns are present
+  required_columns = c("SUBJECT", "DRSP", "score")
+  if(!all(required_columns %in% colnames(d2))){
     stop(stringr::str_c("data must contain the following columns: ",
                         stringr::str_c(required_columns, collapse = "; ")))}
-  if(!all(unique(data$DRSP) %in% 1:24)){stop("DRSP must be integers from 1:24")}
 
-  return(TRUE)
+  day_identifying_columns = list(cpass_format = c("CYCLE","DAY"),
+                                 fw = c("natural_cycle_number","fw_day","cycle_length"),
+                                 bw = c("natural_cycle_number","bw_day","cycle_length"),
+                                 fw_bw = c("natural_cycle_number","fw_day","bw_day"),
+                                 first_day = c("date","is_first_day"),
+                                 bleeding = c("date","bleeding"))
+
+  format = "error"
+  for(format in names(day_identifying_columns))
+    if(all(day_identifying_columns[[format]] %in% colnames(d2))) break
+
+  if(format == "error"){
+    error_message = paste0("Cycles and cycledays must be defined with any of these combinations of columns:\n",
+                           paste0(day_identifying_columns, collapse = "\n"))
+    stop(error_message)
+  }
+
+  if(verbose & (format != "cpass_format"))
+    cat(paste0("Using columns ",paste0(day_identifying_columns[[format]],collapse = ", "),
+        " (format '",format,"') to define 'CYCLE' and 'DAY'."))
+
+  # if format is different than cpass, transform into CYCLE and DAY with sep_event (not implemented yet)
+  if(format != "cpass_format")
+    stop(
+      paste0("The format '",format,
+             "' (", paste0(day_identifying_columns[[format]], collapse = ", "),
+             ") has not been implemented yet. Please provide processed columns 'CYCLE' and 'DAY'.")
+      )
+
+  # DEFINING THE PHASE
+  d2 = d2 %>%
+    dplyr::mutate(
+      PHASE = case_when(
+        DAY %in% -7:-1 ~ "pre",
+        DAY %in% 4:10 ~ "post",
+        DAY %in% 1:3 ~ "menses",
+        TRUE ~ "peri-ovulatory"
+      )
+    )
+
+  if(sep_event == "menses"){
+    phase_levels = c("pre","menses","post","peri-ovulatory")
+  }else{
+    phase_levels = c("menses","post","peri-ovulatory","pre")
+  }
+  d2 = d2 %>% dplyr::mutate(PHASE = factor(PHASE, levels = phase_levels))
+
+
+  # CHECKING THE VALUES OF THE COLUMNS
+  # cycle
+  if((!all(d2$CYCLE>0))|(!all((d2$CYCLE%%1) == 0))) stop("Numbers in the CYCLE column must be integers greater than 0.\n")
+  # day
+  if(!all((d2$DAY%%1) == 0)) stop("Numbers in the DAY column must be integers.\n")
+  if(any(d2$DAY == 0)) stop("DAY must be counted forward from 1 (day 1 = first day of the menses) and backward from -1 (day - 1 = last day before the menses). There is no day 0.\n")
+  if(all(d2$DAY>0)) warning("There are no negative DAY, which will be interpreted as no data for the pre-menstrual phase.")
+  # drsp
+  if(!all(unique(d2$DRSP) %in% 1:24)) stop("DRSP must be integers from 1:24")
+  # score
+  if(!all(unique(d2$score[!is.na(d2$score)]) %in% 1:6)) stop("Values of 'score' must be in 1:6")
+
+
+  # SUBJECTS
+  d2 = d2 %>% dplyr::filter(!is.na(SUBJECT))
+  if(verbose) cat("Number of SUBJECTS: ", length(table(d2$SUBJECT)),"\n")
+
+  # CYCLES
+  if(verbose) cat("Total number of CYCLES: ", length(table(paste0(d2$SUBJECT,"-",d2$CYCLE))),"\n")
+
+
+  class(d2) <- append(class(d2),"cpass.data")
+  d2 = d2 %>% dplyr::select(SUBJECT, CYCLE, PHASE, DAY, DRSP, score)
+  d2
 }
+
+
+
+is_cpass_data = function(data){
+  if(!("cpass.data" %in% class(data))) return(FALSE)
+  ok = try(as_cpass_data(data = data, verbose = FALSE), silent = TRUE)
+  if(class(ok)[1] == "try-error") FALSE else TRUE
+}
+

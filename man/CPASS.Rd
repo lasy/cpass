@@ -4,12 +4,10 @@
 \alias{CPASS}
 \title{Applies the C-PASS procedure for PMDD and MRMD diagnoses}
 \usage{
-CPASS(data, sep_event = c("menses", "ovulation"))
+CPASS(data)
 }
 \arguments{
-\item{data}{a data.frame that contains the symptoms reported by the subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{score}}
-
-\item{sep_event}{an optional character \code{"menses"} (default) or \code{"ovulation"} which declares if the pre- and post-menstrual phases are separated by the menses or by ovulation within a cycle (values of the column \code{CYCLE} in the provided data).}
+\item{data}{a \code{cpass.data} object that contains the symptom scores reported by the subjects. To transform your data into a \code{cpass.data} object, use the function \code{as_cpass_data()}.}
 }
 \value{
 The CPASS function returns a list with 6 elements; each of them is a table (\code{data.frame}):
@@ -24,13 +22,13 @@ The CPASS function returns a list with 6 elements; each of them is a table (\cod
 }
 }
 \description{
-This function implements the C-PASS procedure and returns.
+This function implements the C-PASS procedure and returns a list of 6 tables of summaries and diagnoses at different levels (subjects, cycles, domains, etc).
 }
 \examples{
 data(PMDD_data)
-input = PMDD_data
-output = CPASS(input)
-
+cpass_input = as_cpass_data(PMDD_data)
+output = CPASS(cpass_input)
+head(output$SUBJECT_level_diagnosis)
 }
 \keyword{C-PASS}
 \keyword{CPASS}
