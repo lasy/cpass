@@ -59,6 +59,7 @@ plot_subject_diagnosis = function(data = data.frame()){
     coord_cartesian(ylim=c(1, 6))+
     ylab("")+xlab("")+
     facet_grid(DSM5_SYMPTOM_DOMAIN ~ PHASE, scale = "free_x", switch = "y")+
+    theme_minimal()+
     theme(strip.text.y.left = element_text(angle = 0, hjust = 1),
           strip.background.y = element_rect(fill = viz$strip.background.col, color = NA),
           strip.placement = "outside",
@@ -68,7 +69,6 @@ plot_subject_diagnosis = function(data = data.frame()){
           legend.position = "none",
           plot.title.position = "plot"
     )+
-    theme_minimal()+
     ggtitle("DRSP daily averages")
   #g_daily_summary
 
@@ -96,9 +96,9 @@ plot_subject_diagnosis = function(data = data.frame()){
                     sec.axis = sec_axis(~.,breaks = 1:length(drsp_desc),labels = drsp_desc))+
     guides(col = FALSE)+
     facet_grid(DSM5_SYMPTOM_DOMAIN ~ ., scale = "free_y")+
+    theme_minimal()+
     theme(strip.text = element_blank(),
           panel.spacing.y = unit(5,"pt"))+
-    theme_minimal()+
     ggtitle("Av. % change")
   #g_summary
 
@@ -196,6 +196,7 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE){
     scale_x_continuous(breaks = c(-7,-4,-1,1,4,7,10), minor_breaks = c(-7:-1,4:10))+
     guides(size = FALSE)+ # col = FALSE
     facet_grid(DSM5_SYMPTOM_DOMAIN ~ PHASE, scale = "free", space = "free", switch = "y")+
+    theme_minimal()+
     theme(strip.text.y.left = element_text(angle = 0, hjust = 1),
           strip.background.y = element_rect(fill = viz$strip.background.col, color = NA),
           strip.placement = "outside",
@@ -205,7 +206,6 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE){
           plot.title.position = "plot")+
     ylab("")+
     xlab("")+
-    theme_minimal()+
     ggtitle(stringr::str_c("CYCLE: ", unique(data$CYCLE),title_add))
   #g
 
