@@ -2,7 +2,7 @@
 % Please edit documentation in R/CPASS_functions.R
 \name{as_cpass_data}
 \alias{as_cpass_data}
-\title{Transforms into a "cpass.data" object.}
+\title{Transforms into a "cpass" data.frame.}
 \usage{
 as_cpass_data(data, sep_event = c("menses", "ovulation"), verbose = TRUE)
 }
@@ -12,17 +12,15 @@ as_cpass_data(data, sep_event = c("menses", "ovulation"), verbose = TRUE)
 \item{sep_event}{an optional character \code{"menses"} (default) or \code{"ovulation"} which defines if the pre- and post-menstrual phases are separated by the menses or by ovulation within a cycle (values of the column \code{CYCLE} in the provided data).}
 }
 \value{
-an object of class \code{"cpass.data"}.
+a data.frame.
 }
 \description{
-This function transforms a data.frame into an object of class \code{"cpass.data"}.
+This function checks if the data can be used by the CPASS functions and transforms it into a "cpass" data.frame.
 }
 \examples{
 random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), DRSP = 1:24)
 random_data$score = sample(1:6, nrow(random_data), replace = TRUE)
-class(random_data)
 cpass_data = as_cpass_data(random_data)
-class(cpass_data)
 colnames(cpass_data)
 }
 \keyword{C-PASS}

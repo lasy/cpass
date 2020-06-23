@@ -2,7 +2,7 @@
 % Please edit documentation in R/CPASS_functions.R
 \name{is_cpass_data}
 \alias{is_cpass_data}
-\title{Checks if data is a "cpass.data" object.}
+\title{Checks if data is a "CPASS" data.frame.}
 \usage{
 is_cpass_data(data)
 }
@@ -13,14 +13,12 @@ is_cpass_data(data)
 a logical.
 }
 \description{
-Checks if data is a "cpass.data" object.
+Checks if data is a "CPASS" data.frame.
 }
 \examples{
 random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), DRSP = 1:24)
 random_data$score = sample(1:6, nrow(random_data), replace = TRUE)
-class(random_data)
 cpass_data = as_cpass_data(random_data)
-class(cpass_data)
 colnames(cpass_data)
 is_cpass_data(random_data)
 is_cpass_data(cpass_data)
