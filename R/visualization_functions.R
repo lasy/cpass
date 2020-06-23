@@ -28,7 +28,7 @@ plot_subject_diagnosis = function(data = data.frame()){
   gtitle = ggplot()
   gtitle = gtitle +
     ggtitle(
-      title = stringr::str_c(
+      stringr::str_c(
         "SUBJECT : ",subject,"   ||   ",subject_diagnosis$SUBJECT_level_diagnosis$dx,""),
       subtitle = stringr::str_c(
         "# CYCLES total: ", subject_diagnosis$SUBJECT_level_diagnosis$NCycles_tot,"   ||   ",
