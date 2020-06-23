@@ -74,7 +74,8 @@ CPASS = function(data){
   output_clearance = data   %>%
     dplyr::filter(PHASE == "post") %>%
     dplyr::group_by(SUBJECT, CYCLE, DRSP) %>%
-    dplyr::summarise(max_sev_post = max(score, na.rm = TRUE))
+    dplyr::summarise(max_sev_post = suppressWarnings(max(score, na.rm = TRUE))) %>%
+    dplyr::mutate(max_sev_post = ifelse(is.infinite(max_sev_post),4,max_sev_post))
 
   output_DRSP_level = dplyr::full_join(output_DRSP_level, output_clearance, by = c("SUBJECT","CYCLE","DRSP"))
 
