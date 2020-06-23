@@ -46,7 +46,8 @@ CPASS = function(data){
   output_abs_sev = data   %>%
     dplyr::filter(PHASE == "pre") %>%
     dplyr::group_by(SUBJECT, CYCLE, DRSP) %>%
-    dplyr::summarise(max_sev_pre = max(score, na.rm = TRUE),
+    dplyr::summarise(max_sev_pre = suppressWarnings(max(score, na.rm = TRUE)),
+                     max_sev_pre = ifelse(is.infinite(max_sev_pre),NA,max_sev_pre),
                      n_days_high_score = sum(score >= 4 , na.rm = TRUE))
   output_DRSP_level =
     dplyr::full_join(output_DRSP_level, output_abs_sev, by = c("SUBJECT","CYCLE","DRSP"))
