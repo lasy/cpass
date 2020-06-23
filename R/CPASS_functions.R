@@ -80,15 +80,15 @@ CPASS = function(data){
   # DRSP level diagnosis for this cycle
   output_DRSP_level = output_DRSP_level %>%
     dplyr::mutate(DRSP_meets_criteria =
-             at_least_n_obs & # enough observations
-             (max_sev_pre >= 4) & # high score pre
-             (n_days_high_score >= 2) & # enough days with high score pre
-             (percent_change >= 30) &  # at least 30% change in average scores between pre and post
-             (max_sev_post < 4) # clearance
+                    at_least_n_obs & # enough observations
+                    (max_sev_pre >= 4) & # high score pre
+                    (n_days_high_score >= 2) & # enough days with high score pre
+                    (percent_change >= 30) &  # at least 30% change in average scores between pre and post
+                    (max_sev_post < 4) # clearance
     )
 
   output_DRSP_level =
-    dplyr::full_join(output_DRSP_level, dsm5_dict %>% select(DRSP,DSM5_SYMPTOM_DOMAIN,SYMPTOM_CATEGORY), by = "DRSP")
+    dplyr::full_join(output_DRSP_level, dsm5_dict %>% dplyr::select(DRSP,DSM5_SYMPTOM_DOMAIN,SYMPTOM_CATEGORY), by = "DRSP")
 
 
   #### DSM-5 DOMAINS level diagnosis
@@ -105,7 +105,7 @@ CPASS = function(data){
   output_CYCLE_level = data %>%
     dplyr::group_by(SUBJECT, CYCLE, PHASE, DAY) %>%
     dplyr::summarize(n_DRSP = sum(!is.na(score)),
-              has_X_DRSP = n_DRSP >= X) %>%
+                     has_X_DRSP = n_DRSP >= X) %>%
     dplyr::ungroup() %>%
     dplyr::group_by(SUBJECT, CYCLE, PHASE) %>%
     dplyr::summarize(at_least_nD_days = sum(has_X_DRSP, na.rm = TRUE) >= nD)  %>%
@@ -143,10 +143,10 @@ CPASS = function(data){
   # PMDD or MRMD diagnosis for the cycle
   output_CYCLE_level = output_CYCLE_level %>%
     dplyr::mutate(diagnosis =
-             case_when(
-               !DSM5_A ~ "no diagnosis",
-               DSM5_A & DSM5_B ~ "PMDD",
-               DSM5_A & !DSM5_B ~ "MRMD")
+                    dplyr::case_when(
+                      !DSM5_A ~ "no diagnosis",
+                      DSM5_A & DSM5_B ~ "PMDD",
+                      DSM5_A & !DSM5_B ~ "MRMD")
     ) %>%
     dplyr::arrange(SUBJECT, CYCLE) %>%
     dplyr::select(SUBJECT, CYCLE, included, n_DSM5_DOMAINS_meeting_criteria, DSM5_A, DSM5_B, diagnosis)
@@ -156,7 +156,7 @@ CPASS = function(data){
   output_SUBJECT_level = output_CYCLE_level %>%
     dplyr::group_by(SUBJECT) %>%
     dplyr::summarize(
-      NCycles_tot = n(),
+      NCycles_tot = dplyr::n(),
       NCycles = sum(included),
       N_PMDD = ifelse(NCycles>1, sum(diagnosis == "PMDD"), NA),
       N_MRMD = ifelse(NCycles>1, sum(DSM5_A), NA),
@@ -166,24 +166,26 @@ CPASS = function(data){
       MRMD = (N_MRMD >= 2) & (mrmdcycprop >= 0.5), # CHECK the 2nd part with Tory and Liisa
       dxcat = ifelse(NCycles == 1,
                      NA,
-                     case_when(PMDD ~ 2,
-                               (!PMDD & MRMD) ~ 1,
-                               TRUE ~0)
-                      ), #dxcat is the diagnosis category
+                     dplyr::case_when(PMDD ~ 2,
+                                      (!PMDD & MRMD) ~ 1,
+                                      TRUE ~0)
+      ), #dxcat is the diagnosis category
       dx = c("no diagnosis","MRMD","PMDD")[dxcat+1],
       avgdsm5crit = sum(n_DSM5_DOMAINS_meeting_criteria * included, na.rm = TRUE)/NCycles
     )
 
   #### summaries of DRSP items
-  data = dplyr::full_join(data, output_CYCLE_level %>%  select(SUBJECT, CYCLE, included), by = c("SUBJECT","CYCLE"))
+  data = dplyr::full_join(data, output_CYCLE_level %>%  dplyr::select(SUBJECT, CYCLE, included), by = c("SUBJECT","CYCLE"))
 
   daily_summary_DRSP = data %>%
     dplyr::group_by(SUBJECT, DRSP, PHASE, DAY) %>%
     dplyr::summarise(ave = mean(score, na.rm  = TRUE),
-              med = median(score, na.rm  = TRUE),
-              min = min(score, na.rm  = TRUE),
-              max = max(score, na.rm  = TRUE)
-              )
+                     med = median(score, na.rm  = TRUE),
+                     min = suppressWarnings(min(score, na.rm  = TRUE)),
+                     max = suppressWarnings(max(score, na.rm  = TRUE))
+    ) %>%
+    dplyr::mutate(min = ifelse(is.infinite(min),NA, min),
+                  max = ifelse(is.infinite(max),NA, max))
 
   summary_DRSP = output_DRSP_level %>%
     dplyr::group_by(SUBJECT, DRSP) %>%
@@ -200,23 +202,20 @@ CPASS = function(data){
 }
 
 
-#' Transforms into a "cpass.data" object.
+#' Transforms into a "cpass" data.frame.
 #'
-#' This function transforms a data.frame into an object of class \code{"cpass.data"}.
+#' This function checks if the data can be used by the CPASS functions and transforms it into a "cpass" data.frame.
 #' @param data a data.frame that contains symptoms reported subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{score}
 #' @param sep_event an optional character \code{"menses"} (default) or \code{"ovulation"} which defines if the pre- and post-menstrual phases are separated by the menses or by ovulation within a cycle (values of the column \code{CYCLE} in the provided data).
 #' @keywords CPASS C-PASS PMDD MRMD
-#' @return an object of class \code{"cpass.data"}.
+#' @return a data.frame.
 #' @export
 #' @importFrom magrittr %>%
 #' @examples
 #' random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), DRSP = 1:24)
 #' random_data$score = sample(1:6, nrow(random_data), replace = TRUE)
-#' class(random_data)
 #' cpass_data = as_cpass_data(random_data)
-#' class(cpass_data)
 #' colnames(cpass_data)
-
 
 as_cpass_data = function(data, sep_event = c("menses", "ovulation"), verbose = TRUE){
 
@@ -251,7 +250,7 @@ as_cpass_data = function(data, sep_event = c("menses", "ovulation"), verbose = T
 
   if(verbose & (format != "cpass_format"))
     cat(paste0("Using columns ",paste0(day_identifying_columns[[format]],collapse = ", "),
-        " (format '",format,"') to define 'CYCLE' and 'DAY'."))
+               " (format '",format,"') to define 'CYCLE' and 'DAY'."))
 
   # if format is different than cpass, transform into CYCLE and DAY with sep_event (not implemented yet)
   if(format != "cpass_format")
@@ -259,12 +258,12 @@ as_cpass_data = function(data, sep_event = c("menses", "ovulation"), verbose = T
       paste0("The format '",format,
              "' (", paste0(day_identifying_columns[[format]], collapse = ", "),
              ") has not been implemented yet. Please provide processed columns 'CYCLE' and 'DAY'.")
-      )
+    )
 
   # DEFINING THE PHASE
   d2 = d2 %>%
     dplyr::mutate(
-      PHASE = case_when(
+      PHASE = dplyr::case_when(
         DAY %in% -7:-1 ~ "pre",
         DAY %in% 4:10 ~ "post",
         DAY %in% 1:3 ~ "menses",
@@ -301,12 +300,10 @@ as_cpass_data = function(data, sep_event = c("menses", "ovulation"), verbose = T
   if(verbose) cat("Total number of CYCLES: ", length(table(paste0(d2$SUBJECT,"-",d2$CYCLE))),"\n")
 
   d2 = d2 %>% dplyr::select(SUBJECT, CYCLE, PHASE, DAY, DRSP, score)
-
-  class(d2) <- append(class(d2),"cpass.data")
   d2
 }
 
-#' Checks if data is a "cpass.data" object.
+#' Checks if data is a "CPASS" data.frame.
 #'
 #' @param data a data.frame that contains symptoms reported subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{score}
 #' @keywords CPASS C-PASS PMDD MRMD
@@ -316,15 +313,12 @@ as_cpass_data = function(data, sep_event = c("menses", "ovulation"), verbose = T
 #' @examples
 #' random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), DRSP = 1:24)
 #' random_data$score = sample(1:6, nrow(random_data), replace = TRUE)
-#' class(random_data)
 #' cpass_data = as_cpass_data(random_data)
-#' class(cpass_data)
 #' colnames(cpass_data)
 #' is_cpass_data(random_data)
 #' is_cpass_data(cpass_data)
 
 is_cpass_data = function(data){
-  if(!("cpass.data" %in% class(data))) return(FALSE)
   ok = try(as_cpass_data(data = data, verbose = FALSE), silent = TRUE)
   if(class(ok)[1] == "try-error") FALSE else TRUE
 }
