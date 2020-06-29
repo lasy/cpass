@@ -24,7 +24,7 @@
 #' output = CPASS(cpass_input)
 #' head(output$SUBJECT_level_diagnosis)
 
-CPASS = function(data){
+CPASS = function(data, PME = FALSE){
 
   # Check the data
   if(!is_cpass_data(data)) stop("data must be of class 'cpass.data'. Use 'as_cpass_data(...)' to check the format of your data and transform them into 'cpass.data'.")
@@ -88,6 +88,15 @@ CPASS = function(data){
                     (percent_change >= 30) &  # at least 30% change in average scores between pre and post
                     (max_sev_post < 4) # clearance
     )
+  if(PME){
+    output_DRSP_level = output_DRSP_level %>%
+      dplyr::mutate(DRSP_meets_PME_criteria =  # same but without the clearance criteria
+                      at_least_n_obs &
+                      (max_sev_pre >= 4) &
+                      (n_days_high_score >= 2) &
+                      (percent_change >= 30)
+      )
+  }
 
   output_DRSP_level =
     dplyr::full_join(output_DRSP_level, dsm5_dict %>% dplyr::select(DRSP,DSM5_SYMPTOM_DOMAIN,SYMPTOM_CATEGORY), by = "DRSP")
