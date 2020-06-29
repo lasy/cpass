@@ -4,10 +4,15 @@
 \alias{plot_subject_diagnosis}
 \title{Visualize the subject diagnosis}
 \usage{
-plot_subject_diagnosis(data = data.frame())
+plot_subject_diagnosis(
+  data = data.frame(),
+  color_summary = c("complementary", "rainbow")
+)
 }
 \arguments{
 \item{data}{a data.frame that contains the symptoms reported by ONE subject. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{score}}
+
+\item{colors_summary}{string. Either \code{"complementary"} (default) or \code{"rainbow"} specifying the type of color scheme for the DRSP items in the diagnosis summary. If \code{"complementary"}, the colors are chosen complementary within a domain; if \code{"rainbow"}, the DRSP colors are different for each item and chosen from a rainbow palette.}
 }
 \value{
 a ggplot object
@@ -17,7 +22,7 @@ This function calls the \code{CPASS} function and provides a visualization of th
 }
 \examples{
 data(PMDD_data)
-input = PMDD_data \%>\% filter(SUBJECT == 2)
+input = PMDD_data \%>\% filter(SUBJECT == 2) \%>\%  as_cpass_data()
 plot_subject_diagnosis(data = input)
 }
 \keyword{C-PASS}

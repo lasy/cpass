@@ -9,7 +9,8 @@ plot_subject_data_and_diagnosis(
   save_as_pdf = TRUE,
   pdf_path = "",
   pdf_name = "",
-  max_score_color = "tomato"
+  color_max_score = "tomato",
+  color_summary = c("complementary", "rainbow")
 )
 }
 \arguments{
@@ -26,6 +27,10 @@ By default, the path is an empty string so the pdf is be saved in the current wo
 
 \item{pdf_name}{string. Specifies the name of the pdf.
 By default, the name of the pdf is \code{CPASS_SUBJECT_X.pdf}, where \code{X} is replaced by the subject unique identifier.}
+
+\item{color_max_score}{string specifying the color of a score of 6 (the maximal score) reported by a subject. Any standard color format specification is accepted, i.e. one of the R built-in color names (e.g. "tomato" (default); type \code{colors()} to see the names of all R built-in colors), an RGB hex code (e.g. "#AA2199") or a color specified via one of the color/palette functions (e.g. hsv(0.1,0.9,0.9))}
+
+\item{colors_summary}{string. Either \code{"complementary"} (default) or \code{"rainbow"} specifying the type of color scheme for the DRSP items in the diagnosis summary. If \code{"complementary"}, the colors are chosen complementary within a domain; if \code{"rainbow"}, the DRSP colors are different for each item and chosen from a rainbow palette.}
 }
 \value{
 a ggplot object if \code{save_as_pdf = FALSE}. The same object is returned invisibly by default (\code{save_as_pdf = TRUE}).
@@ -34,8 +39,9 @@ a ggplot object if \code{save_as_pdf = FALSE}. The same object is returned invis
 By default, this function saves the visualization in a pdf. The pdf heigth scales with the number of cycles reported for the subject.
 }
 \examples{
+
 data(PMDD_data)
-input = PMDD_data \%>\% filter(SUBJECT == 2)
+input = PMDD_data \%>\% filter(SUBJECT == 2) \%>\%  as_cpass_data()
 p = plot_subject_data_and_diagnosis(data = input)
 p
 }
