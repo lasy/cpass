@@ -1,0 +1,96 @@
+---
+title: "Introduction to the 'cpass' package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{cpass_vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Installation of the `cpass` package
+
+Currently, the `cpass` package is hosted on the package author github repository.
+
+To install it from this github repository, install and load the package `devtool` by running:
+
+```{r devtools, eval = FALSE}
+install.packages("devtools")
+```
+
+```{r loading-devtools}
+library(devtools)
+```
+
+
+then install and load the `cpass` package by running:
+
+```{r cpass-package, eval = FALSE}
+devtools::install_github("lasy/cpass", dependencies = TRUE)
+```
+
+```{r loading-cpass-package}
+library(cpass)
+```
+
+
+Note that the `cpass` package depends on several other packages (mostly packages from the [`tidyverse` suite](https://www.tidyverse.org/)).
+
+This vignette also uses many of the `tidyverse` functions so it is recommended to install and load the `tidyverse` suite by running:
+
+```{r tidyverse, eval = FALSE}
+install.packages("tidyverse")
+```
+
+```{r loading-tidyverse}
+library(tidyverse)
+```
+
+
+# Demo dataset
+
+To explore the `cpass` package, we will use a demo dataset with the data (daily ratings) from 20 subjects. This demo dataset is attached to the `cpass` package and documented in `?PMDD_data`. 
+
+To load this data into the environment, run
+
+```{r demo-dataset}
+d = PMDD_data
+
+dim(d)
+head(d)
+```
+
+
+# Overview of the package functions 
+
+The `cpass` package contains 3 types of functions:
+
+1. a data formatting function `as_cpass_data()` which first checks the format of the data you would like to analyse with the `cpass` package, then formats it for diagnosis and/or visualizations
+
+2. a PMDD/MRMD/PME diagnosis function `CPASS()`
+
+3. visualization functions: `plot_subject_obs()`, `plot_subject_cycle_obs()`, `plot_subject_diagnosis()` and `plot_subject_data_and_diagnosis()`
+
+A typical `cpass` workflow consists in
+
+* loading (and formatting) raw data from a `.csv` or `.xls` file
+
+* preparing them for diagnosis with the `as_cpass_data()`
+
+* running the `CPASS()` function on these data and extract some general statistics about the diagnoses
+
+* visualy explore the data of specific subjects with the visualization functions.
+
+
+# Package demo
+
+## Formating 
+
+
