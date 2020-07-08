@@ -91,6 +91,93 @@ A typical `cpass` workflow consists in
 
 # Package demo
 
-## Formating 
+## Formating raw data into cpass_data
+
+The function `as_cpass_data()` transforms raw data into `cpass_data`. The data provided as argument to `as_cpass_data()` must be in long format, _i.e._ one row per subject, cycle, day and DRSP item. 
+
+```{r as-cpass-data}
+
+input = as_cpass_data(d)
+
+```
+
+
+For the full documentation, type `?as_cpass_data` in the `R console`.
+
+
+## Running the CPASS procedure for PMDD/MRMD/PME diagnosis
+
+Now that the data is formatted, it can be passed to the `CPASS()` function, which will run the CPASS procedure for PMDD/MRMD (and optionally PME) diagnoses:
+
+```{r CPASS}
+
+diagnosis = CPASS(input)
+
+```
+
+For the full documentation, type `?CPASS` in the `R console`.
+
+The `CPASS` function returns a list of 6 tables:
+
+```{r CPASS-results}
+
+names(diagnosis)
+
+```
+
+
+Let's have a look at the first table:
+
+```{r}
+diagnosis$SUBJECT_level_diagnosis
+```
+
+
+This table has the overall diagnoses for the 20 subjects.
+
+```{r}
+table(diagnosis$SUBJECT_level_diagnosis$dx)
+```
+
+
+3 subjects (~15%) have a PMDD diagnosis, the same number a MRMD diagnosis and 9 subjects (~45%) have no diagnosis for their reported symptoms.
+
+We can dive deeper into the data of particular subjects.
+For example, we can check the cycle-level diagnosis of subject `#47` for which there was 3 cycles of data.
+
+```{r}
+diagnosis$CYCLE_level_diagnosis %>% filter(SUBJECT == 47)
+```
+
+Once cycle of this subject (cycle #2) received a PMDD diagnosis while the symptoms reported in the other cycles did not meet the criteria for PMDD or MRMD.
+
+We can dive even deeper and look at the DRSP items during this cycle #2:
+
+```{r}
+diagnosis$DRSP_level_diagnosis %>% filter(SUBJECT == 47, CYCLE == 2)
+```
+
+As this is a large table which provides the details of the criteria met for each item, we may only consider the following columns for now:
+
+```{r}
+diagnosis$DRSP_level_diagnosis %>% filter(SUBJECT == 47, CYCLE == 2) %>% select(SUBJECT, CYCLE,DRSP, DRSP_meets_criteria, DSM5_SYMPTOM_DOMAIN)
+```
+
+And we observe that this subject mostly experienced severe anxiety, inability to control their mood, anger and feeling of overwhelm in the pre-menstrual phase of cycle 2.
+
+
+## Visualizing subjects data
+
+While the subject diagnoses can all be explored via the tables in the `diagnosis` variable, the `cpass` package comes with visualization functions which may help in the exploration of specific subject's data.
+
+For example, one can have an overview of a subject diagnosis with the `plot_subject_diagnosis()` function.
+
+For the same subject #47, we run:
+
+```{r plot-subject-diagnosis, fig.width=10, fig.height=8}
+plot_subject_diagnosis(input %>% filter(SUBJECT == 47))
+```
+
+
 
 
