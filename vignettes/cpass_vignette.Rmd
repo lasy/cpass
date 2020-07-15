@@ -1,5 +1,5 @@
 ---
-title: "Introduction to the 'cpass' package"
+title: "Introduction to the `cpass` package"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{cpass_vignette}
@@ -17,15 +17,16 @@ knitr::opts_chunk$set(
 
 # Installation of the `cpass` package
 
-Currently, the `cpass` package is hosted on the package author github repository.
+Currently, the `cpass` package is hosted on the package author's github repository.
 
-To install it from this github repository, install and load the package `devtool` by running:
+To install it from github, install and load the package `devtool` by running:
 
 ```{r devtools, eval = FALSE}
 install.packages("devtools")
 ```
 
-```{r loading-devtools}
+
+```{r loading-devtools, warning=FALSE}
 library(devtools)
 ```
 
@@ -43,22 +44,27 @@ library(cpass)
 
 Note that the `cpass` package depends on several other packages (mostly packages from the [`tidyverse` suite](https://www.tidyverse.org/)).
 
-This vignette also uses many of the `tidyverse` functions so it is recommended to install and load the `tidyverse` suite by running:
+This vignette also uses `tidyverse` functions so it is recommended to install and load the `tidyverse` suite by running:
+
+
 
 ```{r tidyverse, eval = FALSE}
 install.packages("tidyverse")
 ```
 
-```{r loading-tidyverse}
+
+
+```{r loading-tidyverse, warning=FALSE}
 library(tidyverse)
 ```
+
 
 
 # Demo dataset
 
 To explore the `cpass` package, we will use a demo dataset with the data (daily ratings) from 20 subjects. This demo dataset is attached to the `cpass` package and documented in `?PMDD_data`. 
 
-To load this data into the environment, run
+To load this data into the environment, run:
 
 ```{r demo-dataset}
 d = PMDD_data
@@ -91,14 +97,12 @@ A typical `cpass` workflow consists in
 
 # Package demo
 
-## Formating raw data into cpass_data
+## Formating raw data into `cpass_data`
 
 The function `as_cpass_data()` transforms raw data into `cpass_data`. The data provided as argument to `as_cpass_data()` must be in long format, _i.e._ one row per subject, cycle, day and DRSP item. 
 
 ```{r as-cpass-data}
-
 input = as_cpass_data(d)
-
 ```
 
 
@@ -107,12 +111,10 @@ For the full documentation, type `?as_cpass_data` in the `R console`.
 
 ## Running the CPASS procedure for PMDD/MRMD/PME diagnosis
 
-Now that the data is formatted, it can be passed to the `CPASS()` function, which will run the CPASS procedure for PMDD/MRMD (and optionally PME) diagnoses:
+Now that the data is formatted, it can be passed to the `CPASS()` function. This function will run the CPASS procedure for PMDD/MRMD (and optionally PME) diagnoses:
 
 ```{r CPASS}
-
 diagnosis = CPASS(input)
-
 ```
 
 For the full documentation, type `?CPASS` in the `R console`.
@@ -120,9 +122,7 @@ For the full documentation, type `?CPASS` in the `R console`.
 The `CPASS` function returns a list of 6 tables:
 
 ```{r CPASS-results}
-
 names(diagnosis)
-
 ```
 
 
@@ -133,23 +133,23 @@ diagnosis$SUBJECT_level_diagnosis
 ```
 
 
-This table has the overall diagnoses for the 20 subjects.
+This table has the diagnoses of the 20 subjects.
 
 ```{r}
 table(diagnosis$SUBJECT_level_diagnosis$dx)
 ```
 
 
-3 subjects (~15%) have a PMDD diagnosis, the same number a MRMD diagnosis and 9 subjects (~45%) have no diagnosis for their reported symptoms.
+3 subjects (~15%) have a PMDD diagnosis, 3 others have a MRMD diagnosis and 9 subjects (~45%) have no diagnosis for their reported symptoms.
 
 We can dive deeper into the data of particular subjects.
-For example, we can check the cycle-level diagnosis of subject `#47` for which there was 3 cycles of data.
+For example, we can check the cycle-level diagnosis of subject `#47` who reported DRSP scores for 3 cycles.
 
 ```{r}
 diagnosis$CYCLE_level_diagnosis %>% filter(SUBJECT == 47)
 ```
 
-Once cycle of this subject (cycle #2) received a PMDD diagnosis while the symptoms reported in the other cycles did not meet the criteria for PMDD or MRMD.
+The second cycle of this subject fulfilled the criteria for a cycle-level PMDD diagnosis. The symptoms reported in the other cycles did not meet the criteria for PMDD nor for MRMD.
 
 We can dive even deeper and look at the DRSP items during this cycle #2:
 
@@ -157,10 +157,10 @@ We can dive even deeper and look at the DRSP items during this cycle #2:
 diagnosis$DRSP_level_diagnosis %>% filter(SUBJECT == 47, CYCLE == 2)
 ```
 
-As this is a large table which provides the details of the criteria met for each item, we may only consider the following columns for now:
+As this is a large table which provides the criteria details for each item, we may only consider the following columns for now:
 
 ```{r}
-diagnosis$DRSP_level_diagnosis %>% filter(SUBJECT == 47, CYCLE == 2) %>% select(SUBJECT, CYCLE,DRSP, DRSP_meets_criteria, DSM5_SYMPTOM_DOMAIN)
+diagnosis$DRSP_level_diagnosis %>% filter(SUBJECT == 47, CYCLE == 2) %>% select(SUBJECT, CYCLE,DRSP, DRSP_meets_criteria, DSM5_SYMPTOM_DOMAIN) %>%  as.data.frame()
 ```
 
 And we observe that this subject mostly experienced severe anxiety, inability to control their mood, anger and feeling of overwhelm in the pre-menstrual phase of cycle 2.
@@ -168,16 +168,76 @@ And we observe that this subject mostly experienced severe anxiety, inability to
 
 ## Visualizing subjects data
 
-While the subject diagnoses can all be explored via the tables in the `diagnosis` variable, the `cpass` package comes with visualization functions which may help in the exploration of specific subject's data.
+While the subject data and diagnoses can be explore by inspecting these tables, the `cpass` package comes with visualization functions which may help in the investigagion of specific subject's data.
+
+### Visualizing subject's diagnoses
 
 For example, one can have an overview of a subject diagnosis with the `plot_subject_diagnosis()` function.
 
 For the same subject #47, we run:
 
-```{r plot-subject-diagnosis, fig.width=10, fig.height=8}
+```{r plot-subject-diagnosis, fig.width=7, fig.height=5}
 plot_subject_diagnosis(input %>% filter(SUBJECT == 47))
 ```
 
+The top panel provides the subject ID, their diagnosis, the number of cycles for which some scores were provided and the number of cycles that had enough data to be included in the diagnosis procedure. It also provides the number of cycles with a PMDD or a MRMD diagnosis.
 
+### Visualizing subject's reported scores
+
+From the `CYCLE_level_diagnosis` table from this subject, we know that cycle #2 fulfilled the PMDD criteria while other cycles did not.
+
+To explore the scores reported during the 2nd cycle, the function `plot_subject_cycle_obs()` can be used.
+This function visualizes the reported score for a given cycle:
+
+
+```{r plot-cycle, fig.height=6, fig.width=7}
+plot_subject_cycle_obs(data = input %>% filter(SUBJECT == 47, CYCLE == 2))
+```
+
+
+The two left panels visualize the reported scores with the x-axis being the cycle-days (time) and there is one line per DRSP item on the y-axis. The score of each item for each day is writen on the corresponding (x,y) rectangle. The color of the rectangle is proportional to the score. Low scores (1) are gray, high scores (6) are red. Missing scores are reprensented by transparent rectangles. The panels on the right visualize the items or domains or cycle that fulfil the PMDD criteria. If they do not meet the criteria, their corresponding rectangle is light-gray, if they meet the criteria, they are red. Items that are excluded from the diagnosis procedure are in dark-gray.
+
+For this subject, we can compare their second cycle (above) with their third cycle:
+
+```{r plot-cycle-3, fig.height=6, fig.width=7}
+plot_subject_cycle_obs(data = input %>% filter(SUBJECT == 47, CYCLE == 3))
+```
+
+Note that the reported scores can be visualized without the diagnosis with the option `add_diagnosis = FALSE`
+
+```{r plot-cycle-no-d, fig.height=6, fig.width=5}
+plot_subject_cycle_obs(data = input %>% filter(SUBJECT == 47, CYCLE == 2), add_diagnosis = FALSE)
+```
+
+And that the color of the high score can be changed with the option `color_max_score = "desired_color"`:
+
+
+```{r plot-cycle-color, fig.height=6, fig.width=7}
+plot_subject_cycle_obs(data = input %>% filter(SUBJECT == 47, CYCLE == 2), color_max_score = "turquoise")
+```
+
+It is also possible to visualize all cycles of a user at once with the function `plot_subject_obs()`
+
+```{r plot-obs, fig.height=18, fig.width=7}
+plot_subject_obs(data = input %>% filter(SUBJECT == 47))
+```
+
+### Visualizing subject's reported scores and diagnosis
+
+And finally, the function `plot_subject_data_and_diagnosis()` is useful to visualize at once all reported scores and the diagnosis summaries of a given subject.
+
+Because this function may return large visualizations, by default, it prints the visualization to a pdf that has an appropriate size, i.e. a height proportional to the number of cycles reported by the subject.
+
+By default, the pdf is saved in the current directory and the filename specifies the subject ID but both the path and the pdf name can be specified via the options `pdf_path` and `pdf_name`.
+
+The pdf option can also be turned off with the option `save_as_pdf = FALSE`. In this case, calling the function prints the visualization in R.
+
+If the function is called with the option `save_as_pdf = TRUE` (default), the visualization is returned silently but could be catch by a variable (e.g. `viz = plot_subject_data_and_diagnosis(data); viz`).
+
+```{r plot-all, fig.height=25, fig.width=7}
+
+plot_subject_data_and_diagnosis(data = input %>% filter(SUBJECT == 47), save_as_pdf = FALSE)
+
+```
 
 
