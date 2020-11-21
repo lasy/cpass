@@ -9,7 +9,7 @@ Description: This package is an implementation of the C-PASS (Carolina Premenstr
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Imports: 
     magrittr,
     ggplot2,
@@ -18,7 +18,8 @@ Imports:
     cowplot,
     purrr,
     tidyr,
-    stringr
+    stringr,
+    ggpubr
 Depends: 
     R (>= 2.10)
 Suggests: 

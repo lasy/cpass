@@ -142,7 +142,19 @@ table(diagnosis$SUBJECT_level_diagnosis$dx)
 
 3 subjects (~15%) have a PMDD diagnosis, 3 others have a MRMD diagnosis and 9 subjects (~45%) have no diagnosis for their reported symptoms.
 
-We can dive deeper into the data of particular subjects.
+The remaining 5 subjects did not have sufficient data to make a diagnosis:
+
+```{r}
+
+diagnosis$SUBJECT_level_diagnosis %>% 
+  filter(is.na(dx))
+
+```
+
+We see that each of these 5 subjects only reported DRSP for one cycle (instead of the two required).
+
+
+Now, we can dive deeper into the data of particular subjects.
 For example, we can check the cycle-level diagnosis of subject `#47` who reported DRSP scores for 3 cycles.
 
 ```{r}
@@ -154,13 +166,18 @@ The second cycle of this subject fulfilled the criteria for a cycle-level PMDD d
 We can dive even deeper and look at the DRSP items during this cycle #2:
 
 ```{r}
-diagnosis$DRSP_level_diagnosis %>% filter(SUBJECT == 47, CYCLE == 2)
+diagnosis$ITEM_level_diagnosis %>% filter(SUBJECT == 47, CYCLE == 2)
 ```
 
 As this is a large table which provides the criteria details for each item, we may only consider the following columns for now:
 
 ```{r}
-diagnosis$DRSP_level_diagnosis %>% filter(SUBJECT == 47, CYCLE == 2) %>% select(SUBJECT, CYCLE,DRSP, DRSP_meets_criteria, DSM5_SYMPTOM_DOMAIN) %>%  as.data.frame()
+
+diagnosis$ITEM_level_diagnosis %>% 
+  filter(SUBJECT == 47, CYCLE == 2) %>% 
+  select(SUBJECT, CYCLE,ITEM, ITEM_meets_PMDD_criteria, DSM5_SYMPTOM_DOMAIN) %>%  
+  as.data.frame()
+
 ```
 
 And we observe that this subject mostly experienced severe anxiety, inability to control their mood, anger and feeling of overwhelm in the pre-menstrual phase of cycle 2.
@@ -177,7 +194,9 @@ For example, one can have an overview of a subject diagnosis with the `plot_subj
 For the same subject #47, we run:
 
 ```{r plot-subject-diagnosis, fig.width=7, fig.height=5}
+
 plot_subject_diagnosis(input %>% filter(SUBJECT == 47))
+
 ```
 
 The top panel provides the subject ID, their diagnosis, the number of cycles for which some scores were provided and the number of cycles that had enough data to be included in the diagnosis procedure. It also provides the number of cycles with a PMDD or a MRMD diagnosis.

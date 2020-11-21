@@ -7,7 +7,7 @@
 as_cpass_data(data, sep_event = c("menses", "ovulation"), verbose = TRUE)
 }
 \arguments{
-\item{data}{a data.frame that contains symptoms reported subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{score}}
+\item{data}{a data.frame that contains symptoms reported subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{ITEM}, \code{DRSP_score}}
 
 \item{sep_event}{an optional character \code{"menses"} (default) or \code{"ovulation"} which defines if the pre- and post-menstrual phases are separated by the menses or by ovulation within a cycle (values of the column \code{CYCLE} in the provided data).}
 }
@@ -18,8 +18,8 @@ a data.frame.
 This function checks if the data can be used by the CPASS functions and transforms it into a "cpass" data.frame.
 }
 \examples{
-random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), DRSP = 1:24)
-random_data$score = sample(1:6, nrow(random_data), replace = TRUE)
+random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), ITEM = 1:24)
+random_data$DRSP_score = sample(1:6, nrow(random_data), replace = TRUE)
 cpass_data = as_cpass_data(random_data)
 colnames(cpass_data)
 }

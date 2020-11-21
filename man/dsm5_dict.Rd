@@ -7,9 +7,9 @@
 \format{
 A data frame with 24 rows and 5 variables:
 \describe{
-  \item{DRSP}{item number}
-  \item{DRSP_full_code}{item number with its names}
-  \item{DRSP_desc}{item description}
+  \item{ITEM}{item number}
+  \item{ITEM_full_code}{item number with its names}
+  \item{ITEM_desc}{item description}
   \item{DSM5_SYMPTOM_DOMAIN}{item domain, as defined in the DSM-5}
   \item{SYMPTOM_CATEGORY}{item category, as defined in the DSM-5. Can be a "Core Emotional Symptom", a "Secondary Symptom" or an "Interference".}
 }

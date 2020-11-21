@@ -17,7 +17,7 @@ A data frame with 12,432 rows and 6 variables:
 }
 }
 \source{
-Tory Eisenlohr-Moul
+Dr. Tory Eisenlohr-Moul
 }
 \usage{
 PMDD_data

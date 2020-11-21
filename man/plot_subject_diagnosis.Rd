@@ -10,9 +10,9 @@ plot_subject_diagnosis(
 )
 }
 \arguments{
-\item{data}{a data.frame that contains the symptoms reported by ONE subject. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{score}}
+\item{data}{a data.frame that contains the symptoms reported by ONE subject. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{ITEM}, \code{DRSP_score}}
 
-\item{colors_summary}{string. Either \code{"complementary"} (default) or \code{"rainbow"} specifying the type of color scheme for the DRSP items in the diagnosis summary. If \code{"complementary"}, the colors are chosen complementary within a domain; if \code{"rainbow"}, the DRSP colors are different for each item and chosen from a rainbow palette.}
+\item{colors_summary}{string. Either \code{"complementary"} (default) or \code{"rainbow"} specifying the type of color scheme for the ITEM items in the diagnosis summary. If \code{"complementary"}, the colors are chosen complementary within a domain; if \code{"rainbow"}, the DRSP items colors are different for each item and chosen from a rainbow palette.}
 }
 \value{
 a ggplot object

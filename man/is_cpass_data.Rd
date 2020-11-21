@@ -7,7 +7,7 @@
 is_cpass_data(data)
 }
 \arguments{
-\item{data}{a data.frame that contains symptoms reported subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{score}}
+\item{data}{a data.frame that contains symptoms reported subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{DRSP_score}}
 }
 \value{
 a logical.
@@ -17,7 +17,7 @@ Checks if data is a "CPASS" data.frame.
 }
 \examples{
 random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), DRSP = 1:24)
-random_data$score = sample(1:6, nrow(random_data), replace = TRUE)
+random_data$DRSP_score = sample(1:6, nrow(random_data), replace = TRUE)
 cpass_data = as_cpass_data(random_data)
 colnames(cpass_data)
 is_cpass_data(random_data)

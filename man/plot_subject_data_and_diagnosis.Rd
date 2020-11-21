@@ -15,7 +15,7 @@ plot_subject_data_and_diagnosis(
 }
 \arguments{
 \item{data}{a data.frame that contains the symptoms reported by ONE subject.
-The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{score}}
+The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{ITEM}, \code{DRSP_score}}
 
 \item{save_as_pdf}{logical.
 If \code{TRUE} (default), this function saves a pdf with the visualizations.
@@ -30,7 +30,7 @@ By default, the name of the pdf is \code{CPASS_SUBJECT_X.pdf}, where \code{X} is
 
 \item{color_max_score}{string specifying the color of a score of 6 (the maximal score) reported by a subject. Any standard color format specification is accepted, i.e. one of the R built-in color names (e.g. "tomato" (default); type \code{colors()} to see the names of all R built-in colors), an RGB hex code (e.g. "#AA2199") or a color specified via one of the color/palette functions (e.g. hsv(0.1,0.9,0.9))}
 
-\item{colors_summary}{string. Either \code{"complementary"} (default) or \code{"rainbow"} specifying the type of color scheme for the DRSP items in the diagnosis summary. If \code{"complementary"}, the colors are chosen complementary within a domain; if \code{"rainbow"}, the DRSP colors are different for each item and chosen from a rainbow palette.}
+\item{colors_summary}{string. Either \code{"complementary"} (default) or \code{"rainbow"} specifying the type of color scheme for the ITEM items in the diagnosis summary. If \code{"complementary"}, the colors are chosen complementary within a domain; if \code{"rainbow"}, the ITEM colors are different for each item and chosen from a rainbow palette.}
 }
 \value{
 a ggplot object if \code{save_as_pdf = FALSE}. The same object is returned invisibly by default (\code{save_as_pdf = TRUE}).

@@ -4,10 +4,10 @@
 \alias{CPASS}
 \title{Applies the C-PASS procedure for PMDD and MRMD diagnoses}
 \usage{
-CPASS(data, PME = FALSE)
+CPASS(data)
 }
 \arguments{
-\item{data}{a \code{cpass.data} object that contains the symptom scores reported by the subjects. To transform your data into a \code{cpass.data} object, use the function \code{as_cpass_data()}.}
+\item{data}{a \code{cpass.data} object that contains the symptom DRSP scores reported by the subjects. To transform your data into a \code{cpass.data} object, use the function \code{as_cpass_data()}.}
 }
 \value{
 The CPASS function returns a list with 6 elements; each of them is a table (\code{data.frame}):
