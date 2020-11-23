@@ -2,6 +2,8 @@ home:
   links:
   - text: CPASS article
     href: https://ajp.psychiatryonline.org/doi/full/10.1176/appi.ajp.2016.15121510
+  - text: source code
+    href: https://github.com/lasy/cpass
 
 reference:
 - title: "Formatting your data for cpass compatibility"
