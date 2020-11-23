@@ -2,7 +2,7 @@
 title: "Introduction to the `cpass` package"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{cpass_vignette}
+  %\VignetteIndexEntry{Introduction to the `cpass` package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
