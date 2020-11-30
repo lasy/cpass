@@ -1,3 +1,7 @@
+<!-- badges: start -->
+  [![Travis build status](https://travis-ci.com/lasy/cpass.svg?branch=master)](https://travis-ci.com/lasy/cpass)
+  <!-- badges: end -->
+
 # The cpass R package
 
 `cpass` is an `R` package for the application of the C-PASS procedure for the diagnosis of PMDD and MRMD.
