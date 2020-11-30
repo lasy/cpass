@@ -10,6 +10,8 @@ as_cpass_data(data, sep_event = c("menses", "ovulation"), verbose = TRUE)
 \item{data}{a data.frame that contains symptoms reported subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{ITEM}, \code{DRSP_score}}
 
 \item{sep_event}{an optional character \code{"menses"} (default) or \code{"ovulation"} which defines if the pre- and post-menstrual phases are separated by the menses or by ovulation within a cycle (values of the column \code{CYCLE} in the provided data).}
+
+\item{verbose}{(optional) logical. Should the function print additional information? (mostly used for debugging purposes)}
 }
 \value{
 a data.frame.
