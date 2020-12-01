@@ -27,7 +27,7 @@ install.packages("devtools")
 ```
 
 
-```{r loading-devtools, warning=FALSE}
+```{r loading-devtools, warning=FALSE, eval = FALSE}
 library(devtools)
 ```
 
@@ -55,10 +55,21 @@ install.packages("tidyverse")
 
 
 
-```{r loading-tidyverse, warning=FALSE}
+```{r loading-tidyverse, warning=FALSE, eval  = FALSE}
 library(tidyverse)
 ```
 
+Alternatively, individual packages can be loaded independently:
+
+```{r loading-pcks, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+library(purrr)
+library(tibble)
+library(tidyr)
+library(stringr)
+library(magrittr)
+```
 
 
 # Demo dataset

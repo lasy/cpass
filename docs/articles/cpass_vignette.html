@@ -103,13 +103,22 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"tidyverse"</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></code></pre></div>
+<p>Alternatively, individual packages can be loaded independently:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://purrr.tidyverse.org">purrr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org">stringr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span></code></pre></div>
 </div>
 <div id="demo-dataset" class="section level1">
 <h1 class="hasAnchor">
 <a href="#demo-dataset" class="anchor"></a>Demo dataset</h1>
 <p>To explore the <code>cpass</code> package, we will use a demo dataset with the data (daily ratings) from 20 subjects. This demo dataset is attached to the <code>cpass</code> package and documented in <code><a href="../reference/PMDD_data.html">?PMDD_data</a></code>.</p>
 <p>To load this data into the environment, run:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">d</span> <span class="op">=</span> <span class="va">PMDD_data</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
@@ -150,7 +159,7 @@
 <a href="#formating-raw-data-into-cpass_data" class="anchor"></a>Formating raw data into <code>cpass_data</code>
 </h2>
 <p>The function <code><a href="../reference/as_cpass_data.html">as_cpass_data()</a></code> transforms raw data into <code>cpass_data</code>. The data provided as argument to <code><a href="../reference/as_cpass_data.html">as_cpass_data()</a></code> must be in long format, <em>i.e.</em> one row per subject, cycle, day and DRSP item.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">input</span> <span class="op">=</span> <span class="fu"><a href="../reference/as_cpass_data.html">as_cpass_data</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
 <span class="co">#&gt; Number of SUBJECTS:  20 </span>
 <span class="co">#&gt; Total number of CYCLES:  37</span></code></pre></div>
@@ -160,17 +169,17 @@
 <h2 class="hasAnchor">
 <a href="#running-the-cpass-procedure-for-pmddmrmdpme-diagnosis" class="anchor"></a>Running the CPASS procedure for PMDD/MRMD/PME diagnosis</h2>
 <p>Now that the data is formatted, it can be passed to the <code><a href="../reference/CPASS.html">CPASS()</a></code> function. This function will run the CPASS procedure for PMDD/MRMD (and optionally PME) diagnoses:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">diagnosis</span> <span class="op">=</span> <span class="fu"><a href="../reference/CPASS.html">CPASS</a></span><span class="op">(</span><span class="va">input</span><span class="op">)</span></code></pre></div>
 <p>For the full documentation, type <code><a href="../reference/CPASS.html">?CPASS</a></code> in the <code>R console</code>.</p>
 <p>The <code>CPASS</code> function returns a list of 6 tables:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">diagnosis</span><span class="op">)</span>
 <span class="co">#&gt; [1] "SUBJECT_level_diagnosis"      "CYCLE_level_diagnosis"       </span>
 <span class="co">#&gt; [3] "DSM5_DOMAINS_level_diagnosis" "ITEM_level_diagnosis"        </span>
 <span class="co">#&gt; [5] "daily_summary_per_ITEM"       "summary_ITEM"</span></code></pre></div>
 <p>Let’s have a look at the first table:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">diagnosis</span><span class="op">$</span><span class="va">SUBJECT_level_diagnosis</span>
 <span class="co">#&gt; # A tibble: 20 x 15</span>
 <span class="co">#&gt;    SUBJECT NCycles_tot NCycles N_PMDD N_MRMD N_PME pmddcycprop mrmdcycprop</span>
@@ -198,17 +207,17 @@
 <span class="co">#&gt; # … with 7 more variables: pmecycprop &lt;dbl&gt;, PMDD &lt;lgl&gt;, MRMD &lt;lgl&gt;, PME &lt;lgl&gt;,</span>
 <span class="co">#&gt; #   dxcat &lt;dbl&gt;, dx &lt;chr&gt;, avgdsm5crit &lt;dbl&gt;</span></code></pre></div>
 <p>This table has the diagnoses of the 20 subjects.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">diagnosis</span><span class="op">$</span><span class="va">SUBJECT_level_diagnosis</span><span class="op">$</span><span class="va">dx</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;         MRMD no diagnosis         PMDD          PME </span>
 <span class="co">#&gt;            3            8            3            1</span></code></pre></div>
 <p>3 subjects (~15%) have a PMDD diagnosis, 3 others have a MRMD diagnosis and 9 subjects (~45%) have no diagnosis for their reported symptoms.</p>
 <p>The remaining 5 subjects did not have sufficient data to make a diagnosis:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">diagnosis</span><span class="op">$</span><span class="va">SUBJECT_level_diagnosis</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">dx</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">dx</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 5 x 15</span>
 <span class="co">#&gt;   SUBJECT NCycles_tot NCycles N_PMDD N_MRMD N_PME pmddcycprop mrmdcycprop</span>
 <span class="co">#&gt;     &lt;dbl&gt;       &lt;int&gt;   &lt;int&gt;  &lt;int&gt;  &lt;int&gt; &lt;int&gt;       &lt;dbl&gt;       &lt;dbl&gt;</span>
@@ -221,8 +230,8 @@
 <span class="co">#&gt; #   dxcat &lt;dbl&gt;, dx &lt;chr&gt;, avgdsm5crit &lt;dbl&gt;</span></code></pre></div>
 <p>We see that each of these 5 subjects only reported DRSP for one cycle (instead of the two required).</p>
 <p>Now, we can dive deeper into the data of particular subjects. For example, we can check the cycle-level diagnosis of subject <code>#47</code> who reported DRSP scores for 3 cycles.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">diagnosis</span><span class="op">$</span><span class="va">CYCLE_level_diagnosis</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span><span class="op">)</span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diagnosis</span><span class="op">$</span><span class="va">CYCLE_level_diagnosis</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 3 x 9</span>
 <span class="co">#&gt; # Groups:   SUBJECT [1]</span>
 <span class="co">#&gt;   SUBJECT CYCLE included n_DSM5_DOMAINS_… n_DSM5_DOMAINS_… PME   DSM5_A DSM5_B</span>
@@ -233,8 +242,8 @@
 <span class="co">#&gt; # … with 1 more variable: diagnosis &lt;chr&gt;</span></code></pre></div>
 <p>The second cycle of this subject fulfilled the criteria for a cycle-level PMDD diagnosis. The symptoms reported in the other cycles did not meet the criteria for PMDD nor for MRMD.</p>
 <p>We can dive even deeper and look at the DRSP items during this cycle #2:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">diagnosis</span><span class="op">$</span><span class="va">ITEM_level_diagnosis</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span>, <span class="va">CYCLE</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diagnosis</span><span class="op">$</span><span class="va">ITEM_level_diagnosis</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span>, <span class="va">CYCLE</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 24 x 16</span>
 <span class="co">#&gt; # Groups:   SUBJECT, CYCLE [1]</span>
 <span class="co">#&gt;    SUBJECT CYCLE  ITEM at_least_n_obs max_sev_pre n_days_high_sco… mean_pre</span>
@@ -255,11 +264,11 @@
 <span class="co">#&gt; #   ITEM_meets_PME_criteria &lt;lgl&gt;, DSM5_SYMPTOM_DOMAIN &lt;chr&gt;,</span>
 <span class="co">#&gt; #   SYMPTOM_CATEGORY &lt;chr&gt;</span></code></pre></div>
 <p>As this is a large table which provides the criteria details for each item, we may only consider the following columns for now:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">diagnosis</span><span class="op">$</span><span class="va">ITEM_level_diagnosis</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span>, <span class="va">CYCLE</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">select</span><span class="op">(</span><span class="va">SUBJECT</span>, <span class="va">CYCLE</span>,<span class="va">ITEM</span>, <span class="va">ITEM_meets_PMDD_criteria</span>, <span class="va">DSM5_SYMPTOM_DOMAIN</span><span class="op">)</span> <span class="op">%&gt;%</span>  
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span>, <span class="va">CYCLE</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">SUBJECT</span>, <span class="va">CYCLE</span>,<span class="va">ITEM</span>, <span class="va">ITEM_meets_PMDD_criteria</span>, <span class="va">DSM5_SYMPTOM_DOMAIN</span><span class="op">)</span> <span class="op">%&gt;%</span>  
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;    SUBJECT CYCLE ITEM ITEM_meets_PMDD_criteria DSM5_SYMPTOM_DOMAIN</span>
 <span class="co">#&gt; 1       47     2    1                    FALSE          DEPRESSION</span>
@@ -297,9 +306,9 @@
 <a href="#visualizing-subjects-diagnoses" class="anchor"></a>Visualizing subject’s diagnoses</h3>
 <p>For example, one can have an overview of a subject diagnosis with the <code><a href="../reference/plot_subject_diagnosis.html">plot_subject_diagnosis()</a></code> function.</p>
 <p>For the same subject #47, we run:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
-<span class="fu"><a href="../reference/plot_subject_diagnosis.html">plot_subject_diagnosis</a></span><span class="op">(</span><span class="va">input</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="../reference/plot_subject_diagnosis.html">plot_subject_diagnosis</a></span><span class="op">(</span><span class="va">input</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; Warning in min(x): no non-missing arguments to min; returning Inf</span>
 <span class="co">#&gt; Warning in max(x): no non-missing arguments to max; returning -Inf</span>
 <span class="co">#&gt; Warning in min(x): no non-missing arguments to min; returning Inf</span>
@@ -316,25 +325,25 @@
 <a href="#visualizing-subjects-reported-scores" class="anchor"></a>Visualizing subject’s reported scores</h3>
 <p>From the <code>CYCLE_level_diagnosis</code> table from this subject, we know that cycle #2 fulfilled the PMDD criteria while other cycles did not.</p>
 <p>To explore the scores reported during the 2nd cycle, the function <code><a href="../reference/plot_subject_cycle_obs.html">plot_subject_cycle_obs()</a></code> can be used. This function visualizes the reported score for a given cycle:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_subject_cycle_obs.html">plot_subject_cycle_obs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">input</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span>, <span class="va">CYCLE</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_subject_cycle_obs.html">plot_subject_cycle_obs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">input</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span>, <span class="va">CYCLE</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="cpass_vignette_files/figure-html/plot-cycle-1.png" width="100%"></p>
 <p>The two left panels visualize the reported scores with the x-axis being the cycle-days (time) and there is one line per DRSP item on the y-axis. The score of each item for each day is writen on the corresponding (x,y) rectangle. The color of the rectangle is proportional to the score. Low scores (1) are gray, high scores (6) are red. Missing scores are reprensented by transparent rectangles. The panels on the right visualize the items or domains or cycle that fulfil the PMDD criteria. If they do not meet the criteria, their corresponding rectangle is light-gray, if they meet the criteria, they are red. Items that are excluded from the diagnosis procedure are in dark-gray.</p>
 <p>For this subject, we can compare their second cycle (above) with their third cycle:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_subject_cycle_obs.html">plot_subject_cycle_obs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">input</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span>, <span class="va">CYCLE</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_subject_cycle_obs.html">plot_subject_cycle_obs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">input</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span>, <span class="va">CYCLE</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="cpass_vignette_files/figure-html/plot-cycle-3-1.png" width="100%"></p>
 <p>Note that the reported scores can be visualized without the diagnosis with the option <code>add_diagnosis = FALSE</code></p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_subject_cycle_obs.html">plot_subject_cycle_obs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">input</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span>, <span class="va">CYCLE</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span>, add_diagnosis <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_subject_cycle_obs.html">plot_subject_cycle_obs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">input</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span>, <span class="va">CYCLE</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span>, add_diagnosis <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p><img src="cpass_vignette_files/figure-html/plot-cycle-no-d-1.png" width="100%"></p>
 <p>And that the color of the high score can be changed with the option <code>color_max_score = "desired_color"</code>:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_subject_cycle_obs.html">plot_subject_cycle_obs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">input</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span>, <span class="va">CYCLE</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span>, color_max_score <span class="op">=</span> <span class="st">"turquoise"</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_subject_cycle_obs.html">plot_subject_cycle_obs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">input</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span>, <span class="va">CYCLE</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span>, color_max_score <span class="op">=</span> <span class="st">"turquoise"</span><span class="op">)</span></code></pre></div>
 <p><img src="cpass_vignette_files/figure-html/plot-cycle-color-1.png" width="100%"></p>
 <p>It is also possible to visualize all cycles of a user at once with the function <code><a href="../reference/plot_subject_obs.html">plot_subject_obs()</a></code></p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot_subject_obs.html">plot_subject_obs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">input</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot_subject_obs.html">plot_subject_obs</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">input</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="cpass_vignette_files/figure-html/plot-obs-1.png" width="100%"></p>
 </div>
 <div id="visualizing-subjects-reported-scores-and-diagnosis" class="section level3">
@@ -345,9 +354,9 @@
 <p>By default, the pdf is saved in the current directory and the filename specifies the subject ID but both the path and the pdf name can be specified via the options <code>pdf_path</code> and <code>pdf_name</code>.</p>
 <p>The pdf option can also be turned off with the option <code>save_as_pdf = FALSE</code>. In this case, calling the function prints the visualization in R.</p>
 <p>If the function is called with the option <code>save_as_pdf = TRUE</code> (default), the visualization is returned silently but could be catch by a variable (e.g. <code>viz = plot_subject_data_and_diagnosis(data); viz</code>).</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
-<span class="fu"><a href="../reference/plot_subject_data_and_diagnosis.html">plot_subject_data_and_diagnosis</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">input</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span><span class="op">)</span>, save_as_pdf <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/plot_subject_data_and_diagnosis.html">plot_subject_data_and_diagnosis</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">input</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">SUBJECT</span> <span class="op">==</span> <span class="fl">47</span><span class="op">)</span>, save_as_pdf <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p><img src="cpass_vignette_files/figure-html/plot-all-1.png" width="100%"></p>
 </div>
 </div>
