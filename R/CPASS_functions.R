@@ -346,7 +346,7 @@ as_cpass_data = function(data, sep_event = c("menses", "ovulation"), verbose = T
 #' @export
 #' @importFrom magrittr %>%
 #' @examples
-#' random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), DRSP = 1:24)
+#' random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), ITEM = 1:24)
 #' random_data$DRSP_score = sample(1:6, nrow(random_data), replace = TRUE)
 #' cpass_data = as_cpass_data(random_data)
 #' colnames(cpass_data)
@@ -355,6 +355,9 @@ as_cpass_data = function(data, sep_event = c("menses", "ovulation"), verbose = T
 
 is_cpass_data = function(data){
   ok = try(as_cpass_data(data = data, verbose = FALSE), silent = TRUE)
-  if(class(ok)[1] == "try-error") FALSE else TRUE
+  if(
+    (class(ok)[1] != "try-error") &&
+    all(colnames(ok) %in% colnames(data))
+    ) TRUE else FALSE
 }
 

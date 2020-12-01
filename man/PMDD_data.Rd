@@ -12,8 +12,8 @@ A data frame with 12,432 rows and 6 variables:
   \item{PHASE}{\code{"pre"} or \code{"post"}: the phase in the menstrual cycle (pre-menstrual vs post-menstrual).}
   \item{DAY}{Cycle day. In this dataset, days in the pre-menstrual phase are counted backward from the onset of the menses. -1 is the day before the onset of the menses.
   Days in the post-menstrual phase are counted forward from the onset of the menses. Day 1 is the first day of the menses. Day 0 does not exist.}
-  \item{DRSP}{Item number}
-  \item{score}{Score reported for the user for the DRSP item, day and cycle of that row}
+  \item{ITEM}{Item number}
+  \item{DRSP_score}{Score reported for the user for the DRSP item, day and cycle of that row}
 }
 }
 \source{

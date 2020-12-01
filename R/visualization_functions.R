@@ -9,7 +9,7 @@
 #'
 #' This function calls the \code{CPASS} function and provides a visualization of the diagnosis.
 #' @param data a data.frame that contains the symptoms reported by ONE subject. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{ITEM}, \code{DRSP_score}
-#' @param colors_summary string. Either \code{"complementary"} (default) or \code{"rainbow"} specifying the type of color scheme for the ITEM items in the diagnosis summary. If \code{"complementary"}, the colors are chosen complementary within a domain; if \code{"rainbow"}, the DRSP items colors are different for each item and chosen from a rainbow palette.
+#' @param color_summary string. Either \code{"complementary"} (default) or \code{"rainbow"} specifying the type of color scheme for the ITEM items in the diagnosis summary. If \code{"complementary"}, the colors are chosen complementary within a domain; if \code{"rainbow"}, the DRSP items colors are different for each item and chosen from a rainbow palette.
 #'
 #' @keywords CPASS C-PASS PMDD MRMD
 #' @return a ggplot object
@@ -51,12 +51,12 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
   daily_summary = subject_diagnosis$daily_summary_per_ITEM
   daily_summary = daily_summary %>%
     dplyr::full_join(.,
-              dsm5_dict %>%  select(ITEM,ITEM_desc, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY),
-              by = "ITEM") %>%
+                     dsm5_dict %>%  select(ITEM,ITEM_desc, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY),
+                     by = "ITEM") %>%
     dplyr::ungroup() %>%
     dplyr::mutate(ITEM = factor(ITEM, levels = dsm5_dict$ITEM),
-           ITEM_desc = factor(ITEM_desc, levels = dsm5_dict$ITEM_desc),
-           DSM5_SYMPTOM_DOMAIN = factor(DSM5_SYMPTOM_DOMAIN, levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN)))
+                  ITEM_desc = factor(ITEM_desc, levels = dsm5_dict$ITEM_desc),
+                  DSM5_SYMPTOM_DOMAIN = factor(DSM5_SYMPTOM_DOMAIN, levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN)))
 
   if(color_summary == "complementary"){
     dsm5_dict = dsm5_dict %>% dplyr::group_by(DSM5_SYMPTOM_DOMAIN) %>% dplyr::mutate(n_within_domain = row_number())
@@ -100,12 +100,12 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
   summary = subject_diagnosis$summary_ITEM
   summary =
     dplyr::full_join(summary,
-                             dsm5_dict %>%  select(ITEM,ITEM_desc, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY),
-                             by = "ITEM") %>%
+                     dsm5_dict %>%  select(ITEM,ITEM_desc, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY),
+                     by = "ITEM") %>%
     dplyr::ungroup() %>%
     dplyr::mutate(ITEM_fac = factor(ITEM, levels = dsm5_dict$ITEM),
-           ITEM_desc = factor(ITEM_desc, levels = dsm5_dict$ITEM_desc),
-           DSM5_SYMPTOM_DOMAIN = factor(DSM5_SYMPTOM_DOMAIN, levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN)))
+                  ITEM_desc = factor(ITEM_desc, levels = dsm5_dict$ITEM_desc),
+                  DSM5_SYMPTOM_DOMAIN = factor(DSM5_SYMPTOM_DOMAIN, levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN)))
 
   if(color_summary == "complementary"){
     dsm5_dict = dsm5_dict %>% dplyr::group_by(DSM5_SYMPTOM_DOMAIN) %>% dplyr::mutate(n_within_domain = row_number())
@@ -189,7 +189,7 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
              DSM5_SYMPTOM_DOMAIN,
              ITEM_meets_PMDD_criteria,
              ITEM_meets_PME_criteria,
-             ) %>%
+      ) %>%
       pivot_longer(.,
                    cols = c(ITEM_meets_PMDD_criteria, ITEM_meets_PME_criteria),
                    values_to = "meets_criteria",
@@ -289,8 +289,8 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 
   obs = obs %>%
     dplyr::mutate(ITEM = ITEM %>% factor(.,levels = rev(dsm5_dict$ITEM)),
-           DSM5_SYMPTOM_DOMAIN = DSM5_SYMPTOM_DOMAIN %>% factor(.,levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN)),
-           PHASE = PHASE %>%  factor(.,levels = c("pre","post")))
+                  DSM5_SYMPTOM_DOMAIN = DSM5_SYMPTOM_DOMAIN %>% factor(.,levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN)),
+                  PHASE = PHASE %>%  factor(.,levels = c("pre","post")))
 
 
   gcanvas = ggplot(obs, aes(x = DAY, y = ITEM,  fill = DRSP_score))
@@ -317,11 +317,11 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 
   if(add_diagnosis){
     g = cowplot::plot_grid(g,
-                  g_item, g_domain, g_cycle,
-                  align = "h",
-                  axis = "tb",
-                  nrow = 1,
-                  rel_widths = c(14,3,3,4)) # 2, 1.2
+                           g_item, g_domain, g_cycle,
+                           align = "h",
+                           axis = "tb",
+                           nrow = 1,
+                           rel_widths = c(14,3,3,4)) # 2, 1.2
   }
 
   return(g)
@@ -383,7 +383,7 @@ plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max
 #' @param pdf_name string. Specifies the name of the pdf.
 #'     By default, the name of the pdf is \code{CPASS_SUBJECT_X.pdf}, where \code{X} is replaced by the subject unique identifier.
 #' @param color_max_score string specifying the color of a score of 6 (the maximal score) reported by a subject. Any standard color format specification is accepted, i.e. one of the R built-in color names (e.g. "tomato" (default); type \code{colors()} to see the names of all R built-in colors), an RGB hex code (e.g. "#AA2199") or a color specified via one of the color/palette functions (e.g. hsv(0.1,0.9,0.9))
-#' @param colors_summary string. Either \code{"complementary"} (default) or \code{"rainbow"} specifying the type of color scheme for the ITEM items in the diagnosis summary. If \code{"complementary"}, the colors are chosen complementary within a domain; if \code{"rainbow"}, the ITEM colors are different for each item and chosen from a rainbow palette.
+#' @param color_summary string. Either \code{"complementary"} (default) or \code{"rainbow"} specifying the type of color scheme for the ITEM items in the diagnosis summary. If \code{"complementary"}, the colors are chosen complementary within a domain; if \code{"rainbow"}, the ITEM colors are different for each item and chosen from a rainbow palette.
 #'
 #' @keywords CPASS C-PASS PMDD MRMD
 #' @return a ggplot object if \code{save_as_pdf = FALSE}. The same object is returned invisibly by default (\code{save_as_pdf = TRUE}).
@@ -397,25 +397,30 @@ plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max
 #' p
 
 
-plot_subject_data_and_diagnosis = function(data = data.frame(), save_as_pdf = TRUE, pdf_path = "", pdf_name = "", color_max_score = "tomato", color_summary = c("complementary","rainbow")){
+plot_subject_data_and_diagnosis =
+  function(
+    data = data.frame(),
+    save_as_pdf = TRUE, pdf_path = "", pdf_name = "",
+    color_max_score = "tomato", color_summary = c("complementary","rainbow")
+  ){
 
-  g_diagnosis_summary = suppressWarnings(plot_subject_diagnosis(data = data, color_summary = color_summary))
-  g_data = suppressWarnings(plot_subject_obs(data = data, add_diagnosis = TRUE, color_max_score = color_max_score))
-  n_cycles = length(g_data$layers)
-  g = suppressWarnings(cowplot::plot_grid(g_diagnosis_summary, g_data, ncol = 1, nrow = 2, rel_heights = c(1.2, n_cycles)))
-  #g
+    g_diagnosis_summary = suppressWarnings(plot_subject_diagnosis(data = data, color_summary = color_summary))
+    g_data = suppressWarnings(plot_subject_obs(data = data, add_diagnosis = TRUE, color_max_score = color_max_score))
+    n_cycles = length(g_data$layers)
+    g = suppressWarnings(cowplot::plot_grid(g_diagnosis_summary, g_data, ncol = 1, nrow = 2, rel_heights = c(1.2, n_cycles)))
+    #g
 
-  if(save_as_pdf){
-    if(pdf_name == ""){pdf_name = stringr::str_c("CPASS_SUBJECT_",unique(data$SUBJECT),".pdf")}
-    if(pdf_path == ""){pdf_path = getwd()}
-    if((pdf_path != "") && (str_sub(pdf_path, -1) != "/")){pdf_path = stringr::str_c(pdf_path, "/")}
-    pdf_filename = stringr::str_c(pdf_path,pdf_name)
-    ggsave(g, filename = pdf_filename, width = 75, height = 50* (1.2 + length(g_data$layers)), units = "mm", scale = 3)
-    cat("Subject summary saved in '",pdf_filename,"'\n")
-    return(invisible(g))
+    if(save_as_pdf){
+      if(pdf_name == ""){pdf_name = stringr::str_c("CPASS_SUBJECT_",unique(data$SUBJECT),".pdf")}
+      if(pdf_path == ""){pdf_path = getwd()}
+      if((pdf_path != "") && (str_sub(pdf_path, -1) != "/")){pdf_path = stringr::str_c(pdf_path, "/")}
+      pdf_filename = stringr::str_c(pdf_path,pdf_name)
+      ggsave(g, filename = pdf_filename, width = 75, height = 50* (1.2 + length(g_data$layers)), units = "mm", scale = 3)
+      cat("Subject summary saved in '",pdf_filename,"'\n")
+      return(invisible(g))
+    }
+    return(g)
   }
-  return(g)
-}
 
 
 

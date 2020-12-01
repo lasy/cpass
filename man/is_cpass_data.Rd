@@ -16,7 +16,7 @@ a logical.
 Checks if data is a "CPASS" data.frame.
 }
 \examples{
-random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), DRSP = 1:24)
+random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), ITEM = 1:24)
 random_data$DRSP_score = sample(1:6, nrow(random_data), replace = TRUE)
 cpass_data = as_cpass_data(random_data)
 colnames(cpass_data)
