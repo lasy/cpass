@@ -14,6 +14,7 @@
 #' @keywords CPASS C-PASS PMDD MRMD
 #' @return a ggplot object
 #' @export
+#' @import ggplot2
 #' @importFrom magrittr %>%
 #' @examples
 #'
@@ -165,6 +166,7 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
 #' @keywords CPASS C-PASS PMDD MRMD
 #' @return a ggplot object
 #' @export
+#' @import ggplot2
 #' @importFrom magrittr %>%
 #' @examples
 #'
@@ -358,6 +360,7 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 #' @keywords CPASS C-PASS PMDD MRMD
 #' @return a ggplot object
 #' @export
+#' @import ggplot2
 #' @importFrom magrittr %>%
 #' @examples
 #'
@@ -413,6 +416,7 @@ plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max
 #' @keywords CPASS C-PASS PMDD MRMD
 #' @return a ggplot object if \code{save_as_pdf = FALSE}. The same object is returned invisibly by default (\code{save_as_pdf = TRUE}).
 #' @export
+#' @import ggplot2
 #' @importFrom magrittr %>%
 #' @examples
 #'
