@@ -193,23 +193,27 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 
     ITEM_diagnosis =
       cycle_diagnosis$ITEM_level_diagnosis %>%
-      select(SUBJECT, CYCLE, ITEM,
-             DSM5_SYMPTOM_DOMAIN,
-             ITEM_meets_PMDD_criteria,
-             ITEM_meets_PME_criteria,
+      dplyr::select(
+        SUBJECT, CYCLE, ITEM,
+        DSM5_SYMPTOM_DOMAIN,
+        ITEM_meets_PMDD_criteria,
+        ITEM_meets_PME_criteria,
       ) %>%
-      pivot_longer(.,
-                   cols = c(ITEM_meets_PMDD_criteria, ITEM_meets_PME_criteria),
-                   values_to = "meets_criteria",
-                   names_to = "criteria") %>%
-      mutate(criteria =
-               ifelse(str_detect(criteria,"PMDD"),
-                      "PMDD","PME") %>%
-               factor(., levels = c("PME", "PMDD")),
-             ITEM = ITEM %>% factor(., levels = rev(dsm5_dict$ITEM)),
-             DSM5_SYMPTOM_DOMAIN = DSM5_SYMPTOM_DOMAIN %>%
-               factor(., levels = dsm5_dict$DSM5_SYMPTOM_DOMAIN %>% unique()),
-             meets_criteria = ifelse(ITEM %in% c(20,22:24), NA, meets_criteria ))
+      tidyr::pivot_longer(
+        .,
+        cols = c(ITEM_meets_PMDD_criteria, ITEM_meets_PME_criteria),
+        values_to = "meets_criteria",
+        names_to = "criteria") %>%
+      dplyr::mutate(
+        criteria =
+          ifelse(stringr::str_detect(criteria,"PMDD"),
+                 "PMDD","PME") %>%
+          factor(., levels = c("PME", "PMDD")),
+        ITEM = ITEM %>% factor(., levels = rev(dsm5_dict$ITEM)),
+        DSM5_SYMPTOM_DOMAIN = DSM5_SYMPTOM_DOMAIN %>%
+          factor(., levels = dsm5_dict$DSM5_SYMPTOM_DOMAIN %>% unique()),
+        meets_criteria = ifelse(ITEM %in% c(20,22:24), NA, meets_criteria )
+      )
 
     g_item = ggplot(ITEM_diagnosis, aes(x = 1, y = ITEM, fill = meets_criteria))
     g_item = g_item +
@@ -228,25 +232,32 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 
     DOMAIN_diagnosis =
       cycle_diagnosis$DSM5_DOMAINS_level_diagnosis %>%
-      select(SUBJECT, CYCLE, DSM5_SYMPTOM_DOMAIN,
-             DSM5_PMDD_criteria, PME_criteria) %>%
-      bind_rows(.,
-                data.frame(DSM5_SYMPTOM_DOMAIN = "INTERFERENCE")) %>%
-      pivot_longer(.,
-                   cols = c(DSM5_PMDD_criteria, PME_criteria),
-                   names_to = "criteria",
-                   values_to = "meets_criteria") %>%
-      mutate(criteria =
-               ifelse(str_detect(criteria,"PMDD"),
-                      "PMDD","PME") %>%
-               factor(., levels = c("PME", "PMDD"))) %>%
-      left_join(.,
-                dsm5_dict %>% select(ITEM, DSM5_SYMPTOM_DOMAIN),
-                by = c("DSM5_SYMPTOM_DOMAIN")) %>%
-      mutate(ITEM = ITEM %>% factor(., levels = rev(dsm5_dict$ITEM)),
-             DSM5_SYMPTOM_DOMAIN = DSM5_SYMPTOM_DOMAIN %>%
-               factor(., levels = dsm5_dict$DSM5_SYMPTOM_DOMAIN %>% unique()),
-             meets_criteria = ifelse(ITEM %in% c(20,22:24), NA, meets_criteria ))
+      dplyr::select(
+        SUBJECT, CYCLE, DSM5_SYMPTOM_DOMAIN,
+        DSM5_PMDD_criteria, PME_criteria) %>%
+      dplyr::bind_rows(
+        .,
+        data.frame(DSM5_SYMPTOM_DOMAIN = "INTERFERENCE")) %>%
+      tidyr::pivot_longer(
+        .,
+        cols = c(DSM5_PMDD_criteria, PME_criteria),
+        names_to = "criteria",
+        values_to = "meets_criteria") %>%
+      dplyr::mutate(
+        criteria =
+          ifelse(str_detect(criteria,"PMDD"),
+                 "PMDD","PME") %>%
+          factor(., levels = c("PME", "PMDD"))) %>%
+      dplyr::left_join(
+        .,
+        dsm5_dict %>% select(ITEM, DSM5_SYMPTOM_DOMAIN),
+        by = c("DSM5_SYMPTOM_DOMAIN")) %>%
+      dplyr::mutate(
+        ITEM = ITEM %>% factor(., levels = rev(dsm5_dict$ITEM)),
+        DSM5_SYMPTOM_DOMAIN = DSM5_SYMPTOM_DOMAIN %>%
+          factor(., levels = dsm5_dict$DSM5_SYMPTOM_DOMAIN %>% unique()),
+        meets_criteria = ifelse(ITEM %in% c(20,22:24), NA, meets_criteria )
+      )
 
     g_domain = ggplot(DOMAIN_diagnosis, aes(x = 1, y = ITEM, fill = meets_criteria))
     g_domain = g_domain +
@@ -265,12 +276,14 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 
     CYCLE_diagnosis =
       cycle_diagnosis$CYCLE_level_diagnosis %>%
-      select(SUBJECT, CYCLE, PME, DSM5_A, DSM5_B) %>%
-      rename(MRMD = DSM5_A, PMDD = DSM5_B) %>%
-      pivot_longer(., cols = c(PME, PMDD, MRMD),
-                   names_to = "criteria",
-                   values_to = "meets_criteria") %>%
-      mutate(criteria = criteria %>% factor(., levels = c("PME","MRMD", "PMDD")))
+      dplyr::select(SUBJECT, CYCLE, PME, DSM5_A, DSM5_B) %>%
+      dplyr::rename(MRMD = DSM5_A, PMDD = DSM5_B) %>%
+      tidyr::pivot_longer(
+        ., cols = c(PME, PMDD, MRMD),
+        names_to = "criteria",
+        values_to = "meets_criteria") %>%
+      dplyr::mutate(
+        criteria = criteria %>% factor(., levels = c("PME","MRMD", "PMDD")))
 
     g_cycle = ggplot(CYCLE_diagnosis, aes(x = 1, y = 1, fill = meets_criteria))
     g_cycle = g_cycle +
