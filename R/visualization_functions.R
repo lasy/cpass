@@ -247,7 +247,7 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
         values_to = "meets_criteria") %>%
       dplyr::mutate(
         criteria =
-          ifelse(str_detect(criteria,"PMDD"),
+          ifelse(stringr::str_detect(criteria,"PMDD"),
                  "PMDD","PME") %>%
           factor(., levels = c("PME", "PMDD"))) %>%
       dplyr::left_join(
@@ -445,7 +445,7 @@ plot_subject_data_and_diagnosis =
     if(save_as_pdf){
       if(pdf_name == ""){pdf_name = stringr::str_c("CPASS_SUBJECT_",unique(data$SUBJECT),".pdf")}
       if(pdf_path == ""){pdf_path = getwd()}
-      if((pdf_path != "") && (str_sub(pdf_path, -1) != "/")){pdf_path = stringr::str_c(pdf_path, "/")}
+      if((pdf_path != "") && (stringr::str_sub(pdf_path, -1) != "/")){pdf_path = stringr::str_c(pdf_path, "/")}
       pdf_filename = stringr::str_c(pdf_path,pdf_name)
       ggsave(g, filename = pdf_filename, width = 75, height = 50* (1.2 + length(g_data$layers)), units = "mm", scale = 3)
       cat("Subject summary saved in '",pdf_filename,"'\n")
