@@ -20,7 +20,6 @@ Then install and load the `cpass` package with:
 
 `library(cpass)`
 
-The package vignette, _i.e._ instructions for installing and using the package, can be found here: [https://lasy.github.io/cpass/vignettes/cpass_vignette.html](https://lasy.github.io/cpass/vignettes/cpass_vignette.html).
+The package vignette, _i.e._ instructions for installing and using the package, can be found here: [https://lasy.github.io/cpass/articles/cpass_vignette.html](https://lasy.github.io/cpass/articles/cpass_vignette.html).
 
 The description and validation of the C-PASS procedure can be found in [Eisenlohr-Moul, et al., 2016](https://github.com/lasy/cpass/blob/master/references/eisenlohr-moul2016.pdf).
-
