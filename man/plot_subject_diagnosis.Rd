@@ -21,6 +21,10 @@ a ggplot object
 This function calls the \code{CPASS} function and provides a visualization of the diagnosis.
 }
 \examples{
+
+library(magrittr)
+library(dplyr)
+
 data(PMDD_data)
 input = PMDD_data \%>\% filter(SUBJECT == 2) \%>\%  as_cpass_data()
 plot_subject_diagnosis(data = input)

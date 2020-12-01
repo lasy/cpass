@@ -16,6 +16,10 @@
 #' @export
 #' @importFrom magrittr %>%
 #' @examples
+#'
+#' library(magrittr)
+#' library(dplyr)
+#'
 #' data(PMDD_data)
 #' input = PMDD_data %>% filter(SUBJECT == 2) %>%  as_cpass_data()
 #' plot_subject_diagnosis(data = input)
@@ -163,6 +167,10 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
 #' @export
 #' @importFrom magrittr %>%
 #' @examples
+#'
+#' library(magrittr)
+#' library(dplyr)
+#'
 #' data(PMDD_data)
 #' input = PMDD_data %>% filter(SUBJECT == 2, CYCLE == 1)  %>%  as_cpass_data()
 #' plot_subject_cycle_obs(data = input)
@@ -339,6 +347,10 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 #' @export
 #' @importFrom magrittr %>%
 #' @examples
+#'
+#' library(magrittr)
+#' library(dplyr)
+#'
 #' data(PMDD_data)
 #' input = PMDD_data %>% filter(SUBJECT == 2)  %>%  as_cpass_data()
 #' plot_subject_obs(data = input)
@@ -390,6 +402,9 @@ plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max
 #' @export
 #' @importFrom magrittr %>%
 #' @examples
+#'
+#' library(magrittr)
+#' library(dplyr)
 #'
 #' data(PMDD_data)
 #' input = PMDD_data %>% filter(SUBJECT == 2) %>%  as_cpass_data()

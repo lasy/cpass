@@ -24,6 +24,10 @@ a ggplot object
 This function visualizes the scores (raw data) reported by a subject. It also internally calls the \code{CPASS} function to provides a visualization of the diagnosis at the ITEM, DSM5 DOMAIN and CYCLE level.
 }
 \examples{
+
+library(magrittr)
+library(dplyr)
+
 data(PMDD_data)
 input = PMDD_data \%>\% filter(SUBJECT == 2)  \%>\%  as_cpass_data()
 plot_subject_obs(data = input)

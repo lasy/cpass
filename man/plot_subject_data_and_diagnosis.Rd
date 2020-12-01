@@ -40,6 +40,9 @@ By default, this function saves the visualization in a pdf. The pdf heigth scale
 }
 \examples{
 
+library(magrittr)
+library(dplyr)
+
 data(PMDD_data)
 input = PMDD_data \%>\% filter(SUBJECT == 2) \%>\%  as_cpass_data()
 p = plot_subject_data_and_diagnosis(data = input)

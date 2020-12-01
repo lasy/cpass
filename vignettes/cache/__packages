@@ -1,0 +1,9 @@
+base
+cpass
+dplyr
+ggplot2
+purrr
+tibble
+tidyr
+stringr
+magrittr
