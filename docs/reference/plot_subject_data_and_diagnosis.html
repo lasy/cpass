@@ -163,7 +163,7 @@ By default, the name of the pdf is <code>CPASS_SUBJECT_X.pdf</code>, where <code
       <td><p>string specifying the color of a score of 6 (the maximal score) reported by a subject. Any standard color format specification is accepted, i.e. one of the R built-in color names (e.g. "tomato" (default); type <code><a href='https://rdrr.io/r/grDevices/colors.html'>colors()</a></code> to see the names of all R built-in colors), an RGB hex code (e.g. "#AA2199") or a color specified via one of the color/palette functions (e.g. hsv(0.1,0.9,0.9))</p></td>
     </tr>
     <tr>
-      <th>colors_summary</th>
+      <th>color_summary</th>
       <td><p>string. Either <code>"complementary"</code> (default) or <code>"rainbow"</code> specifying the type of color scheme for the ITEM items in the diagnosis summary. If <code>"complementary"</code>, the colors are chosen complementary within a domain; if <code>"rainbow"</code>, the ITEM colors are different for each item and chosen from a rainbow palette.</p></td>
     </tr>
     </table>
@@ -174,11 +174,15 @@ By default, the name of the pdf is <code>CPASS_SUBJECT_X.pdf</code>, where <code
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>PMDD_data</span><span class='op'>)</span>
-<span class='va'>input</span> <span class='op'>=</span> <span class='va'>PMDD_data</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>SUBJECT</span> <span class='op'>==</span> <span class='fl'>2</span><span class='op'>)</span> <span class='op'>%&gt;%</span>  <span class='fu'><a href='as_cpass_data.html'>as_cpass_data</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in PMDD_data %&gt;% filter(SUBJECT == 2) %&gt;% as_cpass_data(): could not find function "%&gt;%"</span></div><div class='input'><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>plot_subject_data_and_diagnosis</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>input</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in unique(data$SUBJECT): object 'input' not found</span></div><div class='input'><span class='va'>p</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'p' not found</span></div></pre>
+<span class='va'>input</span> <span class='op'>=</span> <span class='va'>PMDD_data</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>SUBJECT</span> <span class='op'>==</span> <span class='fl'>2</span><span class='op'>)</span> <span class='op'>%&gt;%</span>  <span class='fu'><a href='as_cpass_data.html'>as_cpass_data</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Number of SUBJECTS:  1 
+#&gt; Total number of CYCLES:  2 </div><div class='input'><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>plot_subject_data_and_diagnosis</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>input</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Subject summary saved in ' /Users/laurasymul/Documents/Work/Ladies &amp; Gentlemen/Packages/cpass/docs/reference/CPASS_SUBJECT_2.pdf '</div><div class='input'><span class='va'>p</span>
+</div><div class='img'><img src='plot_subject_data_and_diagnosis-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
