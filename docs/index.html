@@ -40,7 +40,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -78,14 +78,30 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#the-cpass-r-package" class="anchor"></a>The cpass R package</h1></div>
 <p><code>cpass</code> is an <code>R</code> package for the application of the C-PASS procedure for the diagnosis of PMDD and MRMD.</p>
-<p>Before installing <code>cpass</code>, make sure that you have the <code>devtools</code> package installed by running in your <code>R</code> console:</p>
+<div id="installation-instructions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation-instructions" class="anchor"></a>Installation instructions</h2>
+<ol>
+<li><p>To use this package, you need <code>R</code> installed on your computer. To install <code>R</code>, follow these <a href="https://cran.r-project.org">instructions</a>.</p></li>
+<li><p>(optional) Once you have installed <code>R</code>, we recommend that you also install the programming environment <code>RStudio</code>, which makes it easier to interact with <code>R</code>. To download <code>RStudio</code>, go on their <a href="https://rstudio.com/products/rstudio/download/">website</a> and download their free Desktop version.</p></li>
+<li><p>Once both of these are installed, open <code>RStudio</code>. If you need a crash course or a refresher on <code>R</code>, we recommend these <a href="https://www.r-bloggers.com/2015/12/how-to-learn-r-2/">tutorials</a> as well as getting familiar with the <a href="https://www.tidyverse.org">tidyverse package suite</a>.</p></li>
+<li><p>Before installing the <code>cpass</code> package, make sure to install the <code>devtools</code> package by running,in your <code>R</code> console, the following two commands:</p></li>
+</ol>
 <p><code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages("devtools")</a></code></p>
 <p><code><a href="https://devtools.r-lib.org/">library(devtools)</a></code></p>
-<p>Then install and load the <code>cpass</code> package with:</p>
+<ol>
+<li>You can now and load the <code>cpass</code> package with:</li>
+</ol>
 <p><code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github("lasy/cpass", dependencies = TRUE)</a></code></p>
 <p><code><a href="https://lasy.github.io/cpass/">library(cpass)</a></code></p>
-<p>The package vignette, <em>i.e.</em> instructions for installing and using the package, can be found <a href="https://lasy.github.io/cpass/articles/cpass_vignette.html">here</a>.</p>
+</div>
+<div id="using-the-cpass-package" class="section level2">
+<h2 class="hasAnchor">
+<a href="#using-the-cpass-package" class="anchor"></a>Using the <code>cpass</code> package.</h2>
+<p>The package vignette, <em>i.e.</em> instructions for installing and using the package, can be found <a href="https://lasy.github.io/cpass/articles/cpass_vignette.html">here</a>. This vignette provides examples so that you can perform the same analyses on your data.</p>
 <p>The description and validation of the C-PASS procedure can be found in <a href="https://github.com/lasy/cpass/blob/master/references/eisenlohr-moul2016.pdf">Eisenlohr-Moul, et al., 2016</a>.</p>
+<p>In addition to the C-PASS procedure for the diagnosis of PMDD and MRMD, the <code>cpass</code> package also proposes the diagnosis of PME (pre-menstrual exacerbation). This function is still experimental and has not be validated clinically. Please, use with caution.</p>
+</div>
 </div>
 
   </div>

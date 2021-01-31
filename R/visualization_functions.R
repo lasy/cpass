@@ -37,7 +37,7 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
                    stringr::str_c(subject, collapse = ", "))
   )
 
-  subject_diagnosis = CPASS(data)
+  subject_diagnosis = CPASS(data, silent = TRUE)
 
   gtitle = ggplot()
   gtitle = gtitle +
@@ -347,6 +347,8 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
                            rel_widths = c(14,3,3,4)) # 2, 1.2
   }
 
+  if(add_diagnosis) message("PME diagnosis is still experimental and has not be validated clinically. Please, use with caution.\n")
+
   return(g)
 }
 
@@ -392,6 +394,9 @@ plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max
                         })
 
   g_all_cycles = cowplot::plot_grid(plotlist = plotlist, ncol=1, align="v")
+
+  if(add_diagnosis) message("PME diagnosis is still experimental and has not be validated clinically. Please, use with caution.\n")
+
   return(g_all_cycles)
 }
 
@@ -451,6 +456,9 @@ plot_subject_data_and_diagnosis =
       cat("Subject summary saved in '",pdf_filename,"'\n")
       return(invisible(g))
     }
+
+    message("PME diagnosis is still experimental and has not be validated clinically. Please, use with caution.\n")
+
     return(g)
   }
 
