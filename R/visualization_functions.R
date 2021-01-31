@@ -10,7 +10,6 @@
 #' This function calls the \code{CPASS} function and provides a visualization of the diagnosis.
 #' @param data a data.frame that contains the symptoms reported by ONE subject. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{ITEM}, \code{DRSP_score}
 #' @param color_summary string. Either \code{"complementary"} (default) or \code{"rainbow"} specifying the type of color scheme for the ITEM items in the diagnosis summary. If \code{"complementary"}, the colors are chosen complementary within a domain; if \code{"rainbow"}, the DRSP items colors are different for each item and chosen from a rainbow palette.
-#'
 #' @keywords CPASS C-PASS PMDD MRMD
 #' @return a ggplot object
 #' @export
@@ -163,6 +162,7 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
 #' @param data a data.frame that contains the symptoms reported in ONE cycle by ONE subject. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{ITEM}, \code{DRSP_score}
 #' @param add_diagnosis logical. If \code{TRUE} (default), the diagnoses at the ITEM, DSM5-DOMAIN and CYCLE levels are displayed together with the subject's reported scores. If \code{FALSE}, only the reported scores are displayed.
 #' @param color_max_score string specifying the color of a score of 6 (the maximal score) reported by a subject. Any standard color format specification is accepted, i.e. one of the R built-in color names (e.g. "tomato" (default); type \code{colors()} to see the names of all R built-in colors), an RGB hex code (e.g. "#AA2199") or a color specified via one of the color/palette functions (e.g. hsv(0.1,0.9,0.9))
+#' @param silent a \code{logical} specifying is the function should print messages or run silently. Default is \code{FALSE}.
 #' @keywords CPASS C-PASS PMDD MRMD
 #' @return a ggplot object
 #' @export
@@ -179,7 +179,7 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
 #'
 
 
-plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max_score = "tomato"){
+plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max_score = "tomato", silent = FALSE){
   add_legend = FALSE # to change
   columns = c("CYCLE","DAY","PHASE","ITEM","DRSP_score")
   if(any(!(columns %in% colnames(data)))){stop(stringr::str_c("The data must include the following columns:",columns))}
@@ -189,7 +189,7 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 
   if(add_diagnosis){
 
-    cycle_diagnosis = CPASS(data)
+    cycle_diagnosis = CPASS(data, silent = TRUE)
 
     title_add = stringr::str_c("     ",ifelse(cycle_diagnosis$CYCLE_level_diagnosis$included,cycle_diagnosis$CYCLE_level_diagnosis$diagnosis,"not included"))
 
@@ -347,7 +347,7 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
                            rel_widths = c(14,3,3,4)) # 2, 1.2
   }
 
-  if(add_diagnosis) message("PME diagnosis is still experimental and has not be validated clinically. Please, use with caution.\n")
+  if(!silent & add_diagnosis) message("PME diagnosis is still experimental and has not be validated clinically. Please, use with caution.\n")
 
   return(g)
 }
@@ -359,6 +359,7 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 #' @param data a data.frame that contains the symptoms reported by ONE subject. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{ITEM}, \code{DRSP_score}
 #' @param add_diagnosis logical. If \code{TRUE} (default), the diagnoses at the ITEM, DSM5-DOMAIN and CYCLE levels are displayed together with the subject's reported scores. If \code{FALSE}, only the reported scores are displayed.
 #' @param color_max_score string specifying the color of a score of 6 (the maximal score) reported by a subject. Any standard color format specification is accepted, i.e. one of the R built-in color names (e.g. "tomato" (default); type \code{colors()} to see the names of all R built-in colors), an RGB hex code (e.g. "#AA2199") or a color specified via one of the color/palette functions (e.g. hsv(0.1,0.9,0.9))
+#' @param silent a \code{logical} specifying is the function should print messages or run silently. Default is \code{FALSE}.
 #' @keywords CPASS C-PASS PMDD MRMD
 #' @return a ggplot object
 #' @export
@@ -375,7 +376,7 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 #'
 
 
-plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max_score = "tomato"){
+plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max_score = "tomato", silent = FALSE){
   columns = c("CYCLE","DAY","PHASE","ITEM","DRSP_score")
   if(any(!(columns %in% colnames(data)))){stop(stringr::str_c("The data must include the following columns:",columns))}
   if(("SUBJECT" %in% colnames(data)) & (length(unique(data$SUBJECT))>1)){stop("The data must include the observations of only ONE subject")}
@@ -390,12 +391,12 @@ plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max
   plotlist = purrr::map(.x = cycles,
                         .f = function(cycle){
                           this_cycle_data = data[which(data$CYCLE == cycle),] #data %>% dplyr::filter(CYCLE == cycle)
-                          plot_subject_cycle_obs(data = this_cycle_data, add_diagnosis = add_diagnosis, color_max_score = color_max_score)
+                          plot_subject_cycle_obs(data = this_cycle_data, add_diagnosis = add_diagnosis, color_max_score = color_max_score, silent = TRUE)
                         })
 
   g_all_cycles = cowplot::plot_grid(plotlist = plotlist, ncol=1, align="v")
 
-  if(add_diagnosis) message("PME diagnosis is still experimental and has not be validated clinically. Please, use with caution.\n")
+  if(!silent & add_diagnosis) message("PME diagnosis is still experimental and has not be validated clinically. Please, use with caution.\n")
 
   return(g_all_cycles)
 }
@@ -442,7 +443,7 @@ plot_subject_data_and_diagnosis =
   ){
 
     g_diagnosis_summary = suppressWarnings(plot_subject_diagnosis(data = data, color_summary = color_summary))
-    g_data = suppressWarnings(plot_subject_obs(data = data, add_diagnosis = TRUE, color_max_score = color_max_score))
+    g_data = suppressWarnings(plot_subject_obs(data = data, add_diagnosis = TRUE, color_max_score = color_max_score, silent = TRUE))
     n_cycles = length(g_data$layers)
     g = suppressWarnings(cowplot::plot_grid(g_diagnosis_summary, g_data, ncol = 1, nrow = 2, rel_heights = c(1.2, n_cycles)))
     #g
