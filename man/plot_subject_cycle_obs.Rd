@@ -7,7 +7,8 @@
 plot_subject_cycle_obs(
   data = data.frame(),
   add_diagnosis = TRUE,
-  color_max_score = "tomato"
+  color_max_score = "tomato",
+  silent = FALSE
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ plot_subject_cycle_obs(
 \item{add_diagnosis}{logical. If \code{TRUE} (default), the diagnoses at the ITEM, DSM5-DOMAIN and CYCLE levels are displayed together with the subject's reported scores. If \code{FALSE}, only the reported scores are displayed.}
 
 \item{color_max_score}{string specifying the color of a score of 6 (the maximal score) reported by a subject. Any standard color format specification is accepted, i.e. one of the R built-in color names (e.g. "tomato" (default); type \code{colors()} to see the names of all R built-in colors), an RGB hex code (e.g. "#AA2199") or a color specified via one of the color/palette functions (e.g. hsv(0.1,0.9,0.9))}
+
+\item{silent}{a \code{logical} specifying is the function should print messages or run silently. Default is \code{FALSE}.}
 }
 \value{
 a ggplot object
