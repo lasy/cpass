@@ -4,15 +4,17 @@
 \alias{as_cpass_data}
 \title{Transforms into a "cpass" data.frame.}
 \usage{
-as_cpass_data(data, sep_event = c("menses", "ovulation"), verbose = TRUE)
+as_cpass_data(data, sep_event = NULL, silent = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{data}{a data.frame that contains symptoms reported subjects.
 The data must be in a long format, _i.e._ one row per subject, day (date or cycle + cycleday) and DRSP item.
 The data.frame must have the following columns: \code{SUBJECT}, \code{ITEM}, \code{DRSP_score} as well as two columns defining time.
-These two columns can be \code{CYCLE} + \code{DAY} or \code{DATE} + \code{IS_FIRST_DAY}.}
+These two columns can be \code{CYCLE} + \code{DAY} or \code{date} + \code{is_cycle_start}.}
 
-\item{sep_event}{an optional character \code{"menses"} (default) or \code{"ovulation"} which defines if the pre- and post-menstrual phases are separated by the menses or by ovulation within a cycle (values of the column \code{CYCLE} in the provided data).}
+\item{sep_event}{(required) character (\code{"menses"} or \code{"ovulation"}) specifying whether the menstrual event separating the two phases of interest ("pre" and "post" week) is the menses or ovulation. If the menses is the separating event, the week preceding the menstruation ("pre") is compared to the week following the menstruation ("post"). In that case, the "pre" and the "post" week do NOT belong to the same cycle. If ovulation is the separating event, then the two phases belong to the same cycle.}
+
+\item{silent}{(optional) logical, default = \code{FALSE}. Should warning messages be printed?}
 
 \item{verbose}{(optional) logical. Should the function print additional information? (mostly used for debugging purposes)}
 }
@@ -25,7 +27,7 @@ This function checks if the data can be used by the CPASS functions and transfor
 \examples{
 random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), ITEM = 1:24)
 random_data$DRSP_score = sample(1:6, nrow(random_data), replace = TRUE)
-cpass_data = as_cpass_data(random_data)
+cpass_data = as_cpass_data(random_data, sep_event = "menses")
 colnames(cpass_data)
 }
 \keyword{C-PASS}

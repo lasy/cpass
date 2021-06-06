@@ -26,7 +26,7 @@ library(magrittr)
 library(dplyr)
 
 data(PMDD_data)
-input = PMDD_data \%>\% filter(SUBJECT == 2) \%>\%  as_cpass_data()
+input = PMDD_data \%>\% filter(SUBJECT == 2) \%>\%  as_cpass_data(., sep_event = "menses")
 plot_subject_diagnosis(data = input)
 }
 \keyword{C-PASS}

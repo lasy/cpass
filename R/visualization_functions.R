@@ -21,7 +21,7 @@
 #' library(dplyr)
 #'
 #' data(PMDD_data)
-#' input = PMDD_data %>% filter(SUBJECT == 2) %>%  as_cpass_data()
+#' input = PMDD_data %>% filter(SUBJECT == 2) %>%  as_cpass_data(., sep_event = "menses")
 #' plot_subject_diagnosis(data = input)
 
 
@@ -55,7 +55,7 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
   daily_summary = subject_diagnosis$daily_summary_per_ITEM
   daily_summary = daily_summary %>%
     dplyr::full_join(.,
-                     dsm5_dict %>%  select(ITEM,ITEM_desc, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY),
+                     dsm5_dict %>%  dplyr::select(ITEM,ITEM_desc, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY),
                      by = "ITEM") %>%
     dplyr::ungroup() %>%
     dplyr::mutate(ITEM = factor(ITEM, levels = dsm5_dict$ITEM),
@@ -63,7 +63,7 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
                   DSM5_SYMPTOM_DOMAIN = factor(DSM5_SYMPTOM_DOMAIN, levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN)))
 
   if(color_summary == "complementary"){
-    dsm5_dict = dsm5_dict %>% dplyr::group_by(DSM5_SYMPTOM_DOMAIN) %>% dplyr::mutate(n_within_domain = row_number())
+    dsm5_dict = dsm5_dict %>% dplyr::group_by(DSM5_SYMPTOM_DOMAIN) %>% dplyr::mutate(n_within_domain = dplyr::row_number())
     daily_summary = daily_summary %>%
       dplyr::mutate(ITEM_color = dsm5_dict$n_within_domain[match(ITEM, dsm5_dict$ITEM)] %>%
                       factor(., levels = 1:max(dsm5_dict$n_within_domain)))
@@ -72,21 +72,24 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
       dplyr::mutate(ITEM_color = ITEM_desc)
   }
 
-  g_daily_summary = ggplot(daily_summary, aes(x = DAY, group = ITEM_desc))
-  g_daily_summary = g_daily_summary +
-    geom_hline(yintercept = 1, col = "gray60")+
-    geom_hline(yintercept = 3.8, linetype = 2, col = "gray60")+
-    #geom_ribbon(aes(ymin = min, ymax = max, fill = ITEM_desc), alpha = 0.2)+
-    geom_line(aes(y = ave, col = ITEM_color), na.rm = TRUE)+
-    geom_area(position = "identity",aes(y = ave, fill = ITEM_color), alpha = 0.3, na.rm = TRUE)+
-    geom_point(aes(y = ave, col = ITEM_color), na.rm = TRUE)+
-    scale_x_continuous(breaks = c(-7,-4,-1,1,4,7,10), minor_breaks = c(-7:-1,4:10))+
-    scale_y_continuous(breaks = c(1,4), minor_breaks = 1:6)+
-    coord_cartesian(ylim=c(1, 6))+
-    ylab("")+xlab("")+
-    facet_grid(DSM5_SYMPTOM_DOMAIN ~ PHASE, scale = "free_x", switch = "y")+
-    theme_minimal()+
-    theme(strip.text.y = element_text(angle = 0, hjust = 1),
+  g_daily_summary =
+    ggplot(daily_summary, aes(x = DAY, group = ITEM_desc))
+  g_daily_summary =
+    g_daily_summary +
+    geom_hline(yintercept = 1, col = "gray60") +
+    geom_hline(yintercept = 3.8, linetype = 2, col = "gray60") +
+    #geom_ribbon(aes(ymin = min, ymax = max, fill = ITEM_desc), alpha = 0.2) +
+    geom_line(aes(y = ave, col = ITEM_color), na.rm = TRUE) +
+    geom_area(data = daily_summary %>% dplyr::filter(!is.na(ave)), position = "identity",
+              aes(y = ave, fill = ITEM_color, group = ITEM), alpha = 0.3, na.rm = TRUE) +
+    geom_point(aes(y = ave, col = ITEM_color), na.rm = TRUE) +
+    scale_x_continuous(breaks = c(-7,-4,-1,1,4,7,10), minor_breaks = c(-7:-1,4:10)) +
+    scale_y_continuous(breaks = c(1,4), minor_breaks = 1:6) +
+    coord_cartesian(ylim=c(1, 6)) +
+    ylab("")+xlab("") +
+    facet_grid(DSM5_SYMPTOM_DOMAIN ~ PHASE, scale = "free_x", switch = "y") +
+    theme_minimal() +
+    theme(strip.text.y = element_text(angle = 0, hjust = 0.5, size = 7),
           strip.background.y = element_rect(fill = .get_strip_background_color(), color = NA),
           strip.placement = "outside",
           strip.text.x = element_blank(),
@@ -94,7 +97,7 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
           panel.spacing.y = unit(5,"pt"),
           legend.position = "none",
           plot.title.position = "plot"
-    )+
+    ) +
     ggtitle("ITEM daily averages")
   if(color_summary == "complementary")
     g_daily_summary = g_daily_summary +
@@ -104,7 +107,7 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
   summary = subject_diagnosis$summary_ITEM
   summary =
     dplyr::full_join(summary,
-                     dsm5_dict %>%  select(ITEM,ITEM_desc, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY),
+                     dsm5_dict %>%  dplyr::select(ITEM,ITEM_desc, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY),
                      by = "ITEM") %>%
     dplyr::ungroup() %>%
     dplyr::mutate(ITEM_fac = factor(ITEM, levels = dsm5_dict$ITEM),
@@ -112,7 +115,7 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
                   DSM5_SYMPTOM_DOMAIN = factor(DSM5_SYMPTOM_DOMAIN, levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN)))
 
   if(color_summary == "complementary"){
-    dsm5_dict = dsm5_dict %>% dplyr::group_by(DSM5_SYMPTOM_DOMAIN) %>% dplyr::mutate(n_within_domain = row_number())
+    dsm5_dict = dsm5_dict %>% dplyr::group_by(DSM5_SYMPTOM_DOMAIN) %>% dplyr::mutate(n_within_domain = dplyr::row_number())
     summary = summary %>%
       dplyr::mutate(ITEM_color = dsm5_dict$n_within_domain[match(ITEM, dsm5_dict$ITEM)]%>%
                       factor(., levels = 1:max(dsm5_dict$n_within_domain)))
@@ -147,7 +150,7 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
 
   #g_summary
 
-  plots = cowplot::plot_grid(plotlist = list(g_daily_summary, g_summary), ncol = 2, nrow =1,  rel_widths = c(14,10))
+  plots = cowplot::plot_grid(plotlist = list(g_daily_summary, g_summary), ncol = 2, nrow =1,  rel_widths = c(14,13.5))
   plots_with_title = cowplot::plot_grid(plotlist = list(gtitle, plots), ncol = 1, nrow =2,  rel_heights = c(1,10))
 
   return(plots_with_title)
@@ -174,7 +177,7 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
 #' library(dplyr)
 #'
 #' data(PMDD_data)
-#' input = PMDD_data %>% filter(SUBJECT == 2, CYCLE == 1)  %>%  as_cpass_data()
+#' input = PMDD_data %>% filter(SUBJECT == 2, CYCLE == 1)  %>%  as_cpass_data(., sep_event = "menses")
 #' plot_subject_cycle_obs(data = input)
 #'
 
@@ -211,24 +214,41 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
           ifelse(stringr::str_detect(criteria,"PMDD"),
                  "PMDD","PME") %>%
           factor(., levels = c("PME", "PMDD")),
-        ITEM = ITEM %>% factor(., levels = rev(dsm5_dict$ITEM)),
         DSM5_SYMPTOM_DOMAIN = DSM5_SYMPTOM_DOMAIN %>%
           factor(., levels = dsm5_dict$DSM5_SYMPTOM_DOMAIN %>% unique()),
         meets_criteria = ifelse(ITEM %in% c(20,22:24), NA, meets_criteria )
-      )
+      ) %>%
+      dplyr::left_join(., dsm5_dict %>% dplyr::ungroup() %>% dplyr::select(ITEM, ITEM_desc), by = "ITEM") %>%
+      dplyr::arrange(-ITEM) %>%
+      dplyr::mutate(ITEM_axis = paste0(ITEM,". ",ITEM_desc),
+             ITEM_axis = ITEM_axis %>% factor(., levels = ITEM_axis %>%  unique()))
 
-    g_item = ggplot(ITEM_diagnosis, aes(x = 1, y = ITEM, fill = meets_criteria))
+    g_item_names =
+      ggplot(ITEM_diagnosis, aes(x = 1, y = ITEM_axis)) +
+      geom_blank() +
+      facet_grid(DSM5_SYMPTOM_DOMAIN ~ ., scale = "free", space = "free") +
+      ggtitle(" ") +
+      xlab("") + ylab("") +
+      scale_x_continuous(breaks = NULL)+
+      theme_minimal() +
+      theme(strip.text.y = element_blank(),
+            title = element_text(size = 9, hjust = 0.5))
+
+
+    g_item = ggplot(ITEM_diagnosis, aes(x = 1, y = ITEM_axis, fill = meets_criteria))
     g_item = g_item +
-      geom_tile(col = "white", na.rm = TRUE) +
+      geom_tile(col = "white", size = 0.5, na.rm = TRUE) +
       guides(fill = FALSE) +
       xlab("")+ylab("")+
       scale_x_continuous(breaks = NULL)+
-      scale_fill_manual(values = c("gray90", color_max_score), breaks = c(FALSE, TRUE), na.value = "gray45")+
+      scale_fill_manual(values = c("gray90", color_max_score), breaks = c(FALSE, TRUE), na.value = "transparent")+
       facet_grid(DSM5_SYMPTOM_DOMAIN ~ criteria, scale = "free", space = "free") +
       ggtitle("ITEM") +
       theme_minimal() +
       theme(strip.text.y = element_blank(),
-            title = element_text(size = 9, hjust = 0.5))
+            axis.text.y = element_blank(),
+            strip.text.x = element_text(size = 7),
+            plot.title = element_text(size = 9, hjust = 0.5))
     # g_item
 
 
@@ -252,27 +272,29 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
           factor(., levels = c("PME", "PMDD"))) %>%
       dplyr::left_join(
         .,
-        dsm5_dict %>% select(ITEM, DSM5_SYMPTOM_DOMAIN),
+        dsm5_dict %>% dplyr::select(ITEM, DSM5_SYMPTOM_DOMAIN),
         by = c("DSM5_SYMPTOM_DOMAIN")) %>%
       dplyr::mutate(
         ITEM = ITEM %>% factor(., levels = rev(dsm5_dict$ITEM)),
         DSM5_SYMPTOM_DOMAIN = DSM5_SYMPTOM_DOMAIN %>%
           factor(., levels = dsm5_dict$DSM5_SYMPTOM_DOMAIN %>% unique()),
-        meets_criteria = ifelse(ITEM %in% c(20,22:24), NA, meets_criteria )
+        meets_criteria = ifelse(ITEM %in% c(22:24), NA, meets_criteria )
       )
 
     g_domain = ggplot(DOMAIN_diagnosis, aes(x = 1, y = ITEM, fill = meets_criteria))
     g_domain = g_domain +
-      geom_tile(col = NA, na.rm = TRUE) +
+      geom_tile(col = "transparent", na.rm = TRUE) +
       guides(fill = FALSE) +
       xlab("")+ylab("")+
       scale_x_continuous(breaks = NULL)+
-      scale_fill_manual(values = c("gray90", color_max_score), breaks = c(FALSE, TRUE), na.value = "gray45")+
+      scale_fill_manual(values = c("gray90", color_max_score), breaks = c(FALSE, TRUE), na.value = "transparent")+
       facet_grid(DSM5_SYMPTOM_DOMAIN ~ criteria, scale = "free", space = "free") +
       ggtitle("DOMAIN") +
       theme_minimal() +
       theme(strip.text.y = element_blank(),
-            title = element_text(size = 9, hjust = 0.5))
+            strip.text.x = element_text(size = 7),
+            plot.title = element_text(size = 9, hjust = 0.5),
+            axis.text.y = element_blank())
     # g_domain
 
 
@@ -293,13 +315,15 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
       guides(fill = FALSE) +
       xlab("")+ylab("")+
       scale_x_continuous(breaks = NULL)+
-      scale_y_continuous(breaks = NULL, limits = c(0.5,1.5)) +
+      scale_y_continuous(breaks = NULL, limits = c(0.5,1.5), expand = c(0,0)) +
       scale_fill_manual(values = c("gray90", color_max_score), breaks = c(FALSE, TRUE), na.value = "gray45")+
       facet_grid(. ~ criteria, scale = "free", space = "free") +
       ggtitle("CYCLE") +
       theme_minimal() +
       theme(strip.text.y = element_blank(),
-            title = element_text(size = 9, hjust = 0.5))
+            strip.text.x = element_text(size = 7),
+            plot.title = element_text(size = 9, hjust = 0.5)
+            )
     # g_cycle
 
   }else{
@@ -312,9 +336,7 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 
   obs = obs %>%
     dplyr::mutate(ITEM = ITEM %>% factor(.,levels = rev(dsm5_dict$ITEM)),
-                  DSM5_SYMPTOM_DOMAIN = DSM5_SYMPTOM_DOMAIN %>% factor(.,levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN)),
-                  PHASE = PHASE %>%  factor(.,levels = c("pre","post")))
-
+                  DSM5_SYMPTOM_DOMAIN = DSM5_SYMPTOM_DOMAIN %>% factor(.,levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN))) # , PHASE = PHASE %>%  factor(.,levels = c("pre","post"))
 
   gcanvas = ggplot(obs, aes(x = DAY, y = ITEM,  fill = DRSP_score))
   g = gcanvas +
@@ -326,7 +348,7 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
     guides(size = FALSE)+ # col = FALSE
     facet_grid(DSM5_SYMPTOM_DOMAIN ~ PHASE, scale = "free", space = "free", switch = "y")+
     theme_minimal()+
-    theme(strip.text.y = element_text(angle = 0, hjust = 0.5),
+    theme(strip.text.y = element_text(angle = 0, hjust = 0.5, size = 7),
           strip.background.y = element_rect(fill = .get_strip_background_color(), color = NA),
           strip.placement = "outside",
           panel.spacing.x = unit(30,"pt"),
@@ -340,11 +362,12 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 
   if(add_diagnosis){
     g = cowplot::plot_grid(g,
+                           g_item_names,
                            g_item, g_domain, g_cycle,
                            align = "h",
                            axis = "tb",
                            nrow = 1,
-                           rel_widths = c(14,3,3,4)) # 2, 1.2
+                           rel_widths = c(14, 3, 3, 3, 4.5)) # 2, 1.2
   }
 
   if(!silent & add_diagnosis) message("PME diagnosis is still experimental and has not be validated clinically. Please, use with caution.\n")
@@ -371,7 +394,7 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 #' library(dplyr)
 #'
 #' data(PMDD_data)
-#' input = PMDD_data %>% filter(SUBJECT == 2)  %>%  as_cpass_data()
+#' input = PMDD_data %>% filter(SUBJECT == 2)  %>%  as_cpass_data(., sep_event = "menses")
 #' plot_subject_obs(data = input)
 #'
 
@@ -430,7 +453,7 @@ plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max
 #' library(dplyr)
 #'
 #' data(PMDD_data)
-#' input = PMDD_data %>% filter(SUBJECT == 2) %>%  as_cpass_data()
+#' input = PMDD_data %>% filter(SUBJECT == 2) %>%  as_cpass_data(., sep_event = "menses")
 #' p = plot_subject_data_and_diagnosis(data = input)
 #' p
 
@@ -453,7 +476,7 @@ plot_subject_data_and_diagnosis =
       if(pdf_path == ""){pdf_path = getwd()}
       if((pdf_path != "") && (stringr::str_sub(pdf_path, -1) != "/")){pdf_path = stringr::str_c(pdf_path, "/")}
       pdf_filename = stringr::str_c(pdf_path,pdf_name)
-      ggsave(g, filename = pdf_filename, width = 75, height = 50* (1.2 + length(g_data$layers)), units = "mm", scale = 3)
+      ggsave(g, filename = pdf_filename, width = 75, height = 50* (1.2 + length(g_data$layers)), units = "mm", scale = 3.7)
       cat("Subject summary saved in '",pdf_filename,"'\n")
       return(invisible(g))
     }

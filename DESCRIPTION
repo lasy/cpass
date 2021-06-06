@@ -23,10 +23,14 @@ Imports:
     purrr,
     tidyr,
     stringr,
-    ggpubr
+    ggpubr,
+    HiddenSemiMarkov
 Depends: 
     R (>= 2.10)
 Suggests: 
     knitr,
-    rmarkdown
+    markdown,
+    rmarkdown,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3

@@ -4,6 +4,7 @@
 #'
 #' This function implements the C-PASS procedure and returns a list of 6 tables of summaries and diagnoses at different levels (subjects, cycles, domains, etc).
 #' @param data a \code{cpass.data} object that contains the symptom DRSP scores reported by the subjects. To transform your data into a \code{cpass.data} object, use the function \code{as_cpass_data()}.
+#' @param sep_event (optional) character (\code{"menses"} or \code{"ovulation"}) specifying whether the menstrual event separating the two phases of interest ("pre" and "post" week) is the menses or ovulation. If the menses is the separating event, the week preceding the menstruation ("pre") is compared to the week following the menstruation ("post"). In that case, the "pre" and the "post" week do NOT belong to the same cycle. If ovulation is the separating event, then the two phases belong to the same cycle.
 #' @param silent a \code{logical} specifying is the function should print messages or run silently. Default is \code{FALSE}.
 #'
 #' @keywords CPASS C-PASS PMDD MRMD
@@ -21,35 +22,43 @@
 #' @importFrom magrittr %>%
 #' @examples
 #' data(PMDD_data)
-#' cpass_input = as_cpass_data(PMDD_data)
+#' cpass_input = as_cpass_data(PMDD_data, sep_event = "menses")
 #' output = CPASS(cpass_input)
 #' head(output$SUBJECT_level_diagnosis)
 
-CPASS = function(data, silent = FALSE){
+CPASS = function(data, sep_event = NULL, silent = FALSE){
 
   # Check the data
-  if(!is_cpass_data(data)) stop("data must be of class 'cpass.data'. Use 'as_cpass_data(...)' to check the format of your data and transform them into 'cpass.data'.")
+  if(is.null(sep_event) & ("PHASE" %in% colnames(data)) && (is.factor(data$PHASE)))
+    sep_event = ifelse(match("pre-menses", levels(data$PHASE)) < match("post-menses", levels(data$PHASE)),
+                       "menses", "ovulation")
+  data = as_cpass_data(data, sep_event = sep_event, silent = silent, verbose = FALSE)
+  #if(!is_cpass_data(data, silent = silent)) stop("data must be of class 'cpass.data'. Use 'as_cpass_data(...)' to check the format of your data and transform them into 'cpass.data'.")
 
   # Only keep the pre and post-menstrual phase:
-  data = data %>% dplyr::filter(PHASE %in% c("pre","post"))
+  data = data %>% dplyr::filter(PHASE %in% c("pre-menses","post-menses"))
+  # we join the dsm5_dict
+  data = data %>% dplyr::left_join(., dsm5_dict, by = "ITEM")
 
   #### DRSP level diagnosis
   # enough observations in both phase
   n_obs_min = 4
   output_ITEM_level = data   %>%
     dplyr::group_by(SUBJECT, CYCLE, PHASE,ITEM) %>%
-    dplyr::summarise(n_days_with_obs = sum(!is.na(DRSP_score))) %>%
+    dplyr::summarise(n_days_with_obs = sum(!is.na(DRSP_score)), .groups = "drop") %>%
     dplyr::ungroup() %>%
     dplyr::group_by(SUBJECT, CYCLE, ITEM) %>%
-    dplyr::summarise(at_least_n_obs = sum(n_days_with_obs >= n_obs_min, na.rm = TRUE)>=2)
+    dplyr::summarise(at_least_n_obs = sum(n_days_with_obs >= n_obs_min, na.rm = TRUE)>=2,
+                     .groups = "drop")
 
   # max sev pre-phase
   output_abs_sev = data   %>%
-    dplyr::filter(PHASE == "pre") %>%
+    dplyr::filter(PHASE == "pre-menses") %>%
     dplyr::group_by(SUBJECT, CYCLE, ITEM) %>%
     dplyr::summarise(max_sev_pre = suppressWarnings(max(DRSP_score, na.rm = TRUE)),
                      max_sev_pre = ifelse(is.infinite(max_sev_pre),NA,max_sev_pre),
-                     n_days_high_score = sum(DRSP_score >= 4 , na.rm = TRUE))
+                     n_days_high_score = sum(DRSP_score >= 4 , na.rm = TRUE),
+                     .groups = "drop")
   output_ITEM_level =
     dplyr::full_join(output_ITEM_level, output_abs_sev, by = c("SUBJECT","CYCLE","ITEM"))
 
@@ -59,10 +68,12 @@ CPASS = function(data, silent = FALSE){
     dplyr::summarise(range = max(DRSP_score, na.rm = TRUE)-1)
 
   # relative change
-  output_rel_change = data %>%
+  output_rel_change =
+    data %>%
     dplyr::group_by(SUBJECT, CYCLE, PHASE, ITEM) %>%
-    dplyr::summarise(mean = mean(DRSP_score, na.rm = TRUE)) %>%
+    dplyr::summarise(mean = mean(DRSP_score, na.rm = TRUE), .groups = "drop") %>%
     dplyr::ungroup() %>%
+    dplyr::mutate(PHASE = ifelse(PHASE == "pre-menses","pre","post")) %>%
     tidyr::pivot_wider(names_from = PHASE, values_from = mean, names_prefix = "mean_") %>%
     dplyr::mutate(raw_cyclical_change = mean_pre - mean_post)
   output_rel_change =
@@ -73,15 +84,16 @@ CPASS = function(data, silent = FALSE){
 
   # clearance in the post-menstrual phase
   output_clearance = data   %>%
-    dplyr::filter(PHASE == "post") %>%
+    dplyr::filter(PHASE == "post-menses") %>%
     dplyr::group_by(SUBJECT, CYCLE, ITEM) %>%
-    dplyr::summarise(max_sev_post = suppressWarnings(max(DRSP_score, na.rm = TRUE))) %>%
+    dplyr::summarise(max_sev_post = suppressWarnings(max(DRSP_score, na.rm = TRUE)), .groups = "drop") %>%
     dplyr::mutate(max_sev_post = ifelse(is.infinite(max_sev_post),4,max_sev_post))
 
   output_ITEM_level = dplyr::full_join(output_ITEM_level, output_clearance, by = c("SUBJECT","CYCLE","ITEM"))
 
   # ITEM level diagnosis for this cycle
-  output_ITEM_level = output_ITEM_level %>%
+  output_ITEM_level =
+    output_ITEM_level %>%
     dplyr::mutate(
       ITEM_meets_PMDD_criteria =
         at_least_n_obs & # enough observations
@@ -93,35 +105,50 @@ CPASS = function(data, silent = FALSE){
         at_least_n_obs & # enough observations
         (max_sev_pre >= 4) & # high score pre
         (n_days_high_score >= 2) & # enough days with high score pre
-        (percent_change >= 30)  # at least 30% change in average scores between pre and post
-    )
+        (percent_change >= 30),  # at least 30% change in average scores between pre and post
+      ITEM_meets_PMDD_criteria = ifelse(at_least_n_obs, ITEM_meets_PMDD_criteria, NA),
+      ITEM_meets_PME_criteria = ifelse(at_least_n_obs, ITEM_meets_PME_criteria, NA),
+      )
+
 
   output_ITEM_level =
     dplyr::full_join(output_ITEM_level, dsm5_dict %>% dplyr::select(ITEM,DSM5_SYMPTOM_DOMAIN,SYMPTOM_CATEGORY), by = "ITEM")
 
 
   #### DSM-5 DOMAINS level diagnosis
-  output_DSM5_DOMAINS_level = output_ITEM_level %>%
+  output_DSM5_DOMAINS_level =
+    output_ITEM_level %>%
     dplyr::filter(!(ITEM %in% c(20, 22:24))) %>%
     dplyr::group_by(SUBJECT, CYCLE, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY) %>%
-    dplyr::summarise(DSM5_PMDD_criteria = any(ITEM_meets_PMDD_criteria),
-                     PME_criteria = any(ITEM_meets_PME_criteria))
+    dplyr::summarise(DSM5_PMDD_criteria =
+                       ifelse(
+                         all(is.na(ITEM_meets_PMDD_criteria)), NA,
+                         any(ITEM_meets_PMDD_criteria, na.rm = TRUE)),
+                     PME_criteria =
+                       ifelse(
+                         all(is.na(ITEM_meets_PME_criteria)), NA,
+                         any(ITEM_meets_PME_criteria, na.rm = TRUE)),
+                     .groups = "drop")
 
   #### CYCLE level
   # first we label cycles that have enough observation: we need at least X ITEM with at least nD observed days in each phase
   X = 1
   nD = 4 #
 
-  output_CYCLE_level = data %>%
+  output_CYCLE_level =
+    data %>%
     dplyr::group_by(SUBJECT, CYCLE, PHASE, DAY) %>%
     dplyr::summarize(n_ITEM = sum(!is.na(DRSP_score)),
-                     has_X_ITEM = n_ITEM >= X) %>%
+                     has_X_ITEM = n_ITEM >= X,
+                     .groups = "drop") %>%
     dplyr::ungroup() %>%
     dplyr::group_by(SUBJECT, CYCLE, PHASE) %>%
-    dplyr::summarize(at_least_nD_days = sum(has_X_ITEM, na.rm = TRUE) >= nD)  %>%
+    dplyr::summarize(at_least_nD_days = sum(has_X_ITEM, na.rm = TRUE) >= nD,
+                     .groups = "drop")  %>%
     dplyr::ungroup() %>%
     dplyr::group_by(SUBJECT, CYCLE) %>%
-    dplyr::summarize(at_least_nD_days_in_both_phases = all(at_least_nD_days)) %>%
+    dplyr::summarize(at_least_nD_days_in_both_phases = all(at_least_nD_days),
+                     .groups = "drop") %>%
     dplyr::mutate(included = at_least_nD_days_in_both_phases) %>%
     dplyr::select(SUBJECT, CYCLE, included)
 
@@ -130,7 +157,10 @@ CPASS = function(data, silent = FALSE){
   output_core_emotional_symptom = output_DSM5_DOMAINS_level %>%
     dplyr::filter(SYMPTOM_CATEGORY == "Core Emotional Symptoms") %>%
     dplyr::group_by(SUBJECT, CYCLE) %>%
-    dplyr::summarise(core_emotional_criteria = any(DSM5_PMDD_criteria))
+    dplyr::summarise(core_emotional_criteria =
+                       ifelse(all(is.na(DSM5_PMDD_criteria)), NA,
+                              any(DSM5_PMDD_criteria, na.rm = TRUE)),
+                     .groups = "drop")
 
   output_CYCLE_level = dplyr::full_join(
     output_CYCLE_level,
@@ -146,7 +176,8 @@ CPASS = function(data, silent = FALSE){
     dplyr::group_by(SUBJECT, CYCLE) %>%
     dplyr::summarize(
       n_DSM5_DOMAINS_meeting_PMDD_criteria = sum(DSM5_PMDD_criteria, na.rm = TRUE),
-      five_or_more_DSM5_DOMAINS_PMDD = (n_DSM5_DOMAINS_meeting_PMDD_criteria>=5))
+      five_or_more_DSM5_DOMAINS_PMDD = (n_DSM5_DOMAINS_meeting_PMDD_criteria>=5),
+      .groups = "drop")
 
   output_CYCLE_level = dplyr::full_join(
     output_CYCLE_level,output_DSM5_B, by =  c("SUBJECT", "CYCLE"))
@@ -159,7 +190,8 @@ CPASS = function(data, silent = FALSE){
     dplyr::group_by(SUBJECT, CYCLE) %>%
     dplyr::summarize(
       n_DSM5_DOMAINS_meeting_PME_criteria = sum(PME_criteria, na.rm = TRUE),
-      five_or_more_DSM5_DOMAINS_PME = (n_DSM5_DOMAINS_meeting_PME_criteria>=5))
+      five_or_more_DSM5_DOMAINS_PME = (n_DSM5_DOMAINS_meeting_PME_criteria>=5),
+      .groups = "drop")
 
   output_CYCLE_level = dplyr::full_join(
     output_CYCLE_level,output_PME, by =  c("SUBJECT", "CYCLE"))
@@ -184,11 +216,12 @@ CPASS = function(data, silent = FALSE){
 
   #### SUBJECT level
 
-  output_SUBJECT_level = output_CYCLE_level %>%
+  output_SUBJECT_level =
+    output_CYCLE_level %>%
     dplyr::group_by(SUBJECT) %>%
     dplyr::summarize(
       NCycles_tot = dplyr::n(),
-      NCycles = sum(included),
+      NCycles = sum(included, na.rm = TRUE),
       N_PMDD = ifelse(NCycles>1, sum(diagnosis == "PMDD"), NA),
       N_MRMD = ifelse(NCycles>1, sum(DSM5_A), NA),
       N_PME = ifelse(NCycles>1, sum(PME), NA),
@@ -217,14 +250,15 @@ CPASS = function(data, silent = FALSE){
     dplyr::summarise(ave = mean(DRSP_score, na.rm  = TRUE),
                      med = median(DRSP_score, na.rm  = TRUE),
                      min = suppressWarnings(min(DRSP_score, na.rm  = TRUE)),
-                     max = suppressWarnings(max(DRSP_score, na.rm  = TRUE))
+                     max = suppressWarnings(max(DRSP_score, na.rm  = TRUE)),
+                     .groups = "drop"
     ) %>%
     dplyr::mutate(min = ifelse(is.infinite(min),NA, min),
                   max = ifelse(is.infinite(max),NA, max))
 
   summary_ITEM = output_ITEM_level %>%
     dplyr::group_by(SUBJECT, ITEM) %>%
-    dplyr::summarise(ave_perc_change = mean(percent_change, na.rm = TRUE))
+    dplyr::summarise(ave_perc_change = mean(percent_change, na.rm = TRUE), .groups = "drop")
 
 
   if(!silent) message("PME diagnosis is still experimental and has not be validated clinically. Please, use with caution.\n")

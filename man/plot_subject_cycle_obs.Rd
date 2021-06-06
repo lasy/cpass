@@ -32,7 +32,7 @@ library(magrittr)
 library(dplyr)
 
 data(PMDD_data)
-input = PMDD_data \%>\% filter(SUBJECT == 2, CYCLE == 1)  \%>\%  as_cpass_data()
+input = PMDD_data \%>\% filter(SUBJECT == 2, CYCLE == 1)  \%>\%  as_cpass_data(., sep_event = "menses")
 plot_subject_cycle_obs(data = input)
 
 }

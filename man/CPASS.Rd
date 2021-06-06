@@ -4,10 +4,12 @@
 \alias{CPASS}
 \title{Applies the C-PASS procedure for PMDD and MRMD diagnoses}
 \usage{
-CPASS(data, silent = FALSE)
+CPASS(data, sep_event = NULL, silent = FALSE)
 }
 \arguments{
 \item{data}{a \code{cpass.data} object that contains the symptom DRSP scores reported by the subjects. To transform your data into a \code{cpass.data} object, use the function \code{as_cpass_data()}.}
+
+\item{sep_event}{(optional) character (\code{"menses"} or \code{"ovulation"}) specifying whether the menstrual event separating the two phases of interest ("pre" and "post" week) is the menses or ovulation. If the menses is the separating event, the week preceding the menstruation ("pre") is compared to the week following the menstruation ("post"). In that case, the "pre" and the "post" week do NOT belong to the same cycle. If ovulation is the separating event, then the two phases belong to the same cycle.}
 
 \item{silent}{a \code{logical} specifying is the function should print messages or run silently. Default is \code{FALSE}.}
 }
@@ -28,7 +30,7 @@ This function implements the C-PASS procedure and returns a list of 6 tables of 
 }
 \examples{
 data(PMDD_data)
-cpass_input = as_cpass_data(PMDD_data)
+cpass_input = as_cpass_data(PMDD_data, sep_event = "menses")
 output = CPASS(cpass_input)
 head(output$SUBJECT_level_diagnosis)
 }
