@@ -124,7 +124,7 @@
     <p>This function implements the C-PASS procedure and returns a list of 6 tables of summaries and diagnoses at different levels (subjects, cycles, domains, etc).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>CPASS</span><span class='op'>(</span><span class='va'>data</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>CPASS</span><span class='op'>(</span><span class='va'>data</span>, sep_event <span class='op'>=</span> <span class='cn'>NULL</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -132,6 +132,10 @@
     <tr>
       <th>data</th>
       <td><p>a <code>cpass.data</code> object that contains the symptom DRSP scores reported by the subjects. To transform your data into a <code>cpass.data</code> object, use the function <code><a href='as_cpass_data.html'>as_cpass_data()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>sep_event</th>
+      <td><p>(optional) character (<code>"menses"</code> or <code>"ovulation"</code>) specifying whether the menstrual event separating the two phases of interest ("pre" and "post" week) is the menses or ovulation. If the menses is the separating event, the week preceding the menstruation ("pre") is compared to the week following the menstruation ("post"). In that case, the "pre" and the "post" week do NOT belong to the same cycle. If ovulation is the separating event, then the two phases belong to the same cycle.</p></td>
     </tr>
     <tr>
       <th>silent</th>
@@ -155,21 +159,21 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>PMDD_data</span><span class='op'>)</span>
-<span class='va'>cpass_input</span> <span class='op'>=</span> <span class='fu'><a href='as_cpass_data.html'>as_cpass_data</a></span><span class='op'>(</span><span class='va'>PMDD_data</span><span class='op'>)</span>
+<span class='va'>cpass_input</span> <span class='op'>=</span> <span class='fu'><a href='as_cpass_data.html'>as_cpass_data</a></span><span class='op'>(</span><span class='va'>PMDD_data</span>, sep_event <span class='op'>=</span> <span class='st'>"menses"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Number of SUBJECTS:  20 
-#&gt; Total number of CYCLES:  37 </div><div class='input'><span class='va'>output</span> <span class='op'>=</span> <span class='fu'>CPASS</span><span class='op'>(</span><span class='va'>cpass_input</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>PME diagnosis is still experimental and has not be validated clinically. Please, use with caution.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>output</span><span class='op'>$</span><span class='va'>SUBJECT_level_diagnosis</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 6 x 15</span><span>
+#&gt; Total number of CYCLES:  37 </div><div class='output co'>#&gt; <span class='warning'>Warning: The 'PHASE' column will be over-written</span></div><div class='input'><span class='va'>output</span> <span class='op'>=</span> <span class='fu'>CPASS</span><span class='op'>(</span><span class='va'>cpass_input</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: The 'PHASE' column will be over-written</span></div><div class='output co'>#&gt; <span class='message'>PME diagnosis is still experimental and has not be validated clinically. Please, use with caution.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>output</span><span class='op'>$</span><span class='va'>SUBJECT_level_diagnosis</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 6 x 15</span>
 #&gt;   SUBJECT NCycles_tot NCycles N_PMDD N_MRMD N_PME pmddcycprop mrmdcycprop
-#&gt;     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'>1</span><span>       2           2       2      2      2     2           1         1  
-#&gt; </span><span style='color: #555555;'>2</span><span>      15           1       1     </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>    </span><span style='color: #BB0000;'>NA</span><span>          </span><span style='color: #BB0000;'>NA</span><span>        </span><span style='color: #BB0000;'>NA</span><span>  
-#&gt; </span><span style='color: #555555;'>3</span><span>      17           2       2      0      1     0           0         0.5
-#&gt; </span><span style='color: #555555;'>4</span><span>      21           2       2      0      0     0           0         0  
-#&gt; </span><span style='color: #555555;'>5</span><span>      25           2       2      0      2     1           0         1  
-#&gt; </span><span style='color: #555555;'>6</span><span>      27           2       2      0      1     1           0         0.5
-#&gt; </span><span style='color: #555555;'># … with 7 more variables: pmecycprop </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, PMDD </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #555555;'>, MRMD </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #555555;'>, PME </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   dxcat </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, dx </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, avgdsm5crit </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+#&gt;     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>1</span>       2           2       2      2      2     2           1         1  
+#&gt; <span style='color: #BCBCBC;'>2</span>      15           1       1     <span style='color: #BB0000;'>NA</span>     <span style='color: #BB0000;'>NA</span>    <span style='color: #BB0000;'>NA</span>          <span style='color: #BB0000;'>NA</span>        <span style='color: #BB0000;'>NA</span>  
+#&gt; <span style='color: #BCBCBC;'>3</span>      17           2       2      0      1     0           0         0.5
+#&gt; <span style='color: #BCBCBC;'>4</span>      21           2       2      0      0     0           0         0  
+#&gt; <span style='color: #BCBCBC;'>5</span>      25           2       2      0      2     1           0         1  
+#&gt; <span style='color: #BCBCBC;'>6</span>      27           2       2      0      1     1           0         0.5
+#&gt; <span style='color: #949494;'># … with 7 more variables: pmecycprop &lt;dbl&gt;, PMDD &lt;lgl&gt;, MRMD &lt;lgl&gt;, PME &lt;lgl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   dxcat &lt;dbl&gt;, dx &lt;chr&gt;, avgdsm5crit &lt;dbl&gt;</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

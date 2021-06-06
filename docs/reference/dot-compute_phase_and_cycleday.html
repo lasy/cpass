@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Checks if data is a "CPASS" data.frame. — is_cpass_data • cpass</title>
+<title>Compute cycledays and phases from dates and provided starts of cycles. — .compute_phase_and_cycleday • cpass</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Checks if data is a "CPASS" data.frame. — is_cpass_data" />
-<meta property="og:description" content="Checks if data is a &quot;CPASS&quot; data.frame." />
+<meta property="og:title" content="Compute cycledays and phases from dates and provided starts of cycles. — .compute_phase_and_cycleday" />
+<meta property="og:description" content="Compute cycledays and phases from dates and provided starts of cycles." />
 
 
 
@@ -115,40 +115,51 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Checks if data is a "CPASS" data.frame.</h1>
+    <h1>Compute cycledays and phases from dates and provided starts of cycles.</h1>
     
-    <div class="hidden name"><code>is_cpass_data.Rd</code></div>
+    <div class="hidden name"><code>dot-compute_phase_and_cycleday.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Checks if data is a "CPASS" data.frame.</p>
+    <p>Compute cycledays and phases from dates and provided starts of cycles.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>is_cpass_data</span><span class='op'>(</span><span class='va'>data</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>.compute_phase_and_cycleday</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>sep_event</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>a data.frame that contains symptoms reported subjects. The data must be in a long format and have the following columns: <code>SUBJECT</code>, <code>CYCLE</code>, <code>DAY</code>, <code>DRSP</code>, <code>DRSP_score</code></p></td>
+      <td><p>a data.frame that contains symptoms reported subjects. The data must be in a long format and have the following columns: <code>SUBJECT</code>, <code>ITEM</code>, <code>DRSP_score</code></p></td>
+    </tr>
+    <tr>
+      <th>sep_event</th>
+      <td><p>a character XXX</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a logical.</p>
+    <p>the same data.frame as data with additional columns.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>random_data</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span><span class='op'>(</span>SUBJECT <span class='op'>=</span> <span class='fl'>1</span>, CYCLE <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, DAY <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>,<span class='op'>-</span><span class='fl'>10</span><span class='op'>:</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span>, ITEM <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>24</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='va'>random_data</span> <span class='op'>=</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span><span class='op'>(</span>
+        SUBJECT <span class='op'>=</span> <span class='fl'>1</span>,
+        ITEM <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>24</span>,
+        date <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2020-01-01"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2020-03-01"</span><span class='op'>)</span>, by <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+        <span class='op'>)</span>
 <span class='va'>random_data</span><span class='op'>$</span><span class='va'>DRSP_score</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>random_data</span><span class='op'>)</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='va'>cpass_data</span> <span class='op'>=</span> <span class='fu'><a href='as_cpass_data.html'>as_cpass_data</a></span><span class='op'>(</span><span class='va'>random_data</span>, sep_event <span class='op'>=</span> <span class='st'>"menses"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Number of SUBJECTS:  1 
-#&gt; Total number of CYCLES:  2 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>cpass_data</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "SUBJECT"    "CYCLE"      "PHASE"      "DAY"        "ITEM"      
-#&gt; [6] "DRSP_score"</div><div class='input'><span class='fu'>is_cpass_data</span><span class='op'>(</span><span class='va'>random_data</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>is_cpass_data</span><span class='op'>(</span><span class='va'>cpass_data</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] FALSE</div></pre>
+<span class='va'>random_data</span><span class='op'>$</span><span class='va'>is_cycle_start</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>random_data</span><span class='op'>$</span><span class='va'>date</span> <span class='op'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2020-01-15"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2020-02-20"</span><span class='op'>)</span><span class='op'>)</span>, <span class='cn'>TRUE</span>, <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='va'>augmented_data</span> <span class='op'>=</span> <span class='fu'>.compute_phase_and_cycleday</span><span class='op'>(</span><span class='va'>random_data</span>, sep_event <span class='op'>=</span> <span class='st'>"ovulation"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>augmented_data</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "SUBJECT"                  "CYCLE"                   
+#&gt;  [3] "DAY"                      "ITEM"                    
+#&gt;  [5] "DRSP_score"               "date"                    
+#&gt;  [7] "is_cycle_start"           "natural_cycle_nb"        
+#&gt;  [9] "menses_centered_cycle_nb" "cycleday_fw"             
+#&gt; [11] "cycleday_bw"             </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
