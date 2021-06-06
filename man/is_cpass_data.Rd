@@ -8,6 +8,8 @@ is_cpass_data(data, silent = FALSE)
 }
 \arguments{
 \item{data}{a data.frame that contains symptoms reported subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{DRSP_score}}
+
+\item{silent}{(optional) logical, default = \code{FALSE}. Should warning messages be printed?}
 }
 \value{
 a logical.

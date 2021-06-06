@@ -96,7 +96,7 @@ The `cpass` package contains 3 types of functions:
 
 3. visualization functions: `plot_subject_obs()`, `plot_subject_cycle_obs()`, `plot_subject_diagnosis()` and `plot_subject_data_and_diagnosis()`
 
-A typical `cpass` workflow consists in
+A typical `cpass` workflow consists of
 
 * loading (and formatting) raw data from a `.csv` or `.xls` file
 
@@ -104,14 +104,14 @@ A typical `cpass` workflow consists in
 
 * running the `CPASS()` function on these data and extract some general statistics about the diagnoses
 
-* visualy explore the data of specific subjects with the visualization functions.
+* visually explore the data of specific subjects with the visualization functions.
 
 
 # Package demo
 
 ## Formating raw data into `cpass_data`
 
-The function `as_cpass_data()` transforms raw data into `cpass_data`. The data provided as argument to `as_cpass_data()` must be in long format, _i.e._ one row per subject, cycle, day and DRSP item. 
+The function `as_cpass_data()` transforms raw data into `cpass_data`. The data provided as argument to `as_cpass_data()` must be in long format, _i.e._ one row per subject, cycle, day and DRSP (daily record of severity of problems) item (*i.e.*, the symptom diary used to collect the data for a C-PASS diagnosis). 
 
 ```{r as-cpass-data}
 input = as_cpass_data(d)
@@ -152,7 +152,7 @@ table(diagnosis$SUBJECT_level_diagnosis$dx)
 ```
 
 
-3 subjects (~15%) have a PMDD diagnosis, 3 others have a MRMD diagnosis and 9 subjects (~45%) have no diagnosis for their reported symptoms.
+3 subjects (~15%) have a PMDD diagnosis, 3 others have a MRMD diagnosis and 9 subjects (~45%) have no diagnosis based on their reported symptoms.
 
 The remaining 5 subjects did not have sufficient data to make a diagnosis:
 
@@ -192,12 +192,12 @@ diagnosis$ITEM_level_diagnosis %>%
 
 ```
 
-And we observe that this subject mostly experienced severe anxiety, inability to control their mood, anger and feeling of overwhelm in the pre-menstrual phase of cycle 2.
+And we observe that this subject mostly experienced severe anxiety, inability to control their mood, anger and feeling of overwhelm in the premenstrual phase of cycle 2.
 
 
 ## Visualizing subjects data
 
-While the subject data and diagnoses can be explore by inspecting these tables, the `cpass` package comes with visualization functions which may help in the investigagion of specific subject's data.
+While the subject data and diagnoses can be explored by inspecting these tables, the `cpass` package comes with visualization functions which may help in the investigation of a specific subject's data.
 
 ### Visualizing subject's diagnoses
 
@@ -226,7 +226,7 @@ plot_subject_cycle_obs(data = input %>% filter(SUBJECT == 47, CYCLE == 2))
 ```
 
 
-The two left panels visualize the reported scores with the x-axis being the cycle-days (time) and there is one line per DRSP item on the y-axis. The score of each item for each day is writen on the corresponding (x,y) rectangle. The color of the rectangle is proportional to the score. Low scores (1) are gray, high scores (6) are red. Missing scores are reprensented by transparent rectangles. The panels on the right visualize the items or domains or cycle that fulfil the PMDD criteria. If they do not meet the criteria, their corresponding rectangle is light-gray, if they meet the criteria, they are red. Items that are excluded from the diagnosis procedure are in dark-gray.
+The two left panels visualize the reported scores with the x-axis being the cycle-days (time) and each line of the y-axis representing one DRSP item. The score of each item for each day is written on the corresponding (x,y) rectangle. The color of the rectangle is proportional to the score. Low scores (1) are gray, high scores (6) are red. Missing scores are represented by transparent rectangles. The panels on the right visualize the items or domains or cycle that fulfill the PMDD criteria. If they do not meet the criteria, their corresponding rectangle is light-gray. If they meet the criteria, they are red. Items that are excluded from the diagnosis procedure are in dark-gray.
 
 For this subject, we can compare their second cycle (above) with their third cycle:
 
@@ -255,15 +255,15 @@ plot_subject_obs(data = input %>% filter(SUBJECT == 47))
 
 ### Visualizing subject's reported scores and diagnosis
 
-And finally, the function `plot_subject_data_and_diagnosis()` is useful to visualize at once all reported scores and the diagnosis summaries of a given subject.
+And finally, the function `plot_subject_data_and_diagnosis()` is useful to visualize at once all reported scores and the diagnoses summaries of a given subject.
 
-Because this function may return large visualizations, by default, it prints the visualization to a pdf that has an appropriate size, i.e. a height proportional to the number of cycles reported by the subject.
+Because this function may return large visualizations, by default, it prints the visualization to a pdf that has an appropriate size (*i.e.*, a height proportional to the number of cycles reported by the subject).
 
 By default, the pdf is saved in the current directory and the filename specifies the subject ID but both the path and the pdf name can be specified via the options `pdf_path` and `pdf_name`.
 
 The pdf option can also be turned off with the option `save_as_pdf = FALSE`. In this case, calling the function prints the visualization in R.
 
-If the function is called with the option `save_as_pdf = TRUE` (default), the visualization is returned silently but could be catch by a variable (e.g. `viz = plot_subject_data_and_diagnosis(data); viz`).
+If the function is called with the option `save_as_pdf = TRUE` (default), the visualization is returned silently but could be caught by a variable (e.g. `viz = plot_subject_data_and_diagnosis(data); viz`).
 
 ```{r plot-all, fig.height=50, fig.width=14, out.width='100%'}
 

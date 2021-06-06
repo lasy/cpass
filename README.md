@@ -4,7 +4,7 @@
 
 # The cpass R package
 
-`cpass` is an `R` package for the application of the C-PASS procedure for the diagnosis of PMDD and MRMD.
+`cpass` is an `R` package for the application of the C-PASS (Carolina Premenstrual Assessment Scoring System) procedure for the diagnosis of PMDD (Pre-Menstrual Dysphoric Disorder) and MRMD (Menstrually Related Mood Disorder).
 
 ## Installation instructions
 
@@ -14,13 +14,13 @@
 
 * Once both of these are installed, open `RStudio`. If you need a crash course or a refresher on `R`, we recommend these [tutorials](https://www.r-bloggers.com/2015/12/how-to-learn-r-2/) as well as getting familiar with the [tidyverse package suite](https://www.tidyverse.org).
 
-* Before installing the `cpass` package, make sure to install the `devtools` package by running,in your `R` console, the following two commands: 
+* Before installing the `cpass` package, make sure to install the `devtools` package by running, in your `R` console, the following two commands: 
 
 `install.packages("devtools")`
 
 `library(devtools)`
 
-* You can now and load the `cpass` package with: 
+* You can now install and load the `cpass` package with: 
 
 `devtools::install_github("lasy/cpass", dependencies = TRUE)`
 
@@ -31,6 +31,6 @@
 The package vignette, _i.e._ instructions for installing and using the package, can be found [here](https://lasy.github.io/cpass/articles/cpass_vignette.html). 
 This vignette provides examples so that you can perform the same analyses on your data.
 
-The description and validation of the C-PASS procedure can be found in [Eisenlohr-Moul, et al., 2016](https://github.com/lasy/cpass/blob/master/references/eisenlohr-moul2016.pdf).
+The description and validation of the C-PASS procedure can be found in [Eisenlohr-Moul et al., 2016](https://github.com/lasy/cpass/blob/master/references/eisenlohr-moul2016.pdf).
 
-In addition to the C-PASS procedure for the diagnosis of PMDD and MRMD, the `cpass` package also proposes the diagnosis of PME (pre-menstrual exacerbation). This function is still experimental and has not be validated clinically. Please, use with caution.
+In addition to the C-PASS procedure for the diagnosis of PMDD and MRMD, the `cpass` package also proposes the diagnosis of PME (premenstrual exacerbation). This function is still experimental and has not been validated clinically. Please, use with caution.
