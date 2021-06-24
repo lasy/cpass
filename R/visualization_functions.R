@@ -338,6 +338,8 @@ plot_subject_cycle_obs = function(data = data.frame(), sep_event = NULL, add_dia
     dplyr::mutate(ITEM = ITEM %>% factor(.,levels = rev(dsm5_dict$ITEM)),
                   DSM5_SYMPTOM_DOMAIN = DSM5_SYMPTOM_DOMAIN %>% factor(.,levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN))) # , PHASE = PHASE %>%  factor(.,levels = c("pre","post"))
 
+  if(sep_event == "menses") obs = obs %>% dplyr::mutate(PHASE = PHASE %>% factor(., levels = c("pre","post")))
+
   gcanvas = ggplot(obs, aes(x = DAY, y = ITEM,  fill = DRSP_score))
   g = gcanvas +
     geom_tile(col = "white", size = 0.5, na.rm = TRUE)+
@@ -466,7 +468,7 @@ plot_subject_data_and_diagnosis =
     color_max_score = "tomato", color_summary = c("complementary","rainbow")
   ){
 
-    g_diagnosis_summary = suppressWarnings(plot_subject_diagnosis(data = data, color_summary = color_summary))
+    g_diagnosis_summary = suppressWarnings(plot_subject_diagnosis(data = data, sep_event = sep_event, color_summary = color_summary))
     g_data = suppressWarnings(plot_subject_obs(data = data, sep_event = sep_event, add_diagnosis = TRUE, color_max_score = color_max_score, silent = TRUE))
     n_cycles = length(g_data$layers)
     g = suppressWarnings(cowplot::plot_grid(g_diagnosis_summary, g_data, ncol = 1, nrow = 2, rel_heights = c(1.2, n_cycles)))
