@@ -7,6 +7,7 @@
 plot_subject_obs(
   data = data.frame(),
   add_diagnosis = TRUE,
+  sep_event = NULL,
   color_max_score = "tomato",
   silent = FALSE
 )

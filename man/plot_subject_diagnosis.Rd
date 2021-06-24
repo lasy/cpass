@@ -6,6 +6,7 @@
 \usage{
 plot_subject_diagnosis(
   data = data.frame(),
+  sep_event = NULL,
   color_summary = c("complementary", "rainbow")
 )
 }

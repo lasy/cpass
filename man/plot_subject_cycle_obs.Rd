@@ -6,6 +6,7 @@
 \usage{
 plot_subject_cycle_obs(
   data = data.frame(),
+  sep_event = NULL,
   add_diagnosis = TRUE,
   color_max_score = "tomato",
   silent = FALSE

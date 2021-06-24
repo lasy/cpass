@@ -25,7 +25,7 @@
 #' plot_subject_diagnosis(data = input)
 
 
-plot_subject_diagnosis = function(data = data.frame(), color_summary = c("complementary","rainbow")){
+plot_subject_diagnosis = function(data = data.frame(), sep_event = NULL, color_summary = c("complementary","rainbow")){
 
   color_summary = color_summary[1]
   if(! (color_summary %in%  c("complementary","rainbow"))) stop("This color setting (color_summary = ",color_summary,") has not been implemented yet. Please chose between 'complementary' (default) or 'rainbow'.")
@@ -36,7 +36,7 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
                    stringr::str_c(subject, collapse = ", "))
   )
 
-  subject_diagnosis = CPASS(data, silent = TRUE)
+  subject_diagnosis = CPASS(data, sep_event = sep_event, silent = TRUE)
 
   gtitle = ggplot()
   gtitle = gtitle +
@@ -182,7 +182,7 @@ plot_subject_diagnosis = function(data = data.frame(), color_summary = c("comple
 #'
 
 
-plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max_score = "tomato", silent = FALSE){
+plot_subject_cycle_obs = function(data = data.frame(), sep_event = NULL, add_diagnosis = TRUE, color_max_score = "tomato", silent = FALSE){
   add_legend = FALSE # to change
   columns = c("CYCLE","DAY","PHASE","ITEM","DRSP_score")
   if(any(!(columns %in% colnames(data)))){stop(stringr::str_c("The data must include the following columns:",columns))}
@@ -192,7 +192,7 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 
   if(add_diagnosis){
 
-    cycle_diagnosis = CPASS(data, silent = TRUE)
+    cycle_diagnosis = CPASS(data, sep_event = sep_event, silent = TRUE)
 
     title_add = stringr::str_c("     ",ifelse(cycle_diagnosis$CYCLE_level_diagnosis$included,cycle_diagnosis$CYCLE_level_diagnosis$diagnosis,"not included"))
 
@@ -399,7 +399,7 @@ plot_subject_cycle_obs = function(data = data.frame(), add_diagnosis = TRUE, col
 #'
 
 
-plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max_score = "tomato", silent = FALSE){
+plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE, sep_event = NULL, color_max_score = "tomato", silent = FALSE){
   columns = c("CYCLE","DAY","PHASE","ITEM","DRSP_score")
   if(any(!(columns %in% colnames(data)))){stop(stringr::str_c("The data must include the following columns:",columns))}
   if(("SUBJECT" %in% colnames(data)) & (length(unique(data$SUBJECT))>1)){stop("The data must include the observations of only ONE subject")}
@@ -414,7 +414,7 @@ plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max
   plotlist = purrr::map(.x = cycles,
                         .f = function(cycle){
                           this_cycle_data = data[which(data$CYCLE == cycle),] #data %>% dplyr::filter(CYCLE == cycle)
-                          plot_subject_cycle_obs(data = this_cycle_data, add_diagnosis = add_diagnosis, color_max_score = color_max_score, silent = TRUE)
+                          plot_subject_cycle_obs(data = this_cycle_data, add_diagnosis = add_diagnosis, sep_event = sep_event, color_max_score = color_max_score, silent = TRUE)
                         })
 
   g_all_cycles = cowplot::plot_grid(plotlist = plotlist, ncol=1, align="v")
@@ -461,12 +461,13 @@ plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE, color_max
 plot_subject_data_and_diagnosis =
   function(
     data = data.frame(),
+    sep_event = NULL,
     save_as_pdf = TRUE, pdf_path = "", pdf_name = "",
     color_max_score = "tomato", color_summary = c("complementary","rainbow")
   ){
 
     g_diagnosis_summary = suppressWarnings(plot_subject_diagnosis(data = data, color_summary = color_summary))
-    g_data = suppressWarnings(plot_subject_obs(data = data, add_diagnosis = TRUE, color_max_score = color_max_score, silent = TRUE))
+    g_data = suppressWarnings(plot_subject_obs(data = data, sep_event = sep_event, add_diagnosis = TRUE, color_max_score = color_max_score, silent = TRUE))
     n_cycles = length(g_data$layers)
     g = suppressWarnings(cowplot::plot_grid(g_diagnosis_summary, g_data, ncol = 1, nrow = 2, rel_heights = c(1.2, n_cycles)))
     #g

@@ -6,6 +6,7 @@
 \usage{
 plot_subject_data_and_diagnosis(
   data = data.frame(),
+  sep_event = NULL,
   save_as_pdf = TRUE,
   pdf_path = "",
   pdf_name = "",
