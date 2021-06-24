@@ -184,6 +184,8 @@ plot_subject_diagnosis = function(data = data.frame(), sep_event = NULL, color_s
 
 plot_subject_cycle_obs = function(data = data.frame(), sep_event = NULL, add_diagnosis = TRUE, color_max_score = "tomato", silent = FALSE){
   add_legend = FALSE # to change
+
+  data = as_cpass_data(data, sep_event = sep_event, silent = TRUE, verbose = FALSE)
   columns = c("CYCLE","DAY","PHASE","ITEM","DRSP_score")
   if(any(!(columns %in% colnames(data)))){stop(stringr::str_c("The data must include the following columns:",columns))}
   if(("SUBJECT" %in% colnames(data)) & (length(unique(data$SUBJECT))>1)){stop("The data must include the observations of only ONE subject")}
@@ -338,7 +340,7 @@ plot_subject_cycle_obs = function(data = data.frame(), sep_event = NULL, add_dia
     dplyr::mutate(ITEM = ITEM %>% factor(.,levels = rev(dsm5_dict$ITEM)),
                   DSM5_SYMPTOM_DOMAIN = DSM5_SYMPTOM_DOMAIN %>% factor(.,levels = unique(dsm5_dict$DSM5_SYMPTOM_DOMAIN))) # , PHASE = PHASE %>%  factor(.,levels = c("pre","post"))
 
-  if(sep_event == "menses") obs = obs %>% dplyr::mutate(PHASE = PHASE %>% factor(., levels = c("pre","post")))
+  # if(sep_event == "menses") obs = obs %>% dplyr::mutate(PHASE = PHASE %>% factor(., levels = c("pre","post")))
 
   gcanvas = ggplot(obs, aes(x = DAY, y = ITEM,  fill = DRSP_score))
   g = gcanvas +
@@ -402,6 +404,8 @@ plot_subject_cycle_obs = function(data = data.frame(), sep_event = NULL, add_dia
 
 
 plot_subject_obs = function(data = data.frame(), add_diagnosis = TRUE, sep_event = NULL, color_max_score = "tomato", silent = FALSE){
+
+  data = as_cpass_data(data, sep_event = sep_event, silent = TRUE, verbose = FALSE)
   columns = c("CYCLE","DAY","PHASE","ITEM","DRSP_score")
   if(any(!(columns %in% colnames(data)))){stop(stringr::str_c("The data must include the following columns:",columns))}
   if(("SUBJECT" %in% colnames(data)) & (length(unique(data$SUBJECT))>1)){stop("The data must include the observations of only ONE subject")}
