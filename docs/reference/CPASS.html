@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Applies the C-PASS procedure for PMDD and MRMD diagnoses — CPASS • cpass</title>
+<title>Applies the C-PASS procedure for PMDD and MRMD diagnoses — cpass • cpass</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Applies the C-PASS procedure for PMDD and MRMD diagnoses — CPASS" />
-<meta property="og:description" content="This function implements the C-PASS procedure and returns a list of 6 tables of summaries and diagnoses at different levels (subjects, cycles, domains, etc)." />
+<meta property="og:title" content="Applies the C-PASS procedure for PMDD and MRMD diagnoses — cpass" />
+<meta property="og:description" content="This function implements the C-PASS procedure and
+returns a list of 6 tables of summaries and
+diagnoses at different levels (subjects, cycles, domains, etc)." />
 
 
 
@@ -117,54 +119,50 @@
     <div class="page-header">
     <h1>Applies the C-PASS procedure for PMDD and MRMD diagnoses</h1>
     
-    <div class="hidden name"><code>CPASS.Rd</code></div>
+    <div class="hidden name"><code>cpass.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function implements the C-PASS procedure and returns a list of 6 tables of summaries and diagnoses at different levels (subjects, cycles, domains, etc).</p>
+    <p>This function implements the C-PASS procedure and
+returns a list of 6 tables of summaries and
+diagnoses at different levels (subjects, cycles, domains, etc).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>CPASS</span><span class='op'>(</span><span class='va'>data</span>, sep_event <span class='op'>=</span> <span class='cn'>NULL</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cpass</span><span class='op'>(</span><span class='va'>data</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>a <code>cpass.data</code> object that contains the symptom DRSP scores reported by the subjects. To transform your data into a <code>cpass.data</code> object, use the function <code><a href='as_cpass_data.html'>as_cpass_data()</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>sep_event</th>
-      <td><p>(optional) character (<code>"menses"</code> or <code>"ovulation"</code>) specifying whether the menstrual event separating the two phases of interest ("pre" and "post" week) is the menses or ovulation. If the menses is the separating event, the week preceding the menstruation ("pre") is compared to the week following the menstruation ("post"). In that case, the "pre" and the "post" week do NOT belong to the same cycle. If ovulation is the separating event, then the two phases belong to the same cycle.</p></td>
+      <td><p>a <code>cpass.data</code> data frame
+that contains the symptom DRSP scores reported by the subjects.
+To transform your data into a <code>cpass.data</code> object,
+use the function <code><a href='as_cpass_data.html'>as_cpass_data()</a></code>.</p></td>
     </tr>
     <tr>
       <th>silent</th>
-      <td><p>a <code>logical</code> specifying is the function should print messages or run silently. Default is <code>FALSE</code>.</p></td>
+      <td><p>a <code>logical</code>
+specifying is the function should print messages or run silently.
+Default is <code>FALSE</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The CPASS function returns a list with 6 elements; each of them is a table (<code>data.frame</code>):</p>
-<dl>
-  <dt><code>SUBJECT_level_diagnosis</code></dt><dd><p>The subject-level diagnoses</p></dd>
-  <dt><code>CYCLE_level_diagnosis</code></dt><dd><p>The cycle-level diagnoses</p></dd>
-  <dt><code>DSM5_DOMAINS_level_diagnosis</code></dt><dd><p>The diagnoses at the DSM5 DOMAINS level</p></dd>
-  <dt><code>DRSP_level_diagnosis</code></dt><dd><p>The diagnoses at the individual DRSP items level</p></dd>
-  <dt><code>daily_summary_DRSP</code></dt><dd><p>The daily summary of each DRSP for each subject</p></dd>
-  <dt><code>summary_DRSP</code></dt><dd><p>The percentage change in DRSP items between the pre- and post-menstrual phase</p></dd>
+    
 
-</dl>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>PMDD_data</span><span class='op'>)</span>
 <span class='va'>cpass_input</span> <span class='op'>=</span> <span class='fu'><a href='as_cpass_data.html'>as_cpass_data</a></span><span class='op'>(</span><span class='va'>PMDD_data</span>, sep_event <span class='op'>=</span> <span class='st'>"menses"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Number of SUBJECTS:  20 
-#&gt; Total number of CYCLES:  37 </div><div class='output co'>#&gt; <span class='warning'>Warning: The 'PHASE' column will be over-written</span></div><div class='input'><span class='va'>output</span> <span class='op'>=</span> <span class='fu'>CPASS</span><span class='op'>(</span><span class='va'>cpass_input</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The 'PHASE' column will be over-written</span></div><div class='output co'>#&gt; <span class='message'>PME diagnosis is still experimental and has not be validated clinically. Please, use with caution.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>output</span><span class='op'>$</span><span class='va'>SUBJECT_level_diagnosis</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Number of subjects:  20 
+#&gt; Total number of cycles:  37 
+#&gt; Percentage of missing scores:  3.23 %</div><div class='output co'>#&gt; <span class='warning'>Warning: The 'phase' column will be over-written</span></div><div class='output co'>#&gt; Percentage of missing scores (in pre- &amp; post-menstrual phases):  NA %</div><div class='input'><span class='va'>output</span> <span class='op'>=</span> <span class='fu'>cpass</span><span class='op'>(</span><span class='va'>cpass_input</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>PME diagnosis is still experimentaland has not be validated clinically. Please, use with caution.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>output</span><span class='op'>$</span><span class='va'>subject_level_diagnosis</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 6 x 15</span>
-#&gt;   SUBJECT NCycles_tot NCycles N_PMDD N_MRMD N_PME pmddcycprop mrmdcycprop
+#&gt;   subject Ncycles_tot Ncycles N_PMDD N_MRMD N_PME pmddcycprop mrmdcycprop
 #&gt;     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'>1</span>       2           2       2      2      2     2           1         1  
 #&gt; <span style='color: #BCBCBC;'>2</span>      15           1       1     <span style='color: #BB0000;'>NA</span>     <span style='color: #BB0000;'>NA</span>    <span style='color: #BB0000;'>NA</span>          <span style='color: #BB0000;'>NA</span>        <span style='color: #BB0000;'>NA</span>  

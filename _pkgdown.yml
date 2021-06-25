@@ -13,9 +13,10 @@ reference:
 - contents:
   - as_cpass_data
   - is_cpass_data
+  - supported_data_format
 - title: "CPASS diagnosis function"
 - contents:
-  - CPASS
+  - cpass
 - title: "Visualization functions"
   desc: "Functions to visualize subjects data and diagnosis."
 - contents:

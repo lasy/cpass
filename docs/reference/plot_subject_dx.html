@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Visualize the scores of a subject's cycle — plot_subject_cycle_obs • cpass</title>
+<title>Visualize the subject diagnosis — plot_subject_dx • cpass</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,9 @@
 
 
 
-<meta property="og:title" content="Visualize the scores of a subject's cycle — plot_subject_cycle_obs" />
-<meta property="og:description" content="This function visualizes the scores (raw data) of a single subject's cycle.
-It also internally calls the CPASS function to provide
-a visualization of the diagnosis at the ITEM, DSM5 DOMAIN and CYCLE level." />
+<meta property="og:title" content="Visualize the subject diagnosis — plot_subject_dx" />
+<meta property="og:description" content="This function calls the CPASS function and
+provides a visualization of the diagnosis." />
 
 
 
@@ -117,22 +116,19 @@ a visualization of the diagnosis at the ITEM, DSM5 DOMAIN and CYCLE level." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Visualize the scores of a subject's cycle</h1>
+    <h1>Visualize the subject diagnosis</h1>
     
-    <div class="hidden name"><code>plot_subject_cycle_obs.Rd</code></div>
+    <div class="hidden name"><code>plot_subject_dx.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function visualizes the scores (raw data) of a single subject's cycle.
-It also internally calls the <code>CPASS</code> function to provide
-a visualization of the diagnosis at the ITEM, DSM5 DOMAIN and CYCLE level.</p>
+    <p>This function calls the <code>CPASS</code> function and
+provides a visualization of the diagnosis.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plot_subject_cycle_obs</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>plot_subject_dx</span><span class='op'>(</span>
   data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='op'>)</span>,
-  add_diagnosis <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  color_max_score <span class='op'>=</span> <span class='st'>"tomato"</span>,
-  silent <span class='op'>=</span> <span class='cn'>FALSE</span>
+  color_summary <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"complementary"</span>, <span class='st'>"rainbow"</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -142,33 +138,18 @@ a visualization of the diagnosis at the ITEM, DSM5 DOMAIN and CYCLE level.</p>
       <th>data</th>
       <td><p>a <code>cpass</code> data frame
 (use <code>as_cpass_data</code> to convert your data into <code>cpass</code> data)
-that contains the symptoms reported in ONE cycle by ONE subject.</p></td>
+that contains the symptoms reported by ONE subject.</p></td>
     </tr>
     <tr>
-      <th>add_diagnosis</th>
-      <td><p>logical.
-If <code>TRUE</code> (default), the diagnoses at the
-ITEM, DSM5-DOMAIN and CYCLE levels are displayed together
-with the subject's reported scores.
-If <code>FALSE</code>, only the reported scores are displayed.</p></td>
-    </tr>
-    <tr>
-      <th>color_max_score</th>
-      <td><p>string specifying the color of a score of 6
-(the maximal score) reported by a subject.
-Any standard color format specification is accepted,
-i.e. one of the R built-in color names
-(e.g. "tomato" (default); type <code><a href='https://rdrr.io/r/grDevices/colors.html'>colors()</a></code>
-to see the names of all R built-in colors),
-an RGB hex code (e.g. "#AA2199")
-or a color specified via one of the color/palette functions
-(e.g. hsv(0.1,0.9,0.9))</p></td>
-    </tr>
-    <tr>
-      <th>silent</th>
-      <td><p>a <code>logical</code>
-specifying is the function should print messages or run silently.
-Default is <code>FALSE</code>.</p></td>
+      <th>color_summary</th>
+      <td><p>string.
+Either <code>"complementary"</code> (default) or <code>"rainbow"</code>
+specifying the type of color scheme for the ITEM items
+in the diagnosis summary.
+If <code>"complementary"</code>, the colors are chosen complementary
+within a domain;
+if <code>"rainbow"</code>, the DRSP items colors are different for each item and
+chosen from a rainbow palette.</p></td>
     </tr>
     </table>
 
@@ -180,22 +161,16 @@ Default is <code>FALSE</code>.</p></td>
     <pre class="examples"><div class='input'>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'>
+
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>PMDD_data</span><span class='op'>)</span>
 <span class='va'>input</span> <span class='op'>&lt;-</span>
   <span class='va'>PMDD_data</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>subject</span> <span class='op'>==</span> <span class='fl'>2</span>, <span class='va'>cycle</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span>  <span class='op'>%&gt;%</span>
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>subject</span> <span class='op'>==</span> <span class='fl'>2</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='as_cpass_data.html'>as_cpass_data</a></span><span class='op'>(</span><span class='va'>.</span>, sep_event <span class='op'>=</span> <span class='st'>"menses"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Number of subjects:  1 
-#&gt; Total number of cycles:  1 
-#&gt; Percentage of missing scores:  0 %</div><div class='output co'>#&gt; <span class='warning'>Warning: The 'phase' column will be over-written</span></div><div class='output co'>#&gt; Percentage of missing scores (in pre- &amp; post-menstrual phases):  205.06 %</div><div class='input'><span class='fu'>plot_subject_cycle_obs</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>input</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>PME diagnosis is still experimental and has not be validated clinically.Please, use with caution.</span></div><div class='img'><img src='plot_subject_cycle_obs-1.png' alt='' width='700' height='433' /></div><div class='input'>
-</div></pre>
+#&gt; Total number of cycles:  2 
+#&gt; Percentage of missing scores:  13.1 %</div><div class='output co'>#&gt; <span class='warning'>Warning: The 'phase' column will be over-written</span></div><div class='output co'>#&gt; Percentage of missing scores (in pre- &amp; post-menstrual phases):  NA %</div><div class='input'><span class='fu'>plot_subject_dx</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>input</span><span class='op'>)</span>
+</div><div class='img'><img src='plot_subject_dx-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

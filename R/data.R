@@ -21,13 +21,22 @@
 #'
 #' @format A data frame with 12,432 rows and 6 variables:
 #' \describe{
-#'   \item{SUBJECT}{Subject unique idenfier}
-#'   \item{CYCLE}{Cycle number. In this dataset, cycles are numbered from one ovulation to the next.}
-#'   \item{PHASE}{\code{"pre"} or \code{"post"}: the phase in the menstrual cycle (pre-menstrual vs post-menstrual).}
-#'   \item{DAY}{Cycle day. In this dataset, days in the pre-menstrual phase are counted backward from the onset of the menses. -1 is the day before the onset of the menses.
+#'   \item{subject}{Subject unique idenfier}
+#'   \item{cycle}{Cycle number. In this dataset, cycles are numbered from one ovulation to the next.}
+#'   \item{phase}{\code{"pre"} or \code{"post"}: the phase in the menstrual cycle (pre-menstrual vs post-menstrual).}
+#'   \item{day}{Cycle day. In this dataset, days in the pre-menstrual phase are counted backward from the onset of the menses. -1 is the day before the onset of the menses.
 #'   Days in the post-menstrual phase are counted forward from the onset of the menses. Day 1 is the first day of the menses. Day 0 does not exist.}
-#'   \item{ITEM}{Item number}
-#'   \item{DRSP_score}{Score reported for the user for the DRSP item, day and cycle of that row}
+#'   \item{item}{Item number}
+#'   \item{drsp_score}{Score reported for the user for the DRSP item, day and cycle of that row}
 #' }
 #' @source Dr. Tory Eisenlohr-Moul
 "PMDD_data"
+
+
+
+
+
+#' The hidden semi-Markov model for identifying cycles from bleeding data.
+#'
+#' A hidden semi-Markov model from the \code{HiddenSemiMarkov} package.
+"cycle_model"

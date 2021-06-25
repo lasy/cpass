@@ -7,7 +7,9 @@
 .compute_phase_and_cycleday(data, sep_event)
 }
 \arguments{
-\item{data}{a data.frame that contains symptoms reported subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{ITEM}, \code{DRSP_score}}
+\item{data}{a data.frame that contains symptoms reported subjects.
+The data must be in a long format and have the following columns:
+\code{subject}, \code{item}, \code{drsp_score}}
 
 \item{sep_event}{a character XXX}
 }
@@ -20,13 +22,18 @@ Compute cycledays and phases from dates and provided starts of cycles.
 \examples{
 random_data =
     expand.grid(
-        SUBJECT = 1,
-        ITEM = 1:24,
+        subject = 1,
+        item = 1:24,
         date = seq(as.Date("2020-01-01"), as.Date("2020-03-01"), by = 1)
         )
-random_data$DRSP_score = sample(1:6, nrow(random_data), replace = TRUE)
-random_data$is_cycle_start = ifelse(random_data$date \%in\% c(as.Date("2020-01-15"), as.Date("2020-02-20")), TRUE, FALSE)
-augmented_data = .compute_phase_and_cycleday(random_data, sep_event = "ovulation")
+random_data$drsp_score <- sample(1:6, nrow(random_data), replace = TRUE)
+random_data$is_cycle_start <-
+    ifelse(
+       random_data$date \%in\%
+         c(as.Date("2020-01-15"), as.Date("2020-02-20")),
+       TRUE, FALSE)
+augmented_data <-
+   .compute_phase_and_cycleday(random_data, sep_event = "ovulation")
 colnames(augmented_data)
 }
 \keyword{C-PASS}

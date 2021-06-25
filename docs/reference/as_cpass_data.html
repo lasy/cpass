@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Transforms into a "cpass" data.frame. — as_cpass_data" />
-<meta property="og:description" content="This function checks if the data can be used by the CPASS functions and transforms it into a &quot;cpass&quot; data.frame." />
+<meta property="og:description" content="This function checks if the data can be used by the CPASS functions
+and transforms it into a &quot;cpass&quot; data.frame." />
 
 
 
@@ -121,7 +122,8 @@
     </div>
 
     <div class="ref-description">
-    <p>This function checks if the data can be used by the CPASS functions and transforms it into a "cpass" data.frame.</p>
+    <p>This function checks if the data can be used by the CPASS functions
+and transforms it into a "cpass" data.frame.</p>
     </div>
 
     <pre class="usage"><span class='fu'>as_cpass_data</span><span class='op'>(</span><span class='va'>data</span>, sep_event <span class='op'>=</span> <span class='cn'>NULL</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
@@ -132,21 +134,39 @@
     <tr>
       <th>data</th>
       <td><p>a data.frame that contains symptoms reported subjects.
-The data must be in a long format, _i.e._ one row per subject, day (date or cycle + cycleday) and DRSP item.
-The data.frame must have the following columns: <code>SUBJECT</code>, <code>ITEM</code>, <code>DRSP_score</code> as well as two columns defining time.
-These two columns can be <code>CYCLE</code> + <code>DAY</code> or <code>date</code> + <code>is_cycle_start</code>.</p></td>
+The data must be in a long format,
+_i.e._ one row per subject, day (date or cycle + cycleday) and DRSP item.
+The data.frame must have the following columns:
+<code>subject</code>, <code>item</code>, <code>drsp_score</code>
+as well as two columns defining time.
+These two columns can be
+<code>cycle</code> + <code>day</code>,
+<code>date</code> + <code>is_cycle_start</code>, or
+<code>date</code> + <code>bleeding</code>.
+See <code>supported_data_format</code> for details.</p></td>
     </tr>
     <tr>
       <th>sep_event</th>
-      <td><p>(required) character (<code>"menses"</code> or <code>"ovulation"</code>) specifying whether the menstrual event separating the two phases of interest ("pre" and "post" week) is the menses or ovulation. If the menses is the separating event, the week preceding the menstruation ("pre") is compared to the week following the menstruation ("post"). In that case, the "pre" and the "post" week do NOT belong to the same cycle. If ovulation is the separating event, then the two phases belong to the same cycle.</p></td>
+      <td><p>(required) character (<code>"menses"</code> or <code>"ovulation"</code>)
+specifying whether the menstrual event separating the two phases of interest
+(the "pre" and "post" weeks) is the menses or ovulation.
+If the menses is the separating event,
+the week preceding the menstruation ("pre") is compared
+to the week following the menstruation ("post").
+In that case, the "pre" and the "post" week do NOT belong to the same cycle.
+If ovulation is the separating event,
+then the two phases belong to the same cycle.</p></td>
     </tr>
     <tr>
       <th>silent</th>
-      <td><p>(optional) logical, default = <code>FALSE</code>. Should warning messages be printed?</p></td>
+      <td><p>(optional) logical, default = <code>FALSE</code>.
+Should warning messages be printed?</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>(optional) logical. Should the function print additional information? (mostly used for debugging purposes)</p></td>
+      <td><p>(optional) logical.
+Should the function print additional information?
+(mostly used for debugging purposes)</p></td>
     </tr>
     </table>
 
@@ -155,13 +175,21 @@ These two columns can be <code>CYCLE</code> + <code>DAY</code> or <code>date</co
     <p>a data.frame.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>random_data</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span><span class='op'>(</span>SUBJECT <span class='op'>=</span> <span class='fl'>1</span>, CYCLE <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, DAY <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>,<span class='op'>-</span><span class='fl'>10</span><span class='op'>:</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span>, ITEM <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>24</span><span class='op'>)</span>
-<span class='va'>random_data</span><span class='op'>$</span><span class='va'>DRSP_score</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>random_data</span><span class='op'>)</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='va'>random_data</span> <span class='op'>=</span>
+   <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span><span class='op'>(</span>
+       subject <span class='op'>=</span> <span class='fl'>1</span>,
+       cycle <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>,
+       day <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>,<span class='op'>-</span><span class='fl'>10</span><span class='op'>:</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span>,
+       item <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>24</span>
+       <span class='op'>)</span>
+<span class='va'>random_data</span><span class='op'>$</span><span class='va'>drsp_score</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>random_data</span><span class='op'>)</span>, replace <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>cpass_data</span> <span class='op'>=</span> <span class='fu'>as_cpass_data</span><span class='op'>(</span><span class='va'>random_data</span>, sep_event <span class='op'>=</span> <span class='st'>"menses"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Number of SUBJECTS:  1 
-#&gt; Total number of CYCLES:  2 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>cpass_data</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "SUBJECT"    "CYCLE"      "PHASE"      "DAY"        "ITEM"      
-#&gt; [6] "DRSP_score"</div></pre>
+</div><div class='output co'>#&gt; Number of subjects:  1 
+#&gt; Total number of cycles:  2 
+#&gt; Percentage of missing scores:  0 %
+#&gt; Percentage of missing scores (in pre- &amp; post-menstrual phases):  342.71 %</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>cpass_data</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "subject"    "cycle"      "phase"      "day"        "item"      
+#&gt; [6] "drsp_score"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

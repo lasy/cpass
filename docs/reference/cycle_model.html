@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Example of PMDD data. — PMDD_data • cpass</title>
+<title>The hidden semi-Markov model for identifying cycles from bleeding data. — cycle_model • cpass</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Example of PMDD data. — PMDD_data" />
-<meta property="og:description" content="A dataset with DRSP from 20 subjects" />
+<meta property="og:title" content="The hidden semi-Markov model for identifying cycles from bleeding data. — cycle_model" />
+<meta property="og:description" content="A hidden semi-Markov model from the HiddenSemiMarkov package." />
 
 
 
@@ -115,34 +115,21 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Example of PMDD data.</h1>
+    <h1>The hidden semi-Markov model for identifying cycles from bleeding data.</h1>
     
-    <div class="hidden name"><code>PMDD_data.Rd</code></div>
+    <div class="hidden name"><code>cycle_model.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A dataset with DRSP from 20 subjects</p>
+    <p>A hidden semi-Markov model from the <code>HiddenSemiMarkov</code> package.</p>
     </div>
 
-    <pre class="usage"><span class='va'>PMDD_data</span></pre>
+    <pre class="usage"><span class='va'>cycle_model</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A data frame with 12,432 rows and 6 variables:</p><dl>
-  <dt>subject</dt><dd><p>Subject unique idenfier</p></dd>
-  <dt>cycle</dt><dd><p>Cycle number. In this dataset, cycles are numbered from one ovulation to the next.</p></dd>
-  <dt>phase</dt><dd><p><code>"pre"</code> or <code>"post"</code>: the phase in the menstrual cycle (pre-menstrual vs post-menstrual).</p></dd>
-  <dt>day</dt><dd><p>Cycle day. In this dataset, days in the pre-menstrual phase are counted backward from the onset of the menses. -1 is the day before the onset of the menses.
-  Days in the post-menstrual phase are counted forward from the onset of the menses. Day 1 is the first day of the menses. Day 0 does not exist.</p></dd>
-  <dt>item</dt><dd><p>Item number</p></dd>
-  <dt>drsp_score</dt><dd><p>Score reported for the user for the DRSP item, day and cycle of that row</p></dd>
-
-</dl>
-
-    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
-
-    <p>Dr. Tory Eisenlohr-Moul</p>
+    <p>An object of class <code>hsmm</code> of length 10.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

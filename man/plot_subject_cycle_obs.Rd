@@ -6,26 +6,43 @@
 \usage{
 plot_subject_cycle_obs(
   data = data.frame(),
-  sep_event = NULL,
   add_diagnosis = TRUE,
   color_max_score = "tomato",
   silent = FALSE
 )
 }
 \arguments{
-\item{data}{a data.frame that contains the symptoms reported in ONE cycle by ONE subject. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{ITEM}, \code{DRSP_score}}
+\item{data}{a \code{cpass} data frame
+(use \code{as_cpass_data} to convert your data into \code{cpass} data)
+that contains the symptoms reported in ONE cycle by ONE subject.}
 
-\item{add_diagnosis}{logical. If \code{TRUE} (default), the diagnoses at the ITEM, DSM5-DOMAIN and CYCLE levels are displayed together with the subject's reported scores. If \code{FALSE}, only the reported scores are displayed.}
+\item{add_diagnosis}{logical.
+If \code{TRUE} (default), the diagnoses at the
+ITEM, DSM5-DOMAIN and CYCLE levels are displayed together
+with the subject's reported scores.
+If \code{FALSE}, only the reported scores are displayed.}
 
-\item{color_max_score}{string specifying the color of a score of 6 (the maximal score) reported by a subject. Any standard color format specification is accepted, i.e. one of the R built-in color names (e.g. "tomato" (default); type \code{colors()} to see the names of all R built-in colors), an RGB hex code (e.g. "#AA2199") or a color specified via one of the color/palette functions (e.g. hsv(0.1,0.9,0.9))}
+\item{color_max_score}{string specifying the color of a score of 6
+(the maximal score) reported by a subject.
+Any standard color format specification is accepted,
+i.e. one of the R built-in color names
+(e.g. "tomato" (default); type \code{colors()}
+to see the names of all R built-in colors),
+an RGB hex code (e.g. "#AA2199")
+or a color specified via one of the color/palette functions
+(e.g. hsv(0.1,0.9,0.9))}
 
-\item{silent}{a \code{logical} specifying is the function should print messages or run silently. Default is \code{FALSE}.}
+\item{silent}{a \code{logical}
+specifying is the function should print messages or run silently.
+Default is \code{FALSE}.}
 }
 \value{
 a ggplot object
 }
 \description{
-This function visualizes the scores (raw data) of a single subject's cycle. It also internally calls the \code{CPASS} function to provides a visualization of the diagnosis at the ITEM, DSM5 DOMAIN and CYCLE level.
+This function visualizes the scores (raw data) of a single subject's cycle.
+It also internally calls the \code{CPASS} function to provide
+a visualization of the diagnosis at the ITEM, DSM5 DOMAIN and CYCLE level.
 }
 \examples{
 
@@ -33,7 +50,10 @@ library(magrittr)
 library(dplyr)
 
 data(PMDD_data)
-input = PMDD_data \%>\% filter(SUBJECT == 2, CYCLE == 1)  \%>\%  as_cpass_data(., sep_event = "menses")
+input <-
+  PMDD_data \%>\%
+  dplyr::filter(subject == 2, cycle == 1)  \%>\%
+  as_cpass_data(., sep_event = "menses")
 plot_subject_cycle_obs(data = input)
 
 }

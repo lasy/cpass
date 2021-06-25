@@ -4,12 +4,15 @@
 \alias{is_cpass_data}
 \title{Checks if data is a "CPASS" data.frame.}
 \usage{
-is_cpass_data(data, silent = FALSE)
+is_cpass_data(data, silent = TRUE)
 }
 \arguments{
-\item{data}{a data.frame that contains symptoms reported subjects. The data must be in a long format and have the following columns: \code{SUBJECT}, \code{CYCLE}, \code{DAY}, \code{DRSP}, \code{DRSP_score}}
+\item{data}{a data.frame that contains symptoms reported subjects.
+The data must be in a long format and have the following columns:
+\code{subject}, \code{cycle}, \code{day}, \code{DRSP}, \code{drsp_score}}
 
-\item{silent}{(optional) logical, default = \code{FALSE}. Should warning messages be printed?}
+\item{silent}{(optional) logical, default = \code{TRUE}.
+Should warning messages be printed?}
 }
 \value{
 a logical.
@@ -18,8 +21,13 @@ a logical.
 Checks if data is a "CPASS" data.frame.
 }
 \examples{
-random_data = expand.grid(SUBJECT = 1, CYCLE = 1:2, DAY = c(1:10,-10:-1), ITEM = 1:24)
-random_data$DRSP_score = sample(1:6, nrow(random_data), replace = TRUE)
+random_data =
+  expand.grid(
+     subject = 1,
+     cycle = 1:2,
+     day = c(1:10,-10:-1),
+     item = 1:24)
+random_data$drsp_score = sample(1:6, nrow(random_data), replace = TRUE)
 cpass_data = as_cpass_data(random_data, sep_event = "menses")
 colnames(cpass_data)
 is_cpass_data(random_data)
