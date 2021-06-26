@@ -744,7 +744,7 @@ plot_subject_data_and_dx <-
     if (save_as_pdf) {
       if (pdf_name == "")
         pdf_name <-
-          paste0("CPASS_SUBJECT_", unique(data$SUBJECT), ".pdf")
+          paste0("CPASS_SUBJECT_", unique(data$subject), ".pdf")
       if (pdf_path == "")
         pdf_path <-  getwd()
       if ((pdf_path != "") && (stringr::str_sub(pdf_path, -1) != "/"))

@@ -215,7 +215,10 @@ hr {
 
 <p>then install and load the <code>cpass</code> package by running:</p>
 
-<pre><code class="r">devtools::install_github(&quot;lasy/cpass&quot;, dependencies = TRUE)
+<pre><code class="r">
+devtools::install_github(&quot;lasy/HiddenSemiMarkov&quot;) # this won&#39;t be necessary in the future, 
+# but for now, &quot;HiddenSemiMarkov&quot; is not yet released on CRAN and cpass depends on it.
+devtools::install_github(&quot;lasy/cpass&quot;, dependencies = TRUE)
 </code></pre>
 
 <pre><code class="r">library(cpass)
