@@ -24,7 +24,8 @@ Imports:
     tidyr,
     stringr,
     ggpubr,
-    HiddenSemiMarkov
+Remotes:
+    lasy/HiddenSemiMarkov
 Depends: 
     R (>= 2.10)
 Suggests: 

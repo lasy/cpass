@@ -411,7 +411,7 @@ is_cpass_data <- function(data, silent = TRUE) {
 
 
 
-
+#' @importFrom  magrittr %>%
 .identify_cycles_from_bleeding <- function(data) {
 
   d <-  data

@@ -17,7 +17,16 @@ specifying is the function should print messages or run silently.
 Default is \code{FALSE}.}
 }
 \value{
-
+The cpass function returns a list with 6 elements;
+each of them is a table (\code{data.frame}):
+\describe{
+  \item{\code{subject_level_diagnosis}}{The subject-level diagnoses}
+  \item{\code{cycle_level_diagnosis}}{The cycle-level diagnoses}
+  \item{\code{DSM5_domains_level_diagnosis}}{The diagnoses at the DSM5 DOMAINS level}
+  \item{\code{DRSP_level_diagnosis}}{The diagnoses at the individual DRSP items level}
+  \item{\code{daily_summary_DRSP}}{The daily summary of each DRSP for each subject}
+  \item{\code{summary_DRSP}}{The percent change in DRSP items between the pre- and post-menstrual phase}
+}
 }
 \description{
 This function implements the C-PASS procedure and
