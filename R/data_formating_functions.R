@@ -151,7 +151,9 @@ as_cpass_data <-
     # until data match a specific format in the loop below
     formats <-  supported_data_format(as_list = TRUE)
     for (f in names(formats)) {
-      if (all(formats[[f]]$columns %in% colnames(d2))) { format <- f; break }
+      if (all(formats[[f]]$columns %in% colnames(d2))) {
+        format <- f; break
+        }
     }
 
     if (format == "error") {
@@ -205,9 +207,11 @@ as_cpass_data <-
     # drsp
     if (!all(unique(d2$item) %in% 1:24))
       stop("item must be integers from 1:24.")
+    d2$item <- d2$item %>% as.integer()
     # drsp_score
     if (!all(unique(d2$drsp_score[!is.na(d2$drsp_score)]) %in% 1:6))
       stop("Values of 'drsp_score' must be in 1:6.")
+    d2$drsp_score <- d2$drsp_score %>% as.integer()
 
     # subjectS
     d2 <- d2 %>% dplyr::filter(!is.na(.data$subject))
@@ -251,17 +255,21 @@ as_cpass_data <-
       )
 
     if (verbose)
-      cat("Percentage of missing scores (in pre- & post-menstrual phases): ",
-          d2$drsp_score[d2$phase %in% c("pre-menses", "post-menses")] %>%
+      j <- (d2$phase %in% c("pre-menses", "post-menses"))
+      cat("Percentage of missing scores
+          (in pre- & post-menstrual phases): ",
+          d2$drsp_score[j] %>%
+            is.na() %>%
             mean() %>%
             magrittr::multiply_by(100) %>%
             round(., 2), "%\n")
 
-
     if (sep_event == "menses") {
-      phase_levels <- c("pre-menses", "menses", "post-menses", "peri-ovulation")
+      phase_levels <-
+        c("pre-menses", "menses", "post-menses", "peri-ovulation")
     }else{
-      phase_levels <- c("menses", "post-menses", "peri-ovulation", "pre-menses")
+      phase_levels <-
+        c("menses", "post-menses", "peri-ovulation", "pre-menses")
     }
     d2 <-
       d2 %>%
