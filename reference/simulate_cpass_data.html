@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>The hidden semi-Markov model for identifying cycles from bleeding data. — cycle_model • cpass</title>
+<title>Simulates CPASS data — simulate_cpass_data • cpass</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,14 @@
 
 
 
-<meta property="og:title" content="The hidden semi-Markov model for identifying cycles from bleeding data. — cycle_model" />
-<meta property="og:description" content="A hidden semi-Markov model from the HiddenSemiMarkov package." />
+<meta property="og:title" content="Simulates CPASS data — simulate_cpass_data" />
+<meta property="og:description" content="This function simulates DRSP data for n_subjects.
+Options allow to choose the number of cycles per subject (n_cycles),
+the increase in symptoms rating (pmdd_intensity), the baseline levels
+severity of problems for subjects (baseline), the number of items
+varying with the menstrual cycle (n_items), and the missingness rate
+(missingness_rate), which is the fraction of days for which data are
+missing." />
 
 
 
@@ -118,21 +124,78 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>The hidden semi-Markov model for identifying cycles from bleeding data.</h1>
+    <h1>Simulates CPASS data</h1>
     
-    <div class="hidden name"><code>cycle_model.Rd</code></div>
+    <div class="hidden name"><code>simulate_cpass_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A hidden semi-Markov model from the <code>HiddenSemiMarkov</code> package.</p>
+    <p>This function simulates DRSP data for <code>n_subjects</code>.
+Options allow to choose the number of cycles per subject (<code>n_cycles</code>),
+the increase in symptoms rating (<code>pmdd_intensity</code>), the baseline levels
+severity of problems for subjects (<code>baseline</code>), the number of items
+varying with the menstrual cycle (<code>n_items</code>), and the missingness rate
+(<code>missingness_rate</code>), which is the fraction of days for which data are
+missing.</p>
     </div>
 
-    <pre class="usage"><span class='va'>cycle_model</span></pre>
+    <pre class="usage"><span class='fu'>simulate_cpass_data</span><span class='op'>(</span>
+  n_subjects <span class='op'>=</span> <span class='fl'>1</span>,
+  n_cycles <span class='op'>=</span> <span class='fl'>1</span>,
+  baseline <span class='op'>=</span> <span class='fl'>1</span>,
+  pmdd_intensity <span class='op'>=</span> <span class='fl'>0.5</span>,
+  n_items <span class='op'>=</span> <span class='fl'>24</span>,
+  missingness_rate <span class='op'>=</span> <span class='fl'>0</span>
+<span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>n_subjects</th>
+      <td><p>(positive integer) The number of subjects for which data
+need to be simulated</p></td>
+    </tr>
+    <tr>
+      <th>n_cycles</th>
+      <td><p>(positive integer(s)) The number of cycles for each subject.
+This parameter (as well as all following parameters) can be of length
+<code>1</code> (and all subjects have the same number of cycles) or of length
+<code>n_subjects</code> to determine the number of cycles independently
+for each subject.</p></td>
+    </tr>
+    <tr>
+      <th>baseline</th>
+      <td><p>(positive values in 1-6) Baseline levels for severity of
+problems for all subjects (if <code>baseline</code> is of length <code>1</code>) or
+each subject (if <code>baseline</code> is of length <code>n_subjects</code>).</p></td>
+    </tr>
+    <tr>
+      <th>pmdd_intensity</th>
+      <td><p>change from baseline during the pre-menstrual phase.</p></td>
+    </tr>
+    <tr>
+      <th>n_items</th>
+      <td><p>(positive integers in 1-24) number of items for which there is
+a variation in the pre-menstrual phase. Can be of length <code>1</code>
+(same <code>n_items</code> for all subjects) or of length <code>n_subjects</code>
+(specific <code>n_items</code> for each subject).</p></td>
+    </tr>
+    <tr>
+      <th>missingness_rate</th>
+      <td><p>(positive values in 0-0.9) The fraction of missing
+days for all (if of length <code>1</code>) or each (if of length <code>n_subjects</code>)
+subject.</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class <code>hsmm</code> of length 10.</p>
+    <p>a <code>data.frame</code> providing the DRSP scores for each subject,
+cycle, cycle day (within the pre- and post- menstrual phase) and item.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code>simulate_cycle</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>The hidden semi-Markov model for identifying cycles from bleeding data. — cycle_model • cpass</title>
+<title>Simulates CPASS data for a single cycle. — simulate_cycle • cpass</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="The hidden semi-Markov model for identifying cycles from bleeding data. — cycle_model" />
-<meta property="og:description" content="A hidden semi-Markov model from the HiddenSemiMarkov package." />
+<meta property="og:title" content="Simulates CPASS data for a single cycle. — simulate_cycle" />
+<meta property="og:description" content="This function simulates DRSP data for a single cycle" />
 
 
 
@@ -118,21 +118,52 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>The hidden semi-Markov model for identifying cycles from bleeding data.</h1>
+    <h1>Simulates CPASS data for a single cycle.</h1>
     
-    <div class="hidden name"><code>cycle_model.Rd</code></div>
+    <div class="hidden name"><code>simulate_cycle.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A hidden semi-Markov model from the <code>HiddenSemiMarkov</code> package.</p>
+    <p>This function simulates DRSP data for a single cycle</p>
     </div>
 
-    <pre class="usage"><span class='va'>cycle_model</span></pre>
+    <pre class="usage"><span class='fu'>simulate_cycle</span><span class='op'>(</span><span class='va'>cycle_nb</span>, <span class='va'>baseline</span>, <span class='va'>pmdd_intensity</span>, <span class='va'>items</span>, <span class='va'>missingness_rate</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>cycle_nb</th>
+      <td><p>(positive integer) The cycle number.</p></td>
+    </tr>
+    <tr>
+      <th>baseline</th>
+      <td><p>(positive value in 1-6) Baseline level for severity of
+problems for all items.</p></td>
+    </tr>
+    <tr>
+      <th>pmdd_intensity</th>
+      <td><p>change from baseline during the pre-menstrual phase.</p></td>
+    </tr>
+    <tr>
+      <th>items</th>
+      <td><p>(positive integers in 1-24) items for which there is
+a variation in the pre-menstrual phase.</p></td>
+    </tr>
+    <tr>
+      <th>missingness_rate</th>
+      <td><p>(positive value in 0-0.9) The fraction of missing
+days.</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class <code>hsmm</code> of length 10.</p>
+    <p>a <code>data.frame</code> providing the DRSP scores for each cycle day
+(within the pre- and post- menstrual phase) and item.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code>simulate_cycle</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
