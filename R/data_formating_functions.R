@@ -254,7 +254,7 @@ as_cpass_data <-
         )
       )
 
-    if (verbose)
+    if (verbose) {
       j <- (d2$phase %in% c("pre-menses", "post-menses"))
       cat("Percentage of missing scores
           (in pre- & post-menstrual phases): ",
@@ -263,6 +263,7 @@ as_cpass_data <-
             mean() %>%
             magrittr::multiply_by(100) %>%
             round(., 2), "%\n")
+    }
 
     if (sep_event == "menses") {
       phase_levels <-

@@ -20,7 +20,7 @@ test_that("format 'cycle_start' works", {
   expect_equal(cycles, 0:2)
 
   dx = cpass(formated_data, silent = TRUE)
-  expect_equal(dx$subject_level_diagnosis$dx, NA_character_)
+  expect_equal(as.character(dx$subject_level_diagnosis$dx), NA_character_)
 })
 
 
@@ -54,6 +54,6 @@ test_that("format 'bleeding' works", {
   expect_equal(cycles, 0:2)
 
   dx = cpass(formated_data, silent = TRUE)
-  expect_equal(dx$subject_level_diagnosis$dx, NA_character_)
+  expect_equal(as.character(dx$subject_level_diagnosis$dx), NA_character_)
 })
 

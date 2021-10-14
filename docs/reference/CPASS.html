@@ -99,6 +99,9 @@ diagnoses at different levels (subjects, cycles, domains, etc)." />
     <li>
       <a href="../articles/cpass_vignette.html">Introduction to the `cpass` package</a>
     </li>
+    <li>
+      <a href="../articles/fictive-study.html">UNKNOWN TITLE</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -150,8 +153,16 @@ Default is <code>FALSE</code>.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
+    <p>The cpass function returns a list with 6 elements;
+each of them is a table (<code>data.frame</code>):</p><dl>
+  <dt><code>subject_level_diagnosis</code></dt><dd><p>The subject-level diagnoses</p></dd>
+  <dt><code>cycle_level_diagnosis</code></dt><dd><p>The cycle-level diagnoses</p></dd>
+  <dt><code>DSM5_domains_level_diagnosis</code></dt><dd><p>The diagnoses at the DSM5 DOMAINS level</p></dd>
+  <dt><code>DRSP_level_diagnosis</code></dt><dd><p>The diagnoses at the individual DRSP items level</p></dd>
+  <dt><code>daily_summary_DRSP</code></dt><dd><p>The daily summary of each DRSP for each subject</p></dd>
+  <dt><code>summary_DRSP</code></dt><dd><p>The percent change in DRSP items between the pre- and post-menstrual phase</p></dd>
 
+</dl>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -159,9 +170,10 @@ Default is <code>FALSE</code>.</p></td>
 <span class='va'>cpass_input</span> <span class='op'>=</span> <span class='fu'><a href='as_cpass_data.html'>as_cpass_data</a></span><span class='op'>(</span><span class='va'>PMDD_data</span>, sep_event <span class='op'>=</span> <span class='st'>"menses"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Number of subjects:  20 
 #&gt; Total number of cycles:  37 
-#&gt; Percentage of missing scores:  3.23 %</div><div class='output co'>#&gt; <span class='warning'>Warning: The 'phase' column will be over-written</span></div><div class='output co'>#&gt; Percentage of missing scores (in pre- &amp; post-menstrual phases):  NA %</div><div class='input'><span class='va'>output</span> <span class='op'>=</span> <span class='fu'>cpass</span><span class='op'>(</span><span class='va'>cpass_input</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>PME diagnosis is still experimentaland has not be validated clinically. Please, use with caution.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>output</span><span class='op'>$</span><span class='va'>subject_level_diagnosis</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 6 x 15</span>
+#&gt; Percentage of missing scores:  3.23 %</div><div class='output co'>#&gt; <span class='warning'>Warning: The 'phase' column will be over-written</span></div><div class='output co'>#&gt; Percentage of missing scores
+#&gt;           (in pre- &amp; post-menstrual phases):  3.23 %</div><div class='input'><span class='va'>output</span> <span class='op'>=</span> <span class='fu'>cpass</span><span class='op'>(</span><span class='va'>cpass_input</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>PME diagnosis is still experimental and has not been validated clinically. Please, use with caution.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>output</span><span class='op'>$</span><span class='va'>subject_level_diagnosis</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 6 × 15</span>
 #&gt;   subject Ncycles_tot Ncycles N_PMDD N_MRMD N_PME pmddcycprop mrmdcycprop
 #&gt;     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'>1</span>       2           2       2      2      2     2           1         1  
@@ -171,7 +183,7 @@ Default is <code>FALSE</code>.</p></td>
 #&gt; <span style='color: #BCBCBC;'>5</span>      25           2       2      0      2     1           0         1  
 #&gt; <span style='color: #BCBCBC;'>6</span>      27           2       2      0      1     1           0         0.5
 #&gt; <span style='color: #949494;'># … with 7 more variables: pmecycprop &lt;dbl&gt;, PMDD &lt;lgl&gt;, MRMD &lt;lgl&gt;, PME &lt;lgl&gt;,</span>
-#&gt; <span style='color: #949494;'>#   dxcat &lt;dbl&gt;, dx &lt;chr&gt;, avgdsm5crit &lt;dbl&gt;</span></div></pre>
+#&gt; <span style='color: #949494;'>#   dxcat &lt;dbl&gt;, dx &lt;fct&gt;, avgdsm5crit &lt;dbl&gt;</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

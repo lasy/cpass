@@ -27,3 +27,7 @@ reference:
 - title: "DSM5 domains definition"
 - contents:
   - dsm5_dict
+- title: "CPASS data simulation functions"
+- contents:
+  - simulate_cpass_data
+  - simulate_cycle

@@ -212,9 +212,9 @@ cpass <- function(data, silent = FALSE) {
 
   output_cycle_level <-
     dplyr::full_join(
-    output_cycle_level,
-    output_core_emotional_symptom,
-    by =  c("subject", "cycle"))
+      output_cycle_level,
+      output_core_emotional_symptom,
+      by =  c("subject", "cycle"))
 
   # DSM-A : at least one core emotional symptom meets criteria
   output_cycle_level <-
@@ -234,7 +234,7 @@ cpass <- function(data, silent = FALSE) {
 
   output_cycle_level <-
     dplyr::full_join(
-    output_cycle_level, output_DSM5_B, by =  c("subject", "cycle"))
+      output_cycle_level, output_DSM5_B, by =  c("subject", "cycle"))
   output_cycle_level <-
     output_cycle_level %>%
     dplyr::mutate(DSM5_B = included & five_or_more_DSM5_domains_PMDD)
@@ -252,7 +252,7 @@ cpass <- function(data, silent = FALSE) {
 
   output_cycle_level <-
     dplyr::full_join(
-    output_cycle_level, output_PME, by =  c("subject", "cycle"))
+      output_cycle_level, output_PME, by =  c("subject", "cycle"))
   output_cycle_level <-
     output_cycle_level %>%
     dplyr::mutate(PME = included & five_or_more_DSM5_domains_PME)
@@ -276,6 +276,7 @@ cpass <- function(data, silent = FALSE) {
                   PME, DSM5_A, DSM5_B, diagnosis)
 
   #### subject level
+  dx_levels = c("no diagnosis", "MRMD", "PMDD", "PME")
 
   output_subject_level <-
     output_cycle_level %>%
@@ -299,7 +300,7 @@ cpass <- function(data, silent = FALSE) {
                                       !PMDD & !MRMD & PME ~ 3,
                                       TRUE ~0)
       ), #dxcat is the diagnosis category
-      dx = c("no diagnosis", "MRMD", "PMDD", "PME")[dxcat + 1],
+      dx = dx_levels[dxcat + 1] %>% factor(., levels = dx_levels),
       avgdsm5crit =
         sum(n_DSM5_domains_meeting_PMDD_criteria * included,
             na.rm = TRUE) / Ncycles,
@@ -337,8 +338,10 @@ cpass <- function(data, silent = FALSE) {
   if (!silent)
     message(
       paste0(
-        "PME diagnosis is still experimental",
-        "and has not be validated clinically. Please, use with caution.\n")
+        "PME diagnosis is still experimental ",
+        "and has not been validated clinically. ",
+        "Please, use with caution.\n"
+      )
     )
 
   outputs <-

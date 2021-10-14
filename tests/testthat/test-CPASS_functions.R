@@ -22,10 +22,10 @@ test_that("CPASS with missing ITEMs", {
   cpass_d3 = cpass(data = as_cpass_data(d3, sep_event = "menses", silent = TRUE, verbose = FALSE), silent = TRUE)
 
   # We check the results
-  expect_equal(cpass_d0$subject_level_diagnosis$dx, c("PMDD","MRMD","no diagnosis"))
-  expect_equal(cpass_d1$subject_level_diagnosis$dx, c("MRMD","MRMD","no diagnosis"))
-  expect_equal(cpass_d2$subject_level_diagnosis$dx, c("MRMD","MRMD","no diagnosis"))
-  expect_equal(cpass_d3$subject_level_diagnosis$dx, c("MRMD","no diagnosis","no diagnosis"))
+  expect_equal(as.character(cpass_d0$subject_level_diagnosis$dx), c("PMDD","MRMD","no diagnosis"))
+  expect_equal(as.character(cpass_d1$subject_level_diagnosis$dx), c("MRMD","MRMD","no diagnosis"))
+  expect_equal(as.character(cpass_d2$subject_level_diagnosis$dx), c("MRMD","MRMD","no diagnosis"))
+  expect_equal(as.character(cpass_d3$subject_level_diagnosis$dx), c("MRMD","no diagnosis","no diagnosis"))
 
 
   # We also need to check the visualizations

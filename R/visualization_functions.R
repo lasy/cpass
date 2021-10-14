@@ -538,7 +538,7 @@ plot_subject_cycle_obs <-
       message(
         paste0(
           "PME diagnosis is still experimental and ",
-          "has not be validated clinically.",
+          "has not be validated clinically. ",
           "Please, use with caution.\n")
       )
 
@@ -632,8 +632,8 @@ plot_subject_obs <-
     if (!silent & add_diagnosis)
       message(
         paste0(
-          "PME diagnosis is still experimental",
-          "and has not be validated clinically.",
+          "PME diagnosis is still experimental ",
+          "and has not be validated clinically. ",
           "Please, use with caution.\n")
       )
 
@@ -762,8 +762,8 @@ plot_subject_data_and_dx <-
 
     message(
       paste0(
-        "PME diagnosis is still experimental",
-        "and has not be validated clinically.",
+        "PME diagnosis is still experimental ",
+        "and has not be validated clinically. ",
         "Please, use with caution.\n")
     )
 
