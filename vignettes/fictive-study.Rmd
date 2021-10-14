@@ -15,7 +15,7 @@ comment = "#>"
 )
 ```
 
-```{r setup, warning = FALSE, echo = FALSE}
+```{r setup, warning = FALSE, message=FALSE}
 library(cpass)
 library(dplyr)
 library(tidyr)
