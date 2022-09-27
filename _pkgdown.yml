@@ -14,6 +14,7 @@ reference:
   - as_cpass_data
   - is_cpass_data
   - supported_data_format
+  - .compute_phase_and_cycleday
 - title: "CPASS diagnosis function"
 - contents:
   - cpass
@@ -31,3 +32,4 @@ reference:
 - contents:
   - simulate_cpass_data
   - simulate_cycle
+

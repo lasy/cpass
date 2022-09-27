@@ -36,7 +36,7 @@
 
 
 
-#' The hidden semi-Markov model for identifying cycles from bleeding data.
-#'
-#' A hidden semi-Markov model from the \code{HiddenSemiMarkov} package.
-"cycle_model"
+#' #' The hidden semi-Markov model for identifying cycles from bleeding data.
+#' #'
+#' #' A hidden semi-Markov model from the \code{HiddenSemiMarkov} package.
+#' "cycle_model"

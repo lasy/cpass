@@ -342,9 +342,8 @@ is_cpass_data <- function(data, silent = TRUE) {
 #' The data must be in a long format and have the following columns:
 #' \code{subject}, \code{item}, \code{drsp_score}
 #' @param sep_event a character XXX
-#' @keywords CPASS C-PASS PMDD MRMD
+#' @keyword internal
 #' @return the same data.frame as data with additional columns.
-#' @export
 #' @import magrittr
 #' @examples
 #' random_data =
@@ -416,7 +415,6 @@ is_cpass_data <- function(data, silent = TRUE) {
 
   data
 }
-
 
 
 

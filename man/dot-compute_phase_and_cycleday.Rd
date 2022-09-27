@@ -36,7 +36,3 @@ augmented_data <-
    .compute_phase_and_cycleday(random_data, sep_event = "ovulation")
 colnames(augmented_data)
 }
-\keyword{C-PASS}
-\keyword{CPASS}
-\keyword{MRMD}
-\keyword{PMDD}
