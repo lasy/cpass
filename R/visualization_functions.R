@@ -79,19 +79,22 @@ plot_subject_dx <-
         stringr::str_c(
           "SUBJECT : ", subject, "   ||   ",
           subject_diagnosis$subject_level_diagnosis$dx %>%
-            tidyr::replace_na("Undefined diagnosis"), ""
+            stringr::str_replace_na("Undefined diagnosis"), ""
         ),
-        subtitle = stringr::str_c(
-          "# CYCLES total: ",
-          subject_diagnosis$subject_level_diagnosis$Ncycles_tot, "   ||   ",
-          "# CYCLES incl.: ",
-          subject_diagnosis$subject_level_diagnosis$Ncycles, "   ||   ",
-          "# PMDD cycles: ",
-          subject_diagnosis$subject_level_diagnosis$N_PMDD %>%
-            tidyr::replace_na("Undefined"), "   ||   ",
-          "# MRMD cycles: ",
-          subject_diagnosis$subject_level_diagnosis$N_MRMD %>%
-            tidyr::replace_na("Undefined")))
+        subtitle =
+          stringr::str_c(
+            "# CYCLES total: ",
+            subject_diagnosis$subject_level_diagnosis$Ncycles_tot, "   ||   ",
+            "# CYCLES incl.: ",
+            subject_diagnosis$subject_level_diagnosis$Ncycles, "   ||   ",
+            "# PMDD cycles: ",
+            subject_diagnosis$subject_level_diagnosis$N_PMDD %>%
+              stringr::str_replace_na("Undefined"), "   ||   ",
+            "# MRMD cycles: ",
+            subject_diagnosis$subject_level_diagnosis$N_MRMD %>%
+              stringr::str_replace_na("Undefined")
+          )
+      )
 
     daily_summary <- subject_diagnosis$daily_summary_per_item
     daily_summary <- daily_summary %>%
@@ -233,7 +236,7 @@ plot_subject_dx <-
         plotlist = list(gtitle, plots),
         ncol = 1, nrow = 2,  rel_heights = c(1, 10))
 
-    return(plots_with_title)
+    plots_with_title
   }
 
 
