@@ -7,3 +7,6 @@ inst/doc
 doc
 Meta
 .DS_Store
+.DS_Store
+docs/reference/.DS_Store
+vignettes/.DS_Store
