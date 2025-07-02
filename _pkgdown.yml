@@ -1,34 +1,31 @@
+url: https://lasy.github.io/cpass/
+template:
+  bootstrap: 5
 home:
   links:
   - text: CPASS article
     href: https://ajp.psychiatryonline.org/doi/full/10.1176/appi.ajp.2016.15121510
   - text: source code
     href: https://github.com/lasy/cpass
-
 reference:
-- title: "Formatting your data for cpass compatibility"
-  desc: >
-    These functions will help you formatting your data so that you can run the CPASS diagnosis function
-    and the visualization functions.
+- title: Formatting your data for cpass compatibility
+  desc: |
+    These functions will help you formatting your data so that you can run the CPASS diagnosis function and the visualization functions.
 - contents:
   - as_cpass_data
   - is_cpass_data
   - supported_data_format
   - .compute_phase_and_cycleday
-- title: "CPASS diagnosis function"
-- contents:
-  - cpass
-- title: "Visualization functions"
-  desc: "Functions to visualize subjects data and diagnosis."
-- contents:
-  - starts_with("plot_")
-- title: "PMDD example data"
-- contents:
-  - PMDD_data
-- title: "DSM5 domains definition"
-- contents:
-  - dsm5_dict
-- title: "CPASS data simulation functions"
+- title: CPASS diagnosis function
+- contents: cpass
+- title: Visualization functions
+  desc: Functions to visualize subjects data and diagnosis.
+- contents: starts_with("plot_")
+- title: PMDD example data
+- contents: PMDD_data
+- title: DSM5 domains definition
+- contents: dsm5_dict
+- title: CPASS data simulation functions
 - contents:
   - simulate_cpass_data
   - simulate_cycle

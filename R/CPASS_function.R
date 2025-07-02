@@ -25,11 +25,10 @@
 #' }
 #' @keywords cpass C-PASS PMDD MRMD
 #' @export
-#' @importFrom magrittr %>%
 #' @examples
 #' data(PMDD_data)
-#' cpass_input = as_cpass_data(PMDD_data, sep_event = "menses")
-#' output = cpass(cpass_input)
+#' cpass_input <- as_cpass_data(PMDD_data, sep_event = "menses")
+#' output <- cpass(cpass_input)
 #' head(output$subject_level_diagnosis)
 
 cpass <- function(data, silent = FALSE) {
@@ -44,34 +43,37 @@ cpass <- function(data, silent = FALSE) {
 
   # Only keep the pre and post-menstrual phase:
   data <-
-    data %>% dplyr::filter(.data$phase %in% c("pre-menses", "post-menses"))
+    data |>
+    dplyr::filter(data$phase %in% c("pre-menses", "post-menses"))
   # we join the dsm5_dict
   data <-
     dplyr::left_join(
       data,
-      dsm5_dict %>% dplyr::rename(item = ITEM),
+      dsm5_dict |> dplyr::rename(item = ITEM),
       by = "item")
 
   #### DRSP level diagnosis
   # enough observations in both phase
   n_obs_min <-  4
   output_item_level <-
-    data   %>%
-    dplyr::group_by(subject, cycle, phase, item) %>%
-    dplyr::summarise(n_days_with_obs = sum(!is.na(drsp_score)),
-                     .groups = "drop") %>%
-    dplyr::ungroup() %>%
-    dplyr::group_by(subject, cycle, item) %>%
+    data |>
+    dplyr::group_by(subject, cycle, phase, item) |>
     dplyr::summarise(
-      at_least_n_obs = sum(n_days_with_obs >= n_obs_min,
-                           na.rm = TRUE) >= 2,
-      .groups = "drop")
+      n_days_with_obs = sum(!is.na(drsp_score)),
+      .groups = "drop"
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::group_by(subject, cycle, item) |>
+    dplyr::summarise(
+      at_least_n_obs = sum(n_days_with_obs >= n_obs_min, na.rm = TRUE) >= 2,
+      .groups = "drop"
+      )
 
   # max sev pre-phase
   output_abs_sev <-
-    data   %>%
-    dplyr::filter(phase == "pre-menses") %>%
-    dplyr::group_by(subject, cycle, item) %>%
+    data   |>
+    dplyr::filter(phase == "pre-menses") |>
+    dplyr::group_by(subject, cycle, item) |>
     dplyr::summarise(
       max_sev_pre =
         suppressWarnings(max(drsp_score, na.rm = TRUE)),
@@ -88,23 +90,23 @@ cpass <- function(data, silent = FALSE) {
 
   #score range
   output_range <-
-    data %>%
-    dplyr::group_by(subject) %>%
+    data |>
+    dplyr::group_by(subject) |>
     dplyr::summarise(range = max(drsp_score, na.rm = TRUE) - 1)
 
   # relative change
   output_rel_change <-
-    data %>%
-    dplyr::group_by(subject, cycle, phase, item) %>%
+    data |>
+    dplyr::group_by(subject, cycle, phase, item) |>
     dplyr::summarise(
-      mean = mean(drsp_score, na.rm = TRUE), .groups = "drop") %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(phase = ifelse(phase == "pre-menses", "pre", "post")) %>%
+      mean = base::mean(drsp_score, na.rm = TRUE), .groups = "drop") |>
+    dplyr::ungroup() |>
+    dplyr::mutate(phase = ifelse(phase == "pre-menses", "pre", "post")) |>
     tidyr::pivot_wider(
-      names_from = phase, values_from = mean, names_prefix = "mean_") %>%
+      names_from = phase, values_from = mean, names_prefix = "mean_") |>
     dplyr::mutate(raw_cyclical_change = mean_pre - mean_post)
   output_rel_change <-
-    dplyr::full_join(output_rel_change, output_range, by = "subject") %>%
+    dplyr::full_join(output_rel_change, output_range, by = "subject") |>
     dplyr::mutate(percent_change = raw_cyclical_change / range * 100)
 
   output_item_level <-
@@ -115,12 +117,12 @@ cpass <- function(data, silent = FALSE) {
 
   # clearance in the post-menstrual phase
   output_clearance <-
-    data   %>%
-    dplyr::filter(phase == "post-menses") %>%
-    dplyr::group_by(subject, cycle, item) %>%
+    data   |>
+    dplyr::filter(phase == "post-menses") |>
+    dplyr::group_by(subject, cycle, item) |>
     dplyr::summarise(
       max_sev_post = suppressWarnings(max(drsp_score, na.rm = TRUE)),
-      .groups = "drop") %>%
+      .groups = "drop") |>
     dplyr::mutate(
       max_sev_post = ifelse(is.infinite(max_sev_post), 4, max_sev_post))
 
@@ -132,7 +134,7 @@ cpass <- function(data, silent = FALSE) {
 
   # item level diagnosis for this cycle
   output_item_level <-
-    output_item_level %>%
+    output_item_level |>
     dplyr::mutate(
       item_meets_PMDD_criteria =
         at_least_n_obs & # enough observations
@@ -155,17 +157,17 @@ cpass <- function(data, silent = FALSE) {
   output_item_level <-
     dplyr::full_join(
       output_item_level,
-      dsm5_dict %>%
-        dplyr::select(ITEM, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY) %>%
+      dsm5_dict |>
+        dplyr::select(ITEM, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY) |>
         dplyr::rename(item = ITEM),
       by = "item")
 
 
   #### DSM-5 DOMAINS level diagnosis
   output_DSM5_domains_level <-
-    output_item_level %>%
-    dplyr::filter(!(item %in% c(20, 22:24))) %>%
-    dplyr::group_by(subject, cycle, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY) %>%
+    output_item_level |>
+    dplyr::filter(!(item %in% c(20, 22:24))) |>
+    dplyr::group_by(subject, cycle, DSM5_SYMPTOM_DOMAIN, SYMPTOM_CATEGORY) |>
     dplyr::summarise(DSM5_PMDD_criteria =
                        ifelse(
                          all(is.na(item_meets_PMDD_criteria)), NA,
@@ -183,28 +185,28 @@ cpass <- function(data, silent = FALSE) {
   nD <-  4 #
 
   output_cycle_level <-
-    data %>%
-    dplyr::group_by(subject, cycle, phase, day) %>%
+    data |>
+    dplyr::group_by(subject, cycle, phase, day) |>
     dplyr::summarize(n_item = sum(!is.na(drsp_score)),
                      has_X_item = n_item >= X,
-                     .groups = "drop") %>%
-    dplyr::ungroup() %>%
-    dplyr::group_by(subject, cycle, phase) %>%
+                     .groups = "drop") |>
+    dplyr::ungroup() |>
+    dplyr::group_by(subject, cycle, phase) |>
     dplyr::summarize(at_least_nD_days = sum(has_X_item, na.rm = TRUE) >= nD,
-                     .groups = "drop")  %>%
-    dplyr::ungroup() %>%
-    dplyr::group_by(subject, cycle) %>%
+                     .groups = "drop")  |>
+    dplyr::ungroup() |>
+    dplyr::group_by(subject, cycle) |>
     dplyr::summarize(at_least_nD_days_in_both_phases = all(at_least_nD_days),
-                     .groups = "drop") %>%
-    dplyr::mutate(included = at_least_nD_days_in_both_phases) %>%
+                     .groups = "drop") |>
+    dplyr::mutate(included = at_least_nD_days_in_both_phases) |>
     dplyr::select(subject, cycle, included)
 
 
   # any core emotional symptom
   output_core_emotional_symptom <-
-    output_DSM5_domains_level %>%
-    dplyr::filter(SYMPTOM_CATEGORY == "Core Emotional Symptoms") %>%
-    dplyr::group_by(subject, cycle) %>%
+    output_DSM5_domains_level |>
+    dplyr::filter(SYMPTOM_CATEGORY == "Core Emotional Symptoms") |>
+    dplyr::group_by(subject, cycle) |>
     dplyr::summarise(core_emotional_criteria =
                        ifelse(all(is.na(DSM5_PMDD_criteria)), NA,
                               any(DSM5_PMDD_criteria, na.rm = TRUE)),
@@ -218,13 +220,13 @@ cpass <- function(data, silent = FALSE) {
 
   # DSM-A : at least one core emotional symptom meets criteria
   output_cycle_level <-
-    output_cycle_level %>%
+    output_cycle_level |>
     dplyr::mutate(DSM5_A = included & core_emotional_criteria)
 
   # DSM-B : 5 or more DMS-5 DOMAINS meet criteria
   output_DSM5_B <-
-    output_DSM5_domains_level %>%
-    dplyr::group_by(subject, cycle) %>%
+    output_DSM5_domains_level |>
+    dplyr::group_by(subject, cycle) |>
     dplyr::summarize(
       n_DSM5_domains_meeting_PMDD_criteria =
         sum(DSM5_PMDD_criteria, na.rm = TRUE),
@@ -236,14 +238,14 @@ cpass <- function(data, silent = FALSE) {
     dplyr::full_join(
       output_cycle_level, output_DSM5_B, by =  c("subject", "cycle"))
   output_cycle_level <-
-    output_cycle_level %>%
+    output_cycle_level |>
     dplyr::mutate(DSM5_B = included & five_or_more_DSM5_domains_PMDD)
 
 
   # PME
   output_PME <-
-    output_DSM5_domains_level %>%
-    dplyr::group_by(subject, cycle) %>%
+    output_DSM5_domains_level |>
+    dplyr::group_by(subject, cycle) |>
     dplyr::summarize(
       n_DSM5_domains_meeting_PME_criteria = sum(PME_criteria, na.rm = TRUE),
       five_or_more_DSM5_domains_PME =
@@ -254,21 +256,21 @@ cpass <- function(data, silent = FALSE) {
     dplyr::full_join(
       output_cycle_level, output_PME, by =  c("subject", "cycle"))
   output_cycle_level <-
-    output_cycle_level %>%
+    output_cycle_level |>
     dplyr::mutate(PME = included & five_or_more_DSM5_domains_PME)
 
 
   # PMDD or MRMD diagnosis for the cycle
   output_cycle_level <-
-    output_cycle_level %>%
+    output_cycle_level |>
     dplyr::mutate(diagnosis =
                     dplyr::case_when(
                       !PME & !DSM5_A ~ "no diagnosis",
                       PME & !DSM5_A ~ "PME",
                       DSM5_A & DSM5_B ~ "PMDD",
                       DSM5_A & !DSM5_B ~ "MRMD")
-    ) %>%
-    dplyr::arrange(subject, cycle) %>%
+    ) |>
+    dplyr::arrange(subject, cycle) |>
     dplyr::select(subject, cycle,
                   included,
                   n_DSM5_domains_meeting_PME_criteria,
@@ -279,8 +281,8 @@ cpass <- function(data, silent = FALSE) {
   dx_levels = c("no diagnosis", "MRMD", "PMDD", "PME")
 
   output_subject_level <-
-    output_cycle_level %>%
-    dplyr::group_by(subject) %>%
+    output_cycle_level |>
+    dplyr::group_by(subject) |>
     dplyr::summarize(
       Ncycles_tot = dplyr::n(),
       Ncycles = sum(included, na.rm = TRUE),
@@ -300,7 +302,7 @@ cpass <- function(data, silent = FALSE) {
                                       !PMDD & !MRMD & PME ~ 3,
                                       TRUE ~0)
       ), #dxcat is the diagnosis category
-      dx = dx_levels[dxcat + 1] %>% factor(., levels = dx_levels),
+      dx = dx_levels[dxcat + 1] |>  factor(levels = dx_levels),
       avgdsm5crit =
         sum(n_DSM5_domains_meeting_PMDD_criteria * included,
             na.rm = TRUE) / Ncycles,
@@ -311,25 +313,25 @@ cpass <- function(data, silent = FALSE) {
   data <-
     dplyr::full_join(
       data,
-      output_cycle_level %>%  dplyr::select(subject, cycle, included),
+      output_cycle_level |> dplyr::select(subject, cycle, included),
       by = c("subject", "cycle"))
 
   daily_summary_item <-
-    data %>%
-    dplyr::group_by(subject, item, phase, day) %>%
+    data |>
+    dplyr::group_by(subject, item, phase, day) |>
     dplyr::summarise(
       ave = mean(drsp_score, na.rm  = TRUE),
       med = median(drsp_score, na.rm  = TRUE),
       min = suppressWarnings(min(drsp_score, na.rm  = TRUE)),
       max = suppressWarnings(max(drsp_score, na.rm  = TRUE)),
       .groups = "drop"
-    ) %>%
+    ) |>
     dplyr::mutate(min = ifelse(is.infinite(min), NA, min),
                   max = ifelse(is.infinite(max), NA, max))
 
   summary_item <-
-    output_item_level %>%
-    dplyr::group_by(subject, item) %>%
+    output_item_level |>
+    dplyr::group_by(subject, item) |>
     dplyr::summarise(ave_perc_change =
                        mean(percent_change, na.rm = TRUE),
                      .groups = "drop")

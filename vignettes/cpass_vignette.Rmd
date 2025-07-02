@@ -35,9 +35,6 @@ library(devtools)
 then install and load the `cpass` package by running:
 
 ```{r cpass-package, eval = FALSE}
-
-devtools::install_github("lasy/HiddenSemiMarkov") # this won't be necessary in the future, 
-# but for now, "HiddenSemiMarkov" is not yet released on CRAN and cpass depends on it.
 devtools::install_github("lasy/cpass", dependencies = TRUE)
 ```
 
@@ -52,13 +49,13 @@ This vignette also uses `tidyverse` functions so it is recommended to install an
 
 
 
-```{r tidyverse, eval = FALSE}
+```{r tidyverse, eval=FALSE}
 install.packages("tidyverse")
 ```
 
 
 
-```{r loading-tidyverse, warning=FALSE, eval  = FALSE}
+```{r loading-tidyverse, warning=FALSE, eval=FALSE}
 library(tidyverse)
 ```
 
@@ -82,7 +79,7 @@ To explore the `cpass` package, we will use a demo dataset with the data (daily 
 To load this data into the environment, run:
 
 ```{r demo-dataset}
-d = PMDD_data
+d <- PMDD_data
 
 dim(d)
 head(d)
@@ -117,7 +114,7 @@ A typical `cpass` workflow consists of
 The function `as_cpass_data()` transforms raw data into `cpass_data`. The data provided as argument to `as_cpass_data()` must be in long format, _i.e._ one row per subject, cycle, day and DRSP (daily record of severity of problems) item (*i.e.*, the symptom diary used to collect the data for a C-PASS diagnosis). 
 
 ```{r as-cpass-data}
-input = as_cpass_data(d, sep_event = "menses")
+input <- as_cpass_data(d, sep_event = "menses")
 ```
 
 
@@ -129,7 +126,7 @@ For the full documentation, type `?as_cpass_data` in the `R console`.
 Now that the data is formatted, it can be passed to the `CPASS()` function. This function will run the CPASS procedure for PMDD/MRMD (and optionally PME) diagnoses:
 
 ```{r CPASS}
-diagnosis = cpass(input)
+diagnosis <- cpass(input)
 ```
 
 For the full documentation, type `?CPASS` in the `R console`.
@@ -266,11 +263,11 @@ By default, the pdf is saved in the current directory and the filename specifies
 
 The pdf option can also be turned off with the option `save_as_pdf = FALSE`. In this case, calling the function prints the visualization in R.
 
-If the function is called with the option `save_as_pdf = TRUE` (default), the visualization is returned silently but could be caught by a variable (e.g. `viz = plot_subject_data_and_dx(data); viz`).
+If the function is called with the option `save_as_pdf = TRUE` (default), the visualization is returned silently but could be caught by a variable (e.g. `viz <- plot_subject_data_and_dx(data); viz`).
 
 ```{r plot-all, fig.height=50, fig.width=14, out.width='100%'}
 
-plot_subject_data_and_dx(data = input %>% filter(subject == 47), save_as_pdf = FALSE)
+plot_subject_data_and_dx(data = input %>% filter(subject == 47), save_as_pdf = FALSE) 
 
 ```
 

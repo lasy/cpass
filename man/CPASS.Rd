@@ -35,8 +35,8 @@ diagnoses at different levels (subjects, cycles, domains, etc).
 }
 \examples{
 data(PMDD_data)
-cpass_input = as_cpass_data(PMDD_data, sep_event = "menses")
-output = cpass(cpass_input)
+cpass_input <- as_cpass_data(PMDD_data, sep_event = "menses")
+output <- cpass(cpass_input)
 head(output$subject_level_diagnosis)
 }
 \keyword{C-PASS}

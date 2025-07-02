@@ -55,7 +55,6 @@ input <-
   dplyr::filter(subject == 2, cycle == 1)  \%>\%
   as_cpass_data(., sep_event = "menses")
 plot_subject_cycle_obs(data = input)
-
 }
 \keyword{C-PASS}
 \keyword{CPASS}

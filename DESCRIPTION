@@ -3,29 +3,25 @@ Type: Package
 Title: PMDD and MRMD Diagnoses Following The Carolina Premenstrual Assessment Scoring System (C-PASS)
 Version: 0.1.0
 Authors@R: c(
-    person("Laura", "Symul", email = "lsymul@stanford.edu",role = c("aut", "cre","ccp")),
+    person("Laura", "Symul", email = "laura.symul@uclouvain.be",role = c("aut", "cre","ccp")),
     person("Tory", "Eisenlohr-Moul", email = "temo@uic.edu", role = c("aut","ccp"))
     )
-Maintainer: Laura Symul <lsymul@stanford.edu>
+Maintainer: Laura Symul <laura.symul@uclouvain.be>
 Description: This package is an implementation of the C-PASS (Carolina Premenstrual Assessment Scoring System) procedure for the diagnosis of PMDD (Pre-Menstrual Dysphoric Disorder) and MRMD (Menstrually Related Mood Disorder). For a full description of this procedure, refer to Tory A. Eisenlohr-Moul et al., 2017, American Journal of Psychiatry.
     In addition to the implementation of the procedure, this package also provides multiple options for the visualization of the reported symptoms and diagnoses.
 License: CC BY 4.0
 URL: https://lasy.github.io/cpass/
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.2
 Imports: 
     magrittr,
+    tidyr,
     ggplot2,
     dplyr,
-    ggthemes,
     cowplot,
     purrr,
-    tidyr,
-    stringr,
-    ggpubr
-Remotes:
-    lasy/HiddenSemiMarkov
+    stringr
 Depends: 
     R (>= 2.10)
 Suggests: 

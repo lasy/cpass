@@ -1,75 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/articles/cpass_vignette.html</loc>
-  </url>
-  <url>
-    <loc>/articles/fictive-study.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/CPASS.html</loc>
-  </url>
-  <url>
-    <loc>/reference/PMDD_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as_cpass_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cycle_model.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dot-compute_phase_and_cycleday.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dsm5_dict.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is_cpass_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_subject_cycle_obs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_subject_data_and_diagnosis.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_subject_data_and_dx.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_subject_diagnosis.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_subject_dx.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_subject_obs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/simulate_cpass_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/simulate_cycle.html</loc>
-  </url>
-  <url>
-    <loc>/reference/supported_data_format.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://lasy.github.io/cpass/404.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/LICENSE.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/articles/cpass_vignette.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/articles/fictive-study.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/articles/index.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/authors.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/index.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/CPASS.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/PMDD_data.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/as_cpass_data.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/cycle_model.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/dot-compute_phase_and_cycleday.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/dsm5_dict.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/index.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/is_cpass_data.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/plot_subject_cycle_obs.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/plot_subject_data_and_diagnosis.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/plot_subject_data_and_dx.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/plot_subject_diagnosis.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/plot_subject_dx.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/plot_subject_obs.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/simulate_cpass_data.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/simulate_cycle.html</loc></url>
+<url><loc>https://lasy.github.io/cpass/reference/supported_data_format.html</loc></url>
 </urlset>
+

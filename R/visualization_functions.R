@@ -283,9 +283,6 @@ plot_subject_dx <-
 #'   dplyr::filter(subject == 2, cycle == 1)  %>%
 #'   as_cpass_data(., sep_event = "menses")
 #' plot_subject_cycle_obs(data = input)
-#'
-
-
 plot_subject_cycle_obs <-
   function(
     data = data.frame(),
@@ -589,9 +586,6 @@ plot_subject_cycle_obs <-
 #'   dplyr::filter(subject == 2)  %>%
 #'   as_cpass_data(., sep_event = "menses")
 #' plot_subject_obs(data = input)
-#'
-
-
 plot_subject_obs <-
   function(
     data = data.frame(),
@@ -700,10 +694,8 @@ plot_subject_obs <-
 #'   PMDD_data %>%
 #'   dplyr::filter(subject == 2) %>%
 #'   as_cpass_data(., sep_event = "menses")
-#' p = plot_subject_data_and_dx(data = input)
+#' p <- plot_subject_data_and_dx(data = input, save_as_pdf = FALSE)
 #' p
-
-
 plot_subject_data_and_dx <-
   function(
     data = data.frame(),

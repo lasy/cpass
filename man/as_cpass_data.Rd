@@ -44,15 +44,15 @@ This function checks if the data can be used by the CPASS functions
 and transforms it into a "cpass" data.frame.
 }
 \examples{
-random_data =
+random_data <-
    expand.grid(
        subject = 1,
        cycle = 1:2,
        day = c(1:10,-10:-1),
        item = 1:24
        )
-random_data$drsp_score = sample(1:6, nrow(random_data), replace = TRUE)
-cpass_data = as_cpass_data(random_data, sep_event = "menses")
+random_data$drsp_score <- sample(1:6, nrow(random_data), replace = TRUE)
+cpass_data <- as_cpass_data(random_data, sep_event = "menses")
 colnames(cpass_data)
 }
 \keyword{C-PASS}

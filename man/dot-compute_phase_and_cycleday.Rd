@@ -32,7 +32,6 @@ random_data$is_cycle_start <-
        random_data$date \%in\%
          c(as.Date("2020-01-15"), as.Date("2020-02-20")),
        TRUE, FALSE)
-augmented_data <-
-   .compute_phase_and_cycleday(random_data, sep_event = "ovulation")
-colnames(augmented_data)
+# augmented_data <- .compute_phase_and_cycleday(random_data, sep_event = "ovulation")
+# colnames(augmented_data)
 }

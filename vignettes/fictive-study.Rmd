@@ -15,12 +15,12 @@ comment = "#>"
 )
 ```
 
-```{r setup, warning = FALSE, message=FALSE}
+```{r setup, warning=FALSE, message=FALSE}
 library(cpass)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-library(readr)
+# library(readr)
 theme_set(theme_light()) # viz options
 set.seed(1) # for reproducibility
 ```
@@ -55,7 +55,7 @@ This is what would be expected in an actual study during the screening
 ```{r pre-enrollment-data-simulation}
 
 # we simulate data for 240 subjects
-n_subjects = 240
+n_subjects <- 240
 
 # the simulate_cpass_data function is part of the cpass package
 # type "?simulate_cpass_data" for documentation
@@ -243,6 +243,8 @@ subjects_with_pmdd <-
 subjects_with_pmdd$study_arm %>% table() %>% as_tibble() %>% knitr::kable()
 
 ```
+
+
 ```{r adding-subject-nb}
 
 subjects_with_pmdd <- 
@@ -414,11 +416,11 @@ ggplot(item_summary,
   facet_wrap(item ~ ., ncol = 6, labeller = label_both) +
   xlab("Difference (baseline - study) in average % change in reported severity\nbetween the pre- and the post-menstrual phase") +
   scale_fill_discrete("Study arm") +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") 
 
 ```
 
-Because we simulated the data, we know that the treatment is not expected to reduce specific symtpoms. The visualizatio above seems to confirm this expectation.
+Because we simulated the data, we know that the treatment is not expected to reduce specific symptoms. The visualization above seems to confirm this expectation.
 
 
 

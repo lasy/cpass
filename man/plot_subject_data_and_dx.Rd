@@ -72,7 +72,7 @@ input =
   PMDD_data \%>\%
   dplyr::filter(subject == 2) \%>\%
   as_cpass_data(., sep_event = "menses")
-p = plot_subject_data_and_dx(data = input)
+p <- plot_subject_data_and_dx(data = input)
 p
 }
 \keyword{C-PASS}

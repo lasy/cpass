@@ -30,18 +30,6 @@ supported_data_format <- function(as_list = FALSE) {
           "`is_cycle_start` is a logical which is TRUE
           if a menstrual cycle starts on the specified date."
         )
-    ),
-    bleeding = list(
-      columns = c("date", "bleeding"),
-      description =
-        list(
-          "`date` is an actual date
-          (use 'as.Date' to convert character strings to dates)",
-          "`bleeding` is a character describing vaginal bleeding.
-          It can take the following values:
-          'none','spotting','light', 'medium', 'heavy'.
-          Missing values (NAs) are accepted."
-        )
     )
   )
 
@@ -58,6 +46,18 @@ supported_data_format <- function(as_list = FALSE) {
       fw_bw = list(
         columns = c("natural_cycle_number", "fw_day", "bw_day"),
         description = ""
+      ),
+      bleeding = list(
+        columns = c("date", "bleeding"),
+        description =
+          list(
+            "`date` is an actual date
+          (use 'as.Date' to convert character strings to dates)",
+            "`bleeding` is a character describing vaginal bleeding.
+          It can take the following values:
+          'none','spotting','light', 'medium', 'heavy'.
+          Missing values (NAs) are accepted."
+          )
       )
     )
 
@@ -115,15 +115,15 @@ supported_data_format <- function(as_list = FALSE) {
 #' @export
 #' @importFrom magrittr %>%
 #' @examples
-#' random_data =
+#' random_data <-
 #'    expand.grid(
 #'        subject = 1,
 #'        cycle = 1:2,
 #'        day = c(1:10,-10:-1),
 #'        item = 1:24
 #'        )
-#' random_data$drsp_score = sample(1:6, nrow(random_data), replace = TRUE)
-#' cpass_data = as_cpass_data(random_data, sep_event = "menses")
+#' random_data$drsp_score <- sample(1:6, nrow(random_data), replace = TRUE)
+#' cpass_data <- as_cpass_data(random_data, sep_event = "menses")
 #' colnames(cpass_data)
 
 as_cpass_data <-
@@ -180,10 +180,10 @@ as_cpass_data <-
     if (format == "first_day") {
       d2 <-  .compute_phase_and_cycleday(data = d2, sep_event = sep_event)
     }
-    if (format == "bleeding") {
-      d2 <-  .identify_cycles_from_bleeding(data = d2)
-      d2 <-  .compute_phase_and_cycleday(data = d2, sep_event = sep_event)
-    }
+    # if (format == "bleeding") {
+    #   d2 <-  .identify_cycles_from_bleeding(data = d2)
+    #   d2 <-  .compute_phase_and_cycleday(data = d2, sep_event = sep_event)
+    # }
 
     # CHECKING THE VALUES OF THE COLUMNS
     # cycle
@@ -203,7 +203,8 @@ as_cpass_data <-
         paste0("There are no negative days.\n",
                "This will be interpreted as ",
                "no data for the pre-menstrual phase.\n",
-               "CPASS diagnosis cannot be ran."))
+               "CPASS diagnosis cannot be ran.")
+        )
     # drsp
     if (!all(unique(d2$item) %in% 1:24))
       stop("item must be integers from 1:24.")
@@ -226,10 +227,12 @@ as_cpass_data <-
 
 
     # FILLING MISSING VALUES
-    d3 <-  tidyr::expand_grid(
-      d2 %>% dplyr::select(subject, cycle) %>% dplyr::distinct(),
-      day = c(-7:-1, 4:10),
-      item = dsm5_dict$ITEM)
+    d3 <-
+      tidyr::expand_grid(
+        d2 %>% dplyr::select(subject, cycle) %>% dplyr::distinct(),
+        day = c(-7:-1, 4:10),
+        item = dsm5_dict$ITEM
+      )
 
     d2 <-
       dplyr::left_join(
@@ -342,9 +345,8 @@ is_cpass_data <- function(data, silent = TRUE) {
 #' The data must be in a long format and have the following columns:
 #' \code{subject}, \code{item}, \code{drsp_score}
 #' @param sep_event a character XXX
-#' @keyword internal
 #' @return the same data.frame as data with additional columns.
-#' @import magrittr
+#' @importFrom magrittr %>%
 #' @examples
 #' random_data =
 #'     expand.grid(
@@ -358,32 +360,36 @@ is_cpass_data <- function(data, silent = TRUE) {
 #'        random_data$date %in%
 #'          c(as.Date("2020-01-15"), as.Date("2020-02-20")),
 #'        TRUE, FALSE)
-#' augmented_data <-
-#'    .compute_phase_and_cycleday(random_data, sep_event = "ovulation")
-#' colnames(augmented_data)
+#' # augmented_data <- .compute_phase_and_cycleday(random_data, sep_event = "ovulation")
+#' # colnames(augmented_data)
 .compute_phase_and_cycleday <- function(data, sep_event) {
   d <- data
   d <- d %>%
     dplyr::arrange(subject, date, is_cycle_start) %>%
     dplyr::group_by(subject, date) %>%
-    dplyr::summarize(is_cycle_start = any(is_cycle_start),
-                     .groups = "drop") %>%
+    dplyr::summarize(
+      is_cycle_start = any(is_cycle_start),
+      .groups = "drop"
+      ) %>%
     dplyr::group_by(subject) %>%
-    dplyr::mutate(natural_cycle_nb = cumsum(is_cycle_start),
-                  n_cycles = max(natural_cycle_nb)) %>%
+    dplyr::mutate(
+      natural_cycle_nb = cumsum(is_cycle_start),
+      n_cycles = max(natural_cycle_nb)
+      ) %>%
     dplyr::group_by(subject, natural_cycle_nb) %>%
-    dplyr::mutate(cycle_start_date =
-                    ifelse(natural_cycle_nb > 0, min(date), NA),
-                  cycle_end_date =
-                    ifelse(natural_cycle_nb < n_cycles, max(date), NA),
-                  cycleday_fw =
-                    (date - cycle_start_date) %>%
-                    as.numeric(., units = "day") %>%
-                    magrittr::add(1),
-                  cycleday_bw =
-                    (date - cycle_end_date) %>%
-                    as.numeric(., units = "day") %>%
-                    magrittr::add(-1)
+    dplyr::mutate(
+      cycle_start_date =
+        ifelse(natural_cycle_nb > 0, min(date), NA),
+      cycle_end_date =
+        ifelse(natural_cycle_nb < n_cycles, max(date), NA),
+      cycleday_fw =
+        (date - cycle_start_date) %>%
+        as.numeric(., units = "day") %>%
+        magrittr::add(1),
+      cycleday_bw =
+        (date - cycle_end_date) %>%
+        as.numeric(., units = "day") %>%
+        magrittr::add(-1)
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
@@ -395,7 +401,8 @@ is_cpass_data <- function(data, silent = TRUE) {
       menses_centered_cycle_nb =
         ifelse((day %in% -14:-1),
                natural_cycle_nb + 1,
-               natural_cycle_nb))
+               natural_cycle_nb)
+      )
 
   if (sep_event == "ovulation")
     d$cycle <- d$natural_cycle_nb else d$cycle <- d$menses_centered_cycle_nb
@@ -418,60 +425,60 @@ is_cpass_data <- function(data, silent = TRUE) {
 
 
 
-#' @importFrom  magrittr %>%
-.identify_cycles_from_bleeding <- function(data) {
 
-  d <-  data
-  d <- data %>%
-    dplyr::group_by(subject, date) %>%
-    dplyr::mutate(
-      bleeding = bleeding %>%
-        factor(.,
-               levels =
-                 cycle_model$marg_em_probs$bleeding$params$values)
-    ) %>%
-    dplyr::summarize(bleeding = sort(unique(bleeding))[1], .groups = "drop")
-
-  data4hsmm <-
-    d %>%
-    dplyr::mutate(
-      seq_id = subject %>% as.character()
-    ) %>%
-    dplyr::group_by(seq_id) %>%
-    dplyr::mutate(
-      min_date = min(date),
-      t = (date - min_date) %>% as.numeric(., unit = "days")
-    ) %>%
-    dplyr::ungroup()
-
-  vit <-
-    HiddenSemiMarkov::predict_states_hsmm(
-      model = cycle_model, X = data4hsmm, method = "Viterbi")
-  fwbw <-
-    HiddenSemiMarkov::predict_states_hsmm(
-      model = cycle_model, X = data4hsmm, method = "FwBw")
-
-  decoding <-
-    vit$state_seq %>%
-    dplyr::select(seq_id, t, state) %>%
-    dplyr::mutate(
-      seq_id = seq_id %>% as.character()
-    ) %>%
-    dplyr::left_join(
-      fwbw$probabilities %>%
-        dplyr::select(seq_id, t, state, state_prob) %>%
-        dplyr::mutate(seq_id = seq_id %>% as.character()),
-      by = c("seq_id", "t", "state")) %>%
-    dplyr::mutate(is_cycle_start = (state == 1))
-
-  data4hsmm <-
-    data4hsmm %>% dplyr::left_join(., decoding, by = c("seq_id", "t"))
-
-  data <- data %>%
-    dplyr::left_join(
-      .,
-      data4hsmm %>% dplyr::select(subject, date, is_cycle_start),
-      by = c("subject", "date"))
-
-  data
-}
+#' .identify_cycles_from_bleeding <- function(data) {
+#'
+#'   d <-  data
+#'   d <- data %>%
+#'     dplyr::group_by(subject, date) %>%
+#'     dplyr::mutate(
+#'       bleeding = bleeding %>%
+#'         factor(.,
+#'                levels =
+#'                  cycle_model$marg_em_probs$bleeding$params$values)
+#'     ) %>%
+#'     dplyr::summarize(bleeding = sort(unique(bleeding))[1], .groups = "drop")
+#'
+#'   data4hsmm <-
+#'     d %>%
+#'     dplyr::mutate(
+#'       seq_id = subject %>% as.character()
+#'     ) %>%
+#'     dplyr::group_by(seq_id) %>%
+#'     dplyr::mutate(
+#'       min_date = min(date),
+#'       t = (date - min_date) %>% as.numeric(., unit = "days")
+#'     ) %>%
+#'     dplyr::ungroup()
+#'
+#'   vit <-
+#'     HiddenSemiMarkov::predict_states_hsmm(
+#'       model = cycle_model, X = data4hsmm, method = "Viterbi")
+#'   fwbw <-
+#'     HiddenSemiMarkov::predict_states_hsmm(
+#'       model = cycle_model, X = data4hsmm, method = "FwBw")
+#'
+#'   decoding <-
+#'     vit$state_seq %>%
+#'     dplyr::select(seq_id, t, state) %>%
+#'     dplyr::mutate(
+#'       seq_id = seq_id %>% as.character()
+#'     ) %>%
+#'     dplyr::left_join(
+#'       fwbw$probabilities %>%
+#'         dplyr::select(seq_id, t, state, state_prob) %>%
+#'         dplyr::mutate(seq_id = seq_id %>% as.character()),
+#'       by = c("seq_id", "t", "state")) %>%
+#'     dplyr::mutate(is_cycle_start = (state == 1))
+#'
+#'   data4hsmm <-
+#'     data4hsmm %>% dplyr::left_join(., decoding, by = c("seq_id", "t"))
+#'
+#'   data <- data %>%
+#'     dplyr::left_join(
+#'       .,
+#'       data4hsmm %>% dplyr::select(subject, date, is_cycle_start),
+#'       by = c("subject", "date"))
+#'
+#'   data
+#' }
