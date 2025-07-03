@@ -1,6 +1,7 @@
 url: https://lasy.github.io/cpass/
 template:
   bootstrap: 5
+  bootswatch: journal
 home:
   links:
   - text: CPASS article
