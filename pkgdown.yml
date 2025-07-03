@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   cpass_vignette: cpass_vignette.html
   fictive-study: fictive-study.html
-last_built: 2025-07-02T19:07Z
+last_built: 2025-07-03T12:58Z
 urls:
   reference: https://lasy.github.io/cpass/reference
   article: https://lasy.github.io/cpass/articles
